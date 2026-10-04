@@ -5,6 +5,9 @@ package_manager = "npm"
 resolution = true
 skip-lint = false
 
+[programs.devnet]
+zk_gate = "AsTtCWikB8EtHo3fophwB5EhVLY3FwwyuVFjLai86ZDK"
+
 [programs.localnet]
 zk_gate = "AsTtCWikB8EtHo3fophwB5EhVLY3FwwyuVFjLai86ZDK"
 
