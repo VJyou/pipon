@@ -87,6 +87,20 @@ struct CircuitInputTests {
         }
     }
 
+    @Test func deepLinkAndBinding() throws {
+        let url = try ProofRequest.sessionURL(
+            fromDeepLink: "zkcred://prove?s=http%3A%2F%2F192.168.1.5%3A5173%2Fapi%2Fsession%2Fabc")
+        #expect(url.absoluteString == "http://192.168.1.5:5173/api/session/abc")
+        #expect(throws: ProofRequest.RequestError.badLink) { try ProofRequest.sessionURL(fromDeepLink: "https://x/y") }
+
+        // base58 pubkey of Keypair::new_from_array([7; 32]) (the zk_gate test claimer)
+        let wallet = ProofRequest(binding: "GmaDrppBC7P5ARKV8g3djiwP89vz1jLK23V2GBjuAEGB", scope: 1, service: "t", statement: [])
+        #expect(try wallet.bindingBytes() == Array(hex: "ea4a6c63e29c520abef5507b132ec5f9954776aebebe7b92421eea691446d22c"))
+        let session = ProofRequest(binding: String(repeating: "ab", count: 32), scope: 1001, service: "t", statement: [])
+        #expect(try session.bindingBytes() == [UInt8](repeating: 0xAB, count: 32))
+        #expect(Base58.decode("11111111111111111111111111111111") == [UInt8](repeating: 0, count: 32))
+    }
+
     @Test func derLength() throws {
         let cert = try fixture("user.der")
         #expect(try DERLength.total(prefix: Array(cert.prefix(4))) == cert.count)

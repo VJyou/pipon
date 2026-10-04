@@ -5,6 +5,26 @@
 <dict>
 	<key>NFCReaderUsageDescription</key>
 	<string>Reads the signing certificate on your My Number Card to prove facts about you without sharing them.</string>
+	<!-- zkcred://prove?s=<relay session URL> from the web demo's QR code -->
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleURLName</key>
+			<string>app.zkcredentials.prove</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>zkcred</string>
+			</array>
+		</dict>
+	</array>
+	<!-- the demo relay runs on the Mac over plain HTTP on the LAN -->
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+	</dict>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Sends the proof to the demo website running on your computer.</string>
 	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
 	<array>
 		<string>D392F000260100000001</string>

@@ -148,3 +148,24 @@ export const PROGRAM_ERRORS: Record<number, string> = {
   6005: "Invalid proof",
   6006: "Metadata too long",
 };
+
+// BN254 base field modulus (proof A is negated for groth16-solana).
+const BN254_P = 21888242871839275222246405745257275088696311157297823662689037894645226208583n
+const be32 = (x: string | bigint) => BigInt(x).toString(16).padStart(64, '0')
+
+type SnarkjsProof = { pi_a: string[]; pi_b: string[][]; pi_c: string[] }
+
+/** snarkjs/mopro Groth16 proof JSON -> claim encoding (same as circuits/scripts/export_solana.cjs). */
+export function proofToClaim(proof: SnarkjsProof, publicSignals: string[], nonce: string): Claim {
+  const [ax, ay] = proof.pi_a
+  const [[bx0, bx1], [by0, by1]] = proof.pi_b
+  return {
+    proof_a: be32(ax) + be32((BN254_P - BigInt(ay)) % BN254_P),
+    proof_b: be32(bx1) + be32(bx0) + be32(by1) + be32(by0),
+    proof_c: be32(proof.pi_c[0]) + be32(proof.pi_c[1]),
+    public_inputs: publicSignals.map(be32),
+    nonce,
+    current_date: publicSignals[4],
+    prefecture_code: publicSignals[6],
+  }
+}

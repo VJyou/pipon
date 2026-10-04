@@ -1,7 +1,10 @@
-// Mock prover: stands in for the phone app (NFC read + on-device proving) during the web demo.
-// It issues a dummy JPKI certificate for a chosen persona and proves with circuits/build artifacts.
+// Demo backend:
+//  - mock prover: stands in for the phone app (NFC read + on-device proving). It issues a dummy JPKI
+//    certificate for a chosen persona and proves with circuits/build artifacts.
+//  - relay: hands a request to the real iPhone app (QR -> zkcred://) and the proof back to the page.
 //   node server/mock-prover.mjs   (port 8787; Vite proxies /api)
 import { createServer } from "node:http";
+import { randomBytes } from "node:crypto";
 import { execFile } from "node:child_process";
 import { readFile, mkdtemp, rm } from "node:fs/promises";
 import { tmpdir } from "node:os";
@@ -45,6 +48,20 @@ function prove(binding, persona) {
   });
 }
 
+// Relay sessions: id -> { request, result?, expires }. In memory; demo only.
+const sessions = new Map();
+const SESSION_TTL_MS = 10 * 60_000;
+const sessionRoute = /^\/api\/session\/([0-9a-f]{32})(\/result)?$/;
+
+async function readBody(req, limit = 64 * 1024) {
+  let body = "";
+  for await (const chunk of req) {
+    body += chunk;
+    if (body.length > limit) throw new Error("body too large");
+  }
+  return JSON.parse(body);
+}
+
 const json = (res, code, body) => {
   res.writeHead(code, { "content-type": "application/json" });
   res.end(JSON.stringify(body));
@@ -58,10 +75,34 @@ createServer(async (req, res) => {
     if (req.method === "GET" && req.url === "/api/vkey") {
       return json(res, 200, JSON.parse(await readFile(path.join(circuits, "build/vkey.json"), "utf8")));
     }
+    if (req.method === "POST" && req.url === "/api/session") {
+      // The page opens a session; the QR carries only its URL.
+      const { binding, scope, service, statement } = await readBody(req);
+      for (const [k, v] of sessions) if (v.expires < Date.now()) sessions.delete(k);
+      const id = randomBytes(16).toString("hex");
+      sessions.set(id, { request: { binding, scope, service, statement }, expires: Date.now() + SESSION_TTL_MS });
+      return json(res, 200, { id });
+    }
+    const m = sessionRoute.exec(req.url ?? "");
+    if (m) {
+      const s = sessions.get(m[1]);
+      if (!s || s.expires < Date.now()) return json(res, 404, { error: "no such session" });
+      if (req.method === "GET" && !m[2]) {
+        // phone: fetch the request / page: poll for the result
+        return json(res, 200, { request: s.request, result: s.result ?? null });
+      }
+      if (req.method === "POST" && m[2]) {
+        // phone: deliver { proof, publicSignals, nonce } (snarkjs JSON format)
+        const { proof, publicSignals, nonce } = await readBody(req);
+        if (!proof || !Array.isArray(publicSignals) || publicSignals.length !== 8 || !/^[0-9]+$/.test(String(nonce))) {
+          return json(res, 400, { error: "bad result" });
+        }
+        s.result = { proof, publicSignals, nonce: String(nonce) };
+        return json(res, 200, { ok: true });
+      }
+    }
     if (req.method === "POST" && req.url === "/api/prove") {
-      let body = "";
-      for await (const chunk of req) body += chunk;
-      const { binding, persona, scope } = JSON.parse(body);
+      const { binding, persona, scope } = await readBody(req);
       const p = PERSONAS[persona];
       if (!p || typeof binding !== "string" || !/^([1-9A-HJ-NP-Za-km-z]{32,44}|[0-9a-f]{64})$/.test(binding)
         || !Number.isSafeInteger(scope) || scope < 1) {
