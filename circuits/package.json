@@ -1,0 +1,15 @@
+{
+  "name": "zkcredentials-circuits",
+  "private": true,
+  "scripts": {
+    "gen:fixture": "python3 scripts/gen_dummy_jpki.py",
+    "build": "bash scripts/build.sh"
+  },
+  "dependencies": {
+    "@zk-email/circuits": "^6.3.4",
+    "circomlib": "^2.0.5"
+  },
+  "devDependencies": {
+    "snarkjs": "^0.7.6"
+  }
+}
