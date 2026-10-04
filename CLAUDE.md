@@ -22,7 +22,7 @@
 - ZKスタック: Circom+Groth16（groth16-solana）暫定。Noir等と比較が必要なら spike で判断
 - ~~証明元~~ → **決定: JPKI（署名用=属性、利用者証明用=固有性）**（ADR-0001, docs/legal/proof-sources.md）
 - 失効確認の扱い（J-LIS問い合わせは認定が必要。暫定は「発行後N日以内の証明のみ有効」）
-- モバイル: Expo/React Native + NFC 暫定
+- ~~モバイル~~ → **決定: SwiftUI ネイティブ + Core NFC + mopro**（ADR-0003）
 - ハッカソン提出期限: **2026-10-12 11:59pm PDT（= 日本時間 10/13(火) 15:59）**（公式ルール §5、docs/legal/hackathon-rules-check.md）
   - iPhoneアプリ（NFC読取＋端末内証明）は **10/8 が Go/No-Go**。間に合わなければ Web デモ提出＋iPhoneはNFC読取までに切替
   - 10/9〜10/12 は提出準備（英語化、動画、リポジトリ公開）
