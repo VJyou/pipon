@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<!-- Merge into the app target's Info.plist -->
+<plist version="1.0">
+<dict>
+	<key>NFCReaderUsageDescription</key>
+	<string>Reads the signing certificate on your My Number Card to prove facts about you without sharing them.</string>
+	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
+	<array>
+		<string>D392F000260100000001</string>
+	</array>
+</dict>
+</plist>
