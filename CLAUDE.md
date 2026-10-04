@@ -1,55 +1,57 @@
 # zkCredentials — Solana Colosseum Hackathon
 
-## 一行定義
-政府発行ICチップ（マイナンバーカード等）の暗号学的真正性を Root of Trust とし、
-個人情報を渡さずに「必要な事実だけ」を証明する Web2/Web3 共通の ZK クレデンシャル。
+## One-line definition
+ZK credentials for Web2 and Web3 that use the cryptographic authenticity of government-issued IC chips
+(My Number Card, etc.) as the root of trust and prove "only the facts needed" without handing over personal data.
 
-## コアメッセージ
+## Core message
 - IC chips solve authenticity. Zero-knowledge credentials solve privacy.
-- Why Now: 2027年4月、犯収法の非対面本人確認が画像送信型からICチップ読取型へ移行。
+- Why now: from April 2027, remote identity verification under Japan's Act on Prevention of Transfer of Criminal
+  Proceeds (犯収法) moves from photo upload to IC-chip reading.
 
-## 確定している方針
-- **ポジショニング**: 法定KYCの置き換えではない。法的義務がないのに身分証を過剰収集している場面
-  （年齢確認、一人一枠、Sybil耐性、イベント、メタバース、AI Agent委任）が主戦場。
-- **Issuerなし（クライアント側証明）**: 端末でICチップを読み、発行者署名の検証をZK回路内で行い、
-  属性（例: age>=20, unique_human）だけを出力する。Anon Aadhaar / Self 型。
-- **個人番号（マイナンバー）は一切扱わない。**
-- **Why Solana**: Nullifierレジストリ（サービス横断の一人一回）、alt_bn128によるオンチェーンGroth16検証、
-  Solana Attestation Service との接続、Agent決済（x402等）との統合。
+## Settled direction
+- **Positioning**: not a replacement for statutory KYC. The target is where ID is over-collected without a legal duty
+  (age checks, one per person, Sybil resistance, events, metaverse, AI-agent delegation).
+- **No issuer (client-side proving)**: the device reads the IC chip, the issuer signature is verified inside the ZK
+  circuit, and only attributes (e.g. age>=20, unique_human) are output. Anon Aadhaar / Self style.
+- **Never handle the Individual Number (My Number).**
+- **Why Solana**: nullifier registry (one per person across services), on-chain Groth16 via alt_bn128,
+  Solana Attestation Service, integration with agent payments (x402 etc.).
 
-## 未決定（決めたら docs/decisions/ にADRを書き、ここを更新）
-- ~~MVPユースケース~~ → **決定: 年齢＋都道府県＋一人一回 → ゲート付きミント**（ADR-0002）
-- ZKスタック: Circom+Groth16（groth16-solana）暫定。Noir等と比較が必要なら spike で判断
-- ~~証明元~~ → **決定: JPKI（署名用=属性、利用者証明用=固有性）**（ADR-0001, docs/legal/proof-sources.md）
-- 失効確認の扱い（J-LIS問い合わせは認定が必要。暫定は「発行後N日以内の証明のみ有効」）
-- ~~モバイル~~ → **決定: SwiftUI ネイティブ + Core NFC + mopro**（ADR-0003）
-- ハッカソン提出期限: **2026-10-12 11:59pm PDT（= 日本時間 10/13(火) 15:59）**（公式ルール §5、docs/legal/hackathon-rules-check.md）
-  - iPhoneアプリ（NFC読取＋端末内証明）は **10/8 が Go/No-Go**。間に合わなければ Web デモ提出＋iPhoneはNFC読取までに切替
-  - 10/9〜10/12 は提出準備（英語化、動画、リポジトリ公開）
+## Open decisions (when decided, write an ADR in docs/decisions/ and update this list)
+- ~~MVP use case~~ → **Decided: age + prefecture + one per person → gated mint** (ADR-0002)
+- ZK stack: Circom + Groth16 (groth16-solana) for now. Spike against Noir etc. only if needed
+- ~~Root of trust~~ → **Decided: JPKI (signing certificate = attributes, user-authentication certificate = uniqueness)** (ADR-0001, docs/legal/proof-sources.md)
+- Revocation (J-LIS revocation data requires certification; for now "only certificates issued within N days")
+- ~~Mobile~~ → **Decided: native SwiftUI + Core NFC + mopro** (ADR-0003)
+- Hackathon deadline: **2026-10-12 11:59pm PDT (= 2026-10-13 15:59 JST)** (official rules §5, docs/legal/hackathon-rules-check.md)
+  - iPhone app (NFC read + on-device proof): **go/no-go on 10/8**. If not ready, submit the web demo and limit the iPhone to NFC reading
+  - 10/9–10/12: submission prep (English, video, publish the repository)
 
-## リポジトリ構成
-- circuits/   ZK回路（src, test, fixtures）
-- programs/   Solanaプログラム（Anchor）
-- app/mobile/ iPhone用アプリ（NFC読取・プルーフ生成）
-- app/verifier-demo/ 検証側デモ（Web2サイト想定）
-- sdk/        検証者向けSDK
-- docs/decisions/ ADR（意思決定記録）
-- docs/research/  競合・技術調査
-- docs/pitch/     ピッチ素材
-- docs/legal/     犯収法・JPKI関連の一次資料メモ
-- inbox/      iPhoneから送った写真・PDFの置き場（処理後に適切な場所へ移す）
+## Repository layout
+- circuits/   ZK circuits (src, test, fixtures)
+- programs/   Solana programs (Anchor)
+- app/mobile/ iPhone app (NFC read, proof generation)
+- app/verifier-demo/ verifier-side demo (Web2 site and Web3 gate)
+- sdk/        SDK for verifiers
+- docs/decisions/ ADRs
+- docs/research/  competitive and technical research
+- docs/pitch/     pitch material
+- docs/legal/     primary-source notes on AML/CFT rules and JPKI
+- inbox/      photos / PDFs sent from the iPhone (move to the right place after processing)
 
-## 提出要件（公式ルールより）
-- **提出物はすべて英語**（§12）。README・動画・デモUI・主要docs は英語。新規ドキュメントは英語で書く
-- ライセンスは **GPL-3.0**（circomlib 依存のため）。リポジトリは提出直前に公開
-- 実カード・実個人情報を動画/リポジトリに出さない。Colosseum のロゴを使わない
+## Submission requirements (official rules)
+- **All submitted content in English** (§12): README, video, demo UI, docs. Write new documents in English
+- Licence **GPL-3.0** (circomlib dependency). Publish the repository just before submitting
+- No real cards or real personal data in the video or the repository. Do not use Colosseum logos
 
-## 作業ルール（リモート操作前提）
-- **報告はスマホで読める短さに**: 結論→変更点→次の判断事項、の順で数行。長い出力はファイルに書いてパスを示す。
-- **判断が必要なときは選択肢を2〜3個に絞って質問する。** 勝手に大きな方針転換をしない。
-- **小さくコミット**: 意味のある単位で commit し、メッセージは**英語**で具体的に（提出物の英語要件のため、2026-10-04以降）。
-- **長い処理（ビルド、セットアップ、ベンチマーク）が終わったら通知する。**
-- **sudo が必要な操作は実行せず、コマンドを提示して止まる**（リモートからはパスワード入力できない）。
-- **実在の個人情報をリポジトリやテストに入れない。** テストは自前で生成したダミー証明書・鍵を使う。
-- 秘密鍵・.env・Solanaキーペアは読まない、コミットしない。
-- 規制や仕様に関する主張は docs/legal/ に一次資料URL付きで記録し、推測と事実を分ける。
+## Working rules (remote operation)
+- **Talk to the user in Japanese**; everything committed to the repository is in English.
+- **Keep reports short enough to read on a phone**: conclusion → changes → next decisions, in a few lines. Write long output to a file and give the path.
+- **When a decision is needed, ask with 2–3 options.** Do not make large changes of direction on your own.
+- **Commit small**: meaningful units, specific commit messages **in English** (since 2026-10-04, for the English requirement).
+- **Notify when long jobs finish** (builds, setup, benchmarks).
+- **Do not run anything that needs sudo**; show the command and stop (no password input remotely).
+- **No real personal data in the repository or tests.** Tests use self-generated dummy certificates and keys.
+- Do not read or commit private keys, .env files or Solana keypairs.
+- Record regulatory and specification claims in docs/legal/ with primary-source URLs, separating facts from inferences.

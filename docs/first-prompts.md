@@ -1,19 +1,19 @@
-# iPhoneから最初に送る指示（コピペ用）
+# First instructions sent from the iPhone (copy-paste)
 
-## 1. ツールチェーン導入
-CLAUDE.md を読んで。暫定スタック（Rust, Solana CLI, Anchor, Node LTS, circom, snarkjs）の導入状況を確認し、
-未導入のものを公式ドキュメントの最新手順で入れて。sudoが要るものはコマンドだけ示して止まって。
-終わったらバージョン一覧を docs/toolchain.md に書いて通知して。
+## 1. Toolchain
+Read CLAUDE.md. Check the provisional stack (Rust, Solana CLI, Anchor, Node LTS, circom, snarkjs), install what is
+missing following the latest official instructions, and stop with the commands if anything needs sudo.
+When done, write the versions to docs/toolchain.md and notify me.
 
-## 2. 技術リスクの spike（最優先）
-RSA-2048 署名検証 + SHA-256 を含む Circom 回路の制約数とプルーフ生成時間を見積もるspikeを
-circuits/ に作って。既存実装（Anon Aadhaar, zk-email の RSA 回路など）を参考に、
-ダミー鍵で検証まで通し、結果を docs/research/rsa-spike.md にまとめて。
+## 2. Technical-risk spike (top priority)
+Build a spike in circuits/ that estimates the constraint count and proving time of a Circom circuit including
+RSA-2048 signature verification + SHA-256. Use existing implementations (Anon Aadhaar, zk-email's RSA circuits) as
+references, verify with dummy keys end to end, and summarise in docs/research/rsa-spike.md.
 
-## 3. 競合調査
-Self Protocol, zkPassport, Anon Aadhaar, Civic, Solana Attestation Service を比較して
-docs/research/competitors.md にまとめて。差別化ポイントの仮説も3つ書いて。
+## 3. Competitive research
+Compare Self Protocol, zkPassport, Anon Aadhaar, Civic and Solana Attestation Service in docs/research/competitors.md,
+with three differentiation hypotheses.
 
-## 4. Solana側の土台
-programs/ に Anchor プロジェクトを作り、groth16-solana で固定の検証鍵のプルーフを検証し、
-nullifier を PDA に記録して二重使用を拒否する最小プログラムとテストを書いて。
+## 4. Solana foundation
+Create an Anchor project in programs/ with a minimal program and tests that verify a proof against a fixed verifying
+key with groth16-solana and record the nullifier in a PDA to reject double use.
