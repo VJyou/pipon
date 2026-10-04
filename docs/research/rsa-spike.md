@@ -47,8 +47,20 @@ DOB オフセットを住所に向ける、公開鍵オフセットずらし、�
 - カードのチャレンジ署名が `DigestInfo(SHA-256)` 付き PKCS#1 v1.5 であること（myna-card の `Sha256DigestInfo` と整合）を実カードで確認。
 - 証明書の `notBefore`（発行後N日以内ポリシー）は未実装。
 
+## Solana 検証（`programs/zk_gate`）
+- `initialize_gate(scope, min_age, allowed_prefectures(bitmask), ca_key_hashes)` / `claim(proof)`。
+- `claim` はプログラム側で公開入力を再構成する（`chalMsg = SHA256(claimer‖nonce)`、`min_age`・`scope` はゲート設定、日付は Clock から JST で当日/前日のみ許可）。
+  → 他人のウォレットへの証明の流用、年齢閾値・都道府県の詐称、別ゲートへの使い回しはすべて検証失敗になる。
+- nullifier PDA `["nullifier", gate, nullifier]` を `init` → 同一人物の2回目は失敗（一人一回）。
+- **claim の消費 CU: 132,342**（Groth16 検証＋PDA作成込み、LiteSVM 計測）。デフォルト上限 200k 内に収まる。
+- テスト: `anchor build && cargo test -p zk_gate`（7件: 正常＋リプレイ、他人ウォレット、不許可県、県の詐称、未登録CA、古い日付、別scope）。
+- J-LIS 署名用CA の `caKeyHash`（`node circuits/scripts/export_solana.cjs cahash circuits/fixtures/jlis/*.cer`）:
+  - signca02: `0x0f8b63a80a1d2072363fd99ae06672d403b8ea2506aefba46c1076edd32f2e93`
+  - signca03: `0x019d96eda27d0ab684f26405ef59ff856afd20fe36b9932a8a28434e6e55dfb8`
+- 未実装: 実際のミント（Metaplex Core 等の CPI）、ゲート設定の更新、devnet デプロイ。
+
 ## 次の打ち手（優先順）
 1. **zkey サイズ削減**: 実 TBS を測り maxTbs を最小化（1024 なら約0.94M制約、zkey 約600MB見込み）。
 2. **モバイル証明**: mopro / rapidsnark iOS で iPhone 実測。zkey はアプリ初回にダウンロード＋キャッシュ。
-3. **Solana 検証**: groth16-solana で公開入力8個の検証 CU を計測、nullifier PDA。
+3. **ミント**: claim 成功時に Metaplex Core でミント、devnet デプロイ。
 4. 代替案（必要時のみ）: Noir/UltraHonk（trusted setup 不要・鍵小）だがオンチェーン検証コストが課題。

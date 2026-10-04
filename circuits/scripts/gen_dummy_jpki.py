@@ -35,7 +35,7 @@ PERSON = {
     "addr": os.environ.get("ADDR", "東京都千代田区霞が関一丁目１番１号"),
 }
 PREFECTURE_CODE = 13  # 東京都 (JIS X 0401)
-CURRENT_DATE = 20261004
+CURRENT_DATE = int(os.environ.get("CURRENT_DATE", "20261004"))
 AGE_THRESHOLD = 20
 SCOPE = 1  # service identifier, public
 
@@ -133,8 +133,9 @@ def main() -> None:
     addr_long = 1 if addr_hdr[1] == 0x81 else 0
 
     # Challenge: the card signs SHA-256(msg) with PKCS#1 v1.5. msg binds the wallet + nonce.
-    wallet = bytes(range(32))  # dummy wallet pubkey
-    nonce = (12345).to_bytes(8, "big")
+    # WALLET: hex of the claimer's 32-byte Solana pubkey; NONCE: decimal u64 (big-endian on the wire).
+    wallet = bytes.fromhex(os.environ["WALLET"]) if "WALLET" in os.environ else bytes(range(32))
+    nonce = int(os.environ.get("NONCE", "12345")).to_bytes(8, "big")
     msg = hashlib.sha256(wallet + nonce).digest()
     chal_sig = user_key.sign(msg, padding.PKCS1v15(), hashes.SHA256())
 
