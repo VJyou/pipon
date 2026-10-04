@@ -1,0 +1,29 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(git status:*)",
+      "Bash(git diff:*)",
+      "Bash(git log:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)",
+      "Bash(ls:*)",
+      "Bash(cat:*)",
+      "Bash(npm run:*)",
+      "Bash(npm test:*)",
+      "Bash(npx snarkjs:*)",
+      "Bash(circom:*)",
+      "Bash(cargo build:*)",
+      "Bash(cargo test:*)",
+      "Bash(anchor build:*)",
+      "Bash(anchor test:*)"
+    ],
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(~/.config/solana/**)",
+      "Read(~/.ssh/**)",
+      "Bash(git push --force:*)",
+      "Bash(rm -rf /:*)"
+    ]
+  }
+}

@@ -1,0 +1,36 @@
+# deps / build
+node_modules/
+target/
+dist/
+build/
+.anchor/
+test-ledger/
+
+# secrets
+.env
+.env.*
+*.keypair.json
+id.json
+*.pem
+*.key
+
+# ZK artifacts (large / regenerable)
+*.ptau
+*.zkey
+*.r1cs
+*.wtns
+circuits/build/
+circuits/**/*_js/
+circuits/**/*_cpp/
+
+# personal data must never be committed
+circuits/fixtures/real/
+inbox/*
+!inbox/.gitkeep
+
+# local claude settings
+.claude/settings.local.json
+
+# OS / editor
+.DS_Store
+*.swp
