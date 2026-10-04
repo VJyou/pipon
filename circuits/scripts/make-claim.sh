@@ -1,11 +1,16 @@
 #!/usr/bin/env bash
 # Make a claim.json for a wallet and today's JST date, using the persistent dummy CA (build/dummy-ca.pem).
-#   scripts/make-claim.sh <wallet-pubkey-base58> <out.json>
+#   scripts/make-claim.sh <wallet-pubkey-base58 | 64-hex binding> <out.json>
+# Also leaves snarkjs-format proof.json/public.json in build/claim-tmp/ (off-chain verification).
 set -euo pipefail
 cd "$(dirname "$0")/.."
 B=build; C=jpki_age_region; D=$B/claim-tmp
 RAPIDSNARK=${RAPIDSNARK:-$(ls -d "$HOME"/tools/rapidsnark-linux-x86_64-*/bin/prover | head -1)}
-WALLET_HEX=$(node -e "const {PublicKey}=require('../sdk/node_modules/@solana/web3.js');console.log(Buffer.from(new PublicKey(process.argv[1]).toBytes()).toString('hex'))" "$1")
+if [[ "$1" =~ ^[0-9a-f]{64}$ ]]; then
+  WALLET_HEX=$1
+else
+  WALLET_HEX=$(node -e "const {PublicKey}=require('../sdk/node_modules/@solana/web3.js');console.log(Buffer.from(new PublicKey(process.argv[1]).toBytes()).toString('hex'))" "$1")
+fi
 export NONCE=$(od -An -N4 -tu4 /dev/urandom | tr -d ' ')
 mkdir -p $D
 OUT_DIR=$D CA_KEY=$B/dummy-ca.pem WALLET=$WALLET_HEX CURRENT_DATE=$(TZ=Asia/Tokyo date +%Y%m%d) \

@@ -31,13 +31,13 @@ OID_ADDR = "1.2.392.200149.8.5.5.5"
 PERSON = {
     "name": "試験　太郎",
     "sex": "1",
-    "dob": "419990401",
+    "dob": os.environ.get("DOB", "419990401"),
     "addr": os.environ.get("ADDR", "東京都千代田区霞が関一丁目１番１号"),
 }
-PREFECTURE_CODE = 13  # 東京都 (JIS X 0401)
+PREFECTURE_CODE = int(os.environ.get("PREFECTURE_CODE", "13"))  # 東京都 (JIS X 0401); the claimed code
 CURRENT_DATE = int(os.environ.get("CURRENT_DATE", "20261004"))
 AGE_THRESHOLD = 20
-SCOPE = 1  # service identifier, public
+SCOPE = int(os.environ.get("SCOPE", "1"))  # service identifier, public (nullifiers differ per scope)
 
 
 def utf8_der(s: str) -> bytes:
@@ -77,21 +77,25 @@ def sha_pad(msg: bytes, max_len: int) -> tuple[list[int], int]:
     return list(p) + [0] * (max_len - len(p)), len(p)
 
 
+def load_or_create_key(path: str | None) -> rsa.RSAPrivateKey:
+    """Dummy RSA key, persisted at `path` (under gitignored build/) when given."""
+    if path and os.path.exists(path):
+        with open(path, "rb") as f:
+            return serialization.load_pem_private_key(f.read(), password=None)
+    key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    if path:
+        with open(path, "wb") as f:
+            f.write(key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                                      serialization.NoEncryption()))
+    return key
+
+
 def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     now = datetime.datetime(2026, 10, 1, tzinfo=datetime.timezone.utc)
 
-    # CA_KEY: reuse a dummy CA key (PEM, kept under gitignored build/) so a deployed gate keeps trusting it.
-    ca_key_path = os.environ.get("CA_KEY")
-    if ca_key_path and os.path.exists(ca_key_path):
-        with open(ca_key_path, "rb") as f:
-            ca_key = serialization.load_pem_private_key(f.read(), password=None)
-    else:
-        ca_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
-        if ca_key_path:
-            with open(ca_key_path, "wb") as f:
-                f.write(ca_key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
-                                             serialization.NoEncryption()))
+    # CA_KEY: reuse a dummy CA key so a deployed gate keeps trusting it.
+    ca_key = load_or_create_key(os.environ.get("CA_KEY"))
     ca_name = x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, "JP"),
         x509.NameAttribute(NameOID.ORGANIZATION_NAME, "JPKI-DUMMY"),
@@ -107,7 +111,8 @@ def main() -> None:
         .sign(ca_key, hashes.SHA256())
     )
 
-    user_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    # USER_KEY + SERIAL: a stable dummy "card" (same certificate -> same nullifier across proofs).
+    user_key = load_or_create_key(os.environ.get("USER_KEY"))
     san = x509.SubjectAlternativeName([
         x509.OtherName(x509.ObjectIdentifier(OID_NAME), utf8_der(PERSON["name"])),
         x509.OtherName(x509.ObjectIdentifier(OID_SEX), utf8_der(PERSON["sex"])),
@@ -123,7 +128,7 @@ def main() -> None:
         ]))
         .issuer_name(ca_name)
         .public_key(user_key.public_key())
-        .serial_number(x509.random_serial_number())
+        .serial_number(int(os.environ["SERIAL"]) if "SERIAL" in os.environ else x509.random_serial_number())
         .not_valid_before(now).not_valid_after(now + datetime.timedelta(days=365 * 5))
         .add_extension(x509.KeyUsage(True, True, False, False, False, False, False, False, False), critical=True)
         .add_extension(san, critical=False)
