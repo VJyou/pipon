@@ -18,7 +18,7 @@
   Solana Attestation Service との接続、Agent決済（x402等）との統合。
 
 ## 未決定（決めたら docs/decisions/ にADRを書き、ここを更新）
-- MVPユースケース: (A) 年齢/固有性証明→ゲート付きミント (B) 検証済み人間によるAI Agent委任
+- ~~MVPユースケース~~ → **決定: 年齢＋都道府県＋一人一回 → ゲート付きミント**（ADR-0002）
 - ZKスタック: Circom+Groth16（groth16-solana）暫定。Noir等と比較が必要なら spike で判断
 - ~~証明元~~ → **決定: JPKI（署名用=属性、利用者証明用=固有性）**（ADR-0001, docs/legal/proof-sources.md）
 - 失効確認の扱い（J-LIS問い合わせは認定が必要。暫定は「発行後N日以内の証明のみ有効」）
