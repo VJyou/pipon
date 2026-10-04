@@ -41,8 +41,14 @@ scripts/rc.sh        # tmux session "zk"; press SPACE for the QR code, connect f
 ## 5. Circuit artifacts
 The Mac needs the **same** `jpki_age_region.zkey` that produced the verifying key deployed on devnet
 (re-running the setup creates a different key and would require redeploying `zk_gate`).
-Copy `circuits/build/{jpki_age_region.zkey, jpki_age_region_js/jpki_age_region.wasm, vkey.json}` from the Linux box
-(about 940 MB) — e.g. `scp` on the LAN, or a release asset on the private repo via `gh release`.
+The bundle is prepared on the Linux box at `~/zkcredentials/circuits/build/transfer/` (894 MB: zkey, wasm, vkey.json,
+dummy CA / dummy persona keys for the demo, `SHA256SUMS`). Copy it with a USB stick (exFAT or FAT32 is fine; largest file 928 MB), then on the Mac:
+```bash
+mkdir -p ~/zkcredentials/circuits/build && cp /Volumes/<USB>/transfer/* ~/zkcredentials/circuits/build/
+cd ~/zkcredentials/circuits/build && shasum -a 256 -c SHA256SUMS
+mkdir -p jpki_age_region_js && mv jpki_age_region.wasm jpki_age_region_js/
+```
+The dummy keys are test-only, but keep them off git (`circuits/build/` is ignored).
 
 ## 6. iPhone [local]
 - Settings → Privacy & Security → **Developer Mode** on (appears after the first Xcode run).
