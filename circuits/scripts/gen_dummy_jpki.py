@@ -81,7 +81,17 @@ def main() -> None:
     os.makedirs(OUT, exist_ok=True)
     now = datetime.datetime(2026, 10, 1, tzinfo=datetime.timezone.utc)
 
-    ca_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    # CA_KEY: reuse a dummy CA key (PEM, kept under gitignored build/) so a deployed gate keeps trusting it.
+    ca_key_path = os.environ.get("CA_KEY")
+    if ca_key_path and os.path.exists(ca_key_path):
+        with open(ca_key_path, "rb") as f:
+            ca_key = serialization.load_pem_private_key(f.read(), password=None)
+    else:
+        ca_key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+        if ca_key_path:
+            with open(ca_key_path, "wb") as f:
+                f.write(ca_key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                                             serialization.NoEncryption()))
     ca_name = x509.Name([
         x509.NameAttribute(NameOID.COUNTRY_NAME, "JP"),
         x509.NameAttribute(NameOID.ORGANIZATION_NAME, "JPKI-DUMMY"),

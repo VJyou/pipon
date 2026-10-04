@@ -1,0 +1,11 @@
+{
+  "name": "zkcredentials-sdk",
+  "private": true,
+  "main": "src/zkGate.cjs",
+  "scripts": {
+    "demo:devnet": "node scripts/devnet-demo.cjs"
+  },
+  "dependencies": {
+    "@solana/web3.js": "^1.99.0"
+  }
+}

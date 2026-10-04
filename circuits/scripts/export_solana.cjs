@@ -1,6 +1,6 @@
 // Export Groth16 artifacts for the Solana program (groth16-solana byte layout).
 //   node scripts/export_solana.cjs vk                      -> programs/zk_gate/src/vk.rs
-//   node scripts/export_solana.cjs proof <proof> <public>  -> programs/zk_gate/tests/fixtures/claim.json
+//   node scripts/export_solana.cjs proof <proof> <public> [out.json] -> programs/zk_gate/tests/fixtures/claim.json
 //   node scripts/export_solana.cjs cahash <ca.der>...      -> caKeyHash (= PoseidonLarge(121,17) of the RSA modulus)
 const fs = require("fs");
 const path = require("path");
@@ -42,10 +42,10 @@ function exportVk() {
   console.log(`vk.rs written (nPublic=${vk.nPublic})`);
 }
 
-function exportProof(proofPath, publicPath) {
+function exportProof(proofPath, publicPath, outPath) {
   const proof = JSON.parse(fs.readFileSync(proofPath));
   const pub = JSON.parse(fs.readFileSync(publicPath));
-  const input = JSON.parse(fs.readFileSync(path.join(root, "fixtures", "dummy", "input.json")));
+  const input = JSON.parse(fs.readFileSync(process.env.INPUT || path.join(root, "fixtures", "dummy", "input.json")));
   const out = {
     proof_a: g1neg(proof.pi_a),
     proof_b: g2(proof.pi_b),
@@ -55,10 +55,10 @@ function exportProof(proofPath, publicPath) {
     current_date: input.currentDate,
     prefecture_code: input.prefectureCode,
   };
-  const dir = path.join(prog, "tests", "fixtures");
-  fs.mkdirSync(dir, { recursive: true });
-  fs.writeFileSync(path.join(dir, "claim.json"), JSON.stringify(out, null, 2));
-  console.log("claim.json written");
+  const dst = outPath || path.join(prog, "tests", "fixtures", "claim.json");
+  fs.mkdirSync(path.dirname(dst), { recursive: true });
+  fs.writeFileSync(dst, JSON.stringify(out, null, 2));
+  console.log(`${dst} written`);
 }
 
 async function caHash(files) {
@@ -79,7 +79,7 @@ async function caHash(files) {
 
 const [cmd, ...args] = process.argv.slice(2);
 if (cmd === "vk") exportVk();
-else if (cmd === "proof") exportProof(args[0], args[1]);
+else if (cmd === "proof") exportProof(args[0], args[1], args[2]);
 else if (cmd === "cahash") caHash(args);
 else {
   console.error("usage: export_solana.cjs vk | proof <proof.json> <public.json> | cahash <ca.der>...");
