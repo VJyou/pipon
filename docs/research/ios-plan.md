@@ -6,9 +6,20 @@ generate the Groth16 proof **on the iPhone**, and hand the claim to the web demo
 ## Stack (proposal)
 - **SwiftUI native app** (not Expo): Core NFC and mopro both have first-class Swift support; fewer bridges in 4 days.
 - **mopro 0.3.7** (`mopro-ffi` → `Mopro.xcframework` + `mopro.swift`) with `circom-prover` features
-  `witnesscalc` (native witness) + `rapidsnark` (native prover). Fallback: `rustwitness` + `arkworks`.
+  **`rustwitness` + `rapidsnark`** (measured below). Fallback for proving: `arkworks`.
 - Inputs are flat 1-D arrays, which mopro's JSON input format supports.
 - zkey (928 MB) bundled for development; for TestFlight download on first launch and cache.
+
+## Pre-flight measurements on Linux (i7-10750H, 2026-10-04)
+| Backend | Result |
+|---|---|
+| circom-witnesscalc 0.2.1 graph (`circom-witnesscalc` feature) | **Fails**: `build-circuit` panics on zk-email's `long_div` (control flow depends on signal values) |
+| rust-witness 0.1.6 (wasm → C via w2c2, `rustwitness` feature) | **Works**: 3.5 s, 354 MB peak; all 1,471,911 witness values identical to snarkjs/wasm |
+| iden3 witnesscalc C++ (`witnesscalc` feature) | Not built yet; `circom --c` sources generate fine (`build/jpki_age_region_cpp`, 27 MB) — backup option |
+| rapidsnark 0.0.8 prover | 6.0 s, **1.28 GB peak** (iPhone 15 Pro Max has 8 GB) |
+| wasm witness (node) for reference | 7.3 s, 507 MB peak |
+
+Mac needs `brew install cmake nasm` (w2c2 / gmp builds).
 
 ## Card protocol (JPKI-AP, ISO 7816 over Core NFC)
 | Step | APDU | Notes |

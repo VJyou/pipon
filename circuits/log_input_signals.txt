@@ -1,0 +1,14 @@
+main.chalMsg 2
+main.currentDate 1
+main.ageThreshold 1
+main.prefectureCode 1
+main.scope 1
+main.tbs 2048
+main.tbsPaddedLen 1
+main.caSig 17
+main.caModulus 17
+main.modOffset 1
+main.dobOidOffset 1
+main.addrOidOffset 1
+main.addrLongForm 1
+main.chalSig 17

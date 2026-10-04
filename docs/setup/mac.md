@@ -15,7 +15,7 @@ Target: Mac mini (Apple silicon, 24 GB / 512 GB), iPhone 15 Pro Max. Steps marke
 
 ## 2. Toolchain
 ```bash
-brew install cmake node git tmux gh
+brew install cmake nasm node git tmux gh
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
 source "$HOME/.cargo/env"
 rustup target add aarch64-apple-ios aarch64-apple-ios-sim
