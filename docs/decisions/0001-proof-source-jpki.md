@@ -1,24 +1,26 @@
-# ADR-0001: 証明元を JPKI（公的個人認証AP）に固定する
+# ADR-0001: Use JPKI as the root of trust
 
-- 日付: 2026-10-04
-- 状態: 承認
+- Date: 2026-10-04
+- Status: Accepted
 
-## 背景
-クライアント側ZK証明の Root of Trust となるICチップのデータ源を決める必要がある。調査は `docs/legal/proof-sources.md`。
+## Context
+The client-side ZK proof needs an IC-chip data source as its root of trust. Research: `docs/legal/proof-sources.md`.
 
-## 選択肢
-1. JPKI 署名用／利用者証明用電子証明書
-2. 券面事項入力補助AP
-3. 運転免許証IC
+## Options
+1. JPKI signing / user-authentication certificates
+2. Card-face text AP (券面事項入力補助AP)
+3. Driver's licence IC
 
-## 決定
-JPKI に固定する。
-- 属性（年齢・地域）の証明 → **署名用電子証明書**（英数6〜16桁パスワード）
-- 固有性のみ → **利用者証明用電子証明書**（4桁PIN）
-- いずれもカード秘密鍵によるチャレンジ署名を回路内で検証し、チャレンジにウォレットアドレス等を束縛する。
+## Decision
+Use JPKI.
+- Attributes (age, region) → **signing certificate** (6–16 character password)
+- Uniqueness only → **user-authentication certificate** (4-digit PIN)
+- In both cases the circuit verifies a signature by the card's private key over a challenge bound to the wallet or session.
 
-## 理由・トレードオフ
-- 一次資料（CPS、公開CA証明書）が揃い、個人番号に一切触れない。
-- 券面事項入力補助APは署名対象に個人番号ハッシュを含み、CA鍵が非公開。免許証ICは署名対象が大きく PIN2回、公開鍵配布が不明。
-- トレードオフ: 署名用パスワードのUXが重い（5回誤りで閉塞）。失効情報は認定なしでは取得できないため、失効確認は当面行わない。
-- 次期カード（2028年度目標）は ECDSA へ移行見込み → 将来回路の追加が必要。
+## Consequences
+- Primary documentation is available (CPS, published CA certificates) and the Individual Number is never touched.
+- The card-face AP signs a record that includes a hash of the Individual Number and its CA key is unpublished; the
+  driver's licence signs a large blob including domicile and photo, needs two PINs and has no documented key distribution.
+- Trade-offs: the signing password is heavier UX (locks after 5 wrong tries). Revocation data needs government
+  certification, so revocation is not checked for now.
+- The next-generation card (target FY2028) is expected to move to ECDSA → a second circuit will be needed later.

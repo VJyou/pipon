@@ -1,100 +1,120 @@
-# 証明元（Root of Trust）調査：JPKI / 券面事項入力補助AP / 運転免許証IC / iPhone
+# Root of trust: JPKI / card-face text AP / driver's licence IC / iPhone
 
-調査日: 2026-10-04。凡例: **[事実]** 一次資料で確認 / **[二次]** OSS・事業者記事等（一次未確認） / **[推測]** 当方の解釈（要専門家確認）
+Researched 2026-10-04. Legend: **[Fact]** checked against a primary source · **[Secondary]** OSS or vendor articles (primary
+source not yet checked) · **[Inference]** our reading, needs expert confirmation.
+Japanese names of laws and documents are kept in parentheses so they can be looked up.
 
-## 結論（推奨）
+## Conclusion
 
-| 用途 | 推奨ソース | 理由 |
+| Use | Source | Why |
 |---|---|---|
-| 年齢証明（age>=20） | **JPKI 署名用電子証明書** | 一次資料が最も揃う（CA証明書・CPS公開）。個人番号に一切触れない |
-| 固有性（unique_human）のみ | **JPKI 利用者証明用電子証明書** | 属性なし・4桁PIN。UXが最も良い |
-| 予備 | 券面事項入力補助AP | 4桁PINで生年月日が取れるが、CA鍵が非公開・署名対象に個人番号ハッシュを含む |
-| 対象外（MVP） | 運転免許証IC | 署名対象に本籍・写真を含み PIN1+PIN2 必須。公開鍵の配布方法不明。マイナ免許証移行で将来性も低い |
+| Age (≥ 20) and region | **JPKI signing certificate** (署名用電子証明書) | Best primary documentation (public CA certificate and CPS); never touches the Individual Number |
+| Uniqueness only | **JPKI user-authentication certificate** (利用者証明用電子証明書) | No attributes, 4-digit PIN; best UX |
+| Backup | Card-face text AP (券面事項入力補助AP) | 4-digit PIN gives the date of birth, but the CA key is unpublished and the signed record contains a hash of the Individual Number |
+| Out of scope (MVP) | Driver's licence IC | Signed data includes registered domicile and photo, needs PIN1 + PIN2, public-key distribution unknown |
 
-**全方式共通の設計要件**: 証明書は秘密情報ではない（コピー可能）ため、「証明書を知っている」だけでは本人性の証明にならない。
-**カード秘密鍵によるチャレンジ署名（PIN/パスワード必須）を回路内で検証**し、チャレンジにウォレットアドレス等を束縛する必要がある → 回路内 RSA-2048 検証は最低2回（CA→証明書、証明書→チャレンジ）。
+**Design requirement for every source**: a certificate is not secret (it can be copied), so knowing it proves nothing.
+The circuit must verify **a signature by the card's private key over a challenge** (PIN/password required) bound to the
+wallet or session → at least two RSA-2048 verifications in the circuit (CA → certificate, certificate → challenge).
 
 ---
 
-## 1. JPKI（公的個人認証AP）
+## 1. JPKI (public-key authentication application)
 
-- **[事実]** 署名用電子証明書: 基本4情報（氏名・住所・生年月日・性別）を記録、15歳以上に発行。利用者証明用電子証明書: 基本4情報なし。
-  — 公的個人認証サービス利用のための民間事業者向けガイドライン 第1.6版（令和7年10月）
+- **[Fact]** The signing certificate records the four basic attributes (name, address, date of birth, sex) and is issued
+  to holders aged 15+. The user-authentication certificate records none of them.
+  — Guidelines for private businesses using JPKI, v1.6 (公的個人認証サービス利用のための民間事業者向けガイドライン 第1.6版, Oct 2025)
   https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/1f2fb150-febe-4bee-b691-f02f68c4e8d4/3d68c090/20251010_policies_mynumber_private-business_outline_01.pdf
-- **[事実]** 鍵: 署名用CA・署名利用者とも **RSA 2048ビット**（CPS 6.1.5）。
-  — 署名用認証局 運用規程 第3.3版（2026-05-26） https://www.jpki.go.jp/ca/pdf/sign_cps.pdf
-- **[事実]** 署名用CA自己署名証明書は公開されている（CPS 2.2）。取得・確認結果（2026-10-04、openssl）:
+- **[Fact]** Keys: the signing CA and holders use **RSA 2048-bit** (CPS 6.1.5).
+  — Signing CA Certification Practice Statement v3.3 (署名用認証局 運用規程, 2026-05-26) https://www.jpki.go.jp/ca/pdf/sign_cps.pdf
+- **[Fact]** The signing CA's self-signed certificates are public (CPS 2.2). Downloaded and checked on 2026-10-04 with openssl:
 
-  | ファイル | 有効期間 | SHA-256 fingerprint |
+  | File | Validity | SHA-256 fingerprint |
   |---|---|---|
-  | signca01.cer | 2015-10-20〜2025-10-19（期限切れ） | 19:64:54:05:…:FC:93:55 |
-  | signca02.cer | 2019-09-14〜2029-09-14 | 79:67:9C:33:…:E6:FB:EB |
-  | signca03.cer | 2023-07-16〜2033-07-15 | D2:27:F6:CD:…:FA:36:5F |
+  | signca01.cer | 2015-10-20 – 2025-10-19 (expired) | 19:64:54:05:…:FC:93:55 |
+  | signca02.cer | 2019-09-14 – 2029-09-14 | 79:67:9C:33:…:E6:FB:EB |
+  | signca03.cer | 2023-07-16 – 2033-07-15 | D2:27:F6:CD:…:FA:36:5F |
 
-  いずれも RSA-2048, e=65537, sha256WithRSAEncryption。配布元 https://www.jpki.go.jp/ca/ca_rules3.html
-  fingerprint は J-LIS 公表値と3件とも一致（https://www.jpki.go.jp/ca/pdf/sign_fingerprint.pdf, 2026-10-04照合）。
-  証明書は `circuits/fixtures/jlis/` に保存（公開情報）。
-- **[事実]** 署名用電子証明書の有効期間: 発行後5回目の誕生日まで（カード有効期限・利用者証明用の期限が早ければそちら）。スマホ用は紐づくカード用の期限まで（CPS 6.3.2.2）。
-  → 証明書の notBefore を回路で読めば「発行後N日以内」ポリシーを実装可能。
-- **[事実]** 失効事由: 有効期間満了／カード・スマホの紛失等／（署名用のみ）婚姻による氏名変更、引越しによる住所変更等（ガイドライン 第2章(2)イ）。
-- **[事実]** 民間事業者が**失効情報**を入手するには公的個人認証法17条1項6号の主務大臣認定が必要（ガイドライン 第4章(2)）。
-  認定を受けた署名検証者には、利用者の公開鍵・失効情報等の目的外利用禁止等が課される（同 表4-1）。
-- **[事実]** CPS 2.2: 「署名用電子証明書の失効情報は法に基づき署名検証者等に限定して提供する」。
-- **[二次]** 署名用電子証明書の読出しには署名用パスワード（英数6〜16桁）が必要。利用者証明用証明書はPINなしで読出し可、署名操作は4桁PIN。
+  All RSA-2048, e = 65537, sha256WithRSAEncryption. Source: https://www.jpki.go.jp/ca/ca_rules3.html.
+  All three fingerprints match J-LIS's published list (https://www.jpki.go.jp/ca/pdf/sign_fingerprint.pdf).
+  Stored in `circuits/fixtures/jlis/` (public data).
+- **[Fact]** Validity of a signing certificate: until the holder's 5th birthday after issuance, or earlier if the card or
+  the authentication certificate expires first; smartphone certificates follow the card's (CPS 6.3.2.2).
+  → reading `notBefore` in the circuit allows an "issued within N days" policy.
+- **[Fact]** Revocation reasons: expiry; loss/theft of the card or phone; and, for the signing certificate only, a change of
+  name or address (Guidelines ch. 2 (2) イ).
+- **[Fact]** A private business needs ministerial certification under Art. 17(1)(vi) of the JPKI Act to obtain
+  **revocation information** (Guidelines ch. 4 (2)). Certified verifiers must not use holders' public keys or revocation
+  data for other purposes (Table 4-1).
+- **[Fact]** CPS 2.2: revocation information for signing certificates is provided only to signature verifiers as defined by law.
+- **[Secondary]** Reading the signing certificate requires the signing password (6–16 alphanumerics). The authentication
+  certificate is readable without a PIN; signing with it needs the 4-digit PIN.
   — https://tex2e.github.io/blog/crypto/my-number-card , https://github.com/soltia48/myna-card
-- **[二次]** 基本4情報は subjectAltName の OtherName に格納。OID 1.2.392.200149.8.5.5.{1:氏名, 3:性別, 4:生年月日（EYYYYMMDD, E=元号）, 5:住所}。
-  一次資料は J-LIS「公的個人認証サービス プロファイル仕様書 3.2版」https://www.j-lis.go.jp/file/13_profile_genkou.pdf （Cloudflare によりCLI取得不可 → 要手動確認）
-- **[二次]** AID: JPKI-AP = `D3 92 F0 00 26 01 00 00 00 01`（iOS Core NFC の select-identifiers に登録が必要）
+- **[Secondary]** The attributes are subjectAltName OtherName values, OID 1.2.392.200149.8.5.5.{1 name, 3 sex,
+  4 date of birth `EYYYYMMDD` (E = era), 5 address}. Primary source: J-LIS certificate profile v3.2
+  (公的個人認証サービス プロファイル仕様書) https://www.j-lis.go.jp/file/13_profile_genkou.pdf (blocked for scripted download; check manually).
+- **[Secondary]** AID of the JPKI application: `D3 92 F0 00 26 01 00 00 00 01` (must be listed for iOS Core NFC).
 
-### 法的論点（JPKI）
-- **[推測]** 認定が必須なのは「失効情報の入手」。端末内で CA 署名を検証するだけ（失効情報を使わない）のは公的個人認証法の認定対象外と読めるが、
-  **明文の根拠は未確認**。デジタル庁/総務省への照会 or 弁護士確認が必要。ピッチでは「失効確認は将来、認定事業者（プラットフォーム事業者特例）経由」と位置づけるのが安全。
-- **[推測]** 失効を見ないため、紛失・転居済みカードでも証明が作れてしまう → 暫定ポリシー「証明書発行後N日以内」は有効期間（最長5年）内の失効を拾えない点を明記すべき。
+### Legal questions (JPKI)
+- **[Inference]** Certification is required to *obtain revocation information*. Verifying the CA signature on the device
+  without revocation data reads as outside that requirement, **but we have not found an explicit basis**. To confirm with
+  the Digital Agency / Ministry of Internal Affairs or counsel. In the pitch: revocation checks later via a certified
+  platform operator (プラットフォーム事業者特例).
+- **[Inference]** Without revocation, a lost card or one whose holder has moved can still produce proofs. An "issued within
+  N days" policy does not catch revocations inside the (up to 5-year) validity; we state this limit.
 
-## 2. 券面事項入力補助AP
+## 2. Card-face text AP (券面事項入力補助AP)
 
-- **[二次]** 4桁PINで読出し。AID `D3 92 10 00 31 00 01 01 04 08`。EF構成（myna-card 実装より）:
-  - `0001` 個人番号 / `0002` 基本4情報 / `0003` 完全性レコード / `0004` カード検証可能証明書（CVC, X.509ではない）/ `0007` カード鍵の公開鍵＋発行者署名
-  - `0003` = `DF31: SHA-256(個人番号ファイル)` + `DF32: SHA-256(基本4情報ファイル)` + `DF33: RSA-2048署名`
-  - 照合番号B（生年月日6桁＋有効期限年4桁＋セキュリティコード4桁）では `0002`/`0003` は開くが `0001`（個人番号）は開かない
-  — https://github.com/soltia48/myna-card （リバースエンジニアリングに基づく）
-- **[二次]** 発行者CA鍵（証明者鍵ID `5000033`）は CVC に含まれず、**J-LIS による公開を確認できていない**（myna-card はカードから得た値を埋め込み）。
-- **[推測]** 個人番号本体は読まずに検証可能だが、`0003` に**個人番号ファイルのSHA-256（12桁ゆえ総当たり可能）**が含まれる。
-  番号法2条8項の「個人番号に代わって用いられる符号」に当たるかは不明 → 「個人番号は一切扱わない」方針と衝突しうるため MVP では非推奨。
+- **[Secondary]** Read with the 4-digit PIN; AID `D3 92 10 00 31 00 01 01 04 08`. Files (per the myna-card implementation):
+  - `0001` Individual Number / `0002` four attributes / `0003` integrity record / `0004` card-verifiable certificate (not X.509) /
+    `0007` card key + issuer signature
+  - `0003` = `DF31: SHA-256(Individual Number file)` + `DF32: SHA-256(attributes file)` + `DF33: RSA-2048 signature`
+  - Check code B (date of birth + expiry year + security code) opens `0002`/`0003` but not `0001`
+  — https://github.com/soltia48/myna-card (based on reverse engineering)
+- **[Secondary]** The issuer CA key (`5000033`) is not inside the CVC and **we could not find it published by J-LIS**.
+- **[Inference]** The attributes can be verified without reading the Individual Number itself, but `0003` contains a
+  **SHA-256 of the Individual Number file (12 digits, so brute-forceable)**. Whether that is a "code used in place of the
+  Individual Number" under the My Number Act Art. 2(8) is unclear → conflicts with our rule of never handling the
+  Individual Number; not used.
 
-## 3. 運転免許証IC
+## 3. Driver's licence IC
 
-- **[事実]** 仕様書V10（警察庁丁運発第145号, 令和6年7月19日）https://www.npa.go.jp/laws/notification/koutuu/menkyo/menkyo20240719_145.pdf
-  - 電子署名: SHA-256( DF1/EF01(880B) ‖ DF1/EF02(82B, 本籍) ‖ DF2/EF01(2005B, 写真) ) を RSA-2048・PKCS#1 v1.5 で署名（4項）。
-    図示されたパディングは `00 01 FF…FF 00 ‖ hash` で **DigestInfo なし**。
-  - 読出し: DF1/EF01 は PIN1、DF1/EF02（本籍）と DF2/EF01（写真）は **PIN1 AND PIN2**。PIN は交付後変更不可、3回で閉塞。
-  - 署名 EF07 に発行者名・主体者鍵識別子あり。**公開鍵の配布方法は本仕様書に記載なし**。
-- **[推測]** ハッシュ対象が約3KB（SHA-256 約47ブロック）と大きく、PIN2回入力。MVPには不向き。
+- **[Fact]** Specification v10 (National Police Agency notice 丁運発第145号, 2024-07-19)
+  https://www.npa.go.jp/laws/notification/koutuu/menkyo/menkyo20240719_145.pdf
+  - Signature: SHA-256(DF1/EF01 (880 B) ‖ DF1/EF02 (82 B, registered domicile) ‖ DF2/EF01 (2005 B, photo)), RSA-2048
+    PKCS#1 v1.5 (section 4); the drawn padding is `00 01 FF…FF 00 ‖ hash`, **without DigestInfo**.
+  - Reading: DF1/EF01 needs PIN1; DF1/EF02 and DF2/EF01 need **PIN1 and PIN2**; PINs cannot be changed, 3 tries.
+  - EF07 carries issuer name and subject key id; **public-key distribution is not described**.
+- **[Inference]** ~3 KB to hash (≈47 SHA-256 blocks) and two PINs: not suitable for the MVP.
 
-## 4. iPhone のマイナンバーカード（Apple Wallet / スマホ用電子証明書）
+## 4. My Number Card on iPhone (Apple Wallet / smartphone certificate)
 
-- **[事実]** 犯収法施行規則に「カード代替電磁的記録」（スマホ搭載）による確認方法（新規則6条1項1号ル）が新設。令和7年6月24日公布。J-LIS とスマホ保持者の電子署名で真正性を確認。
+- **[Fact]** The AML/CFT rules (犯収法施行規則) add identification by the smartphone-embedded card record
+  (new Art. 6(1)(i)(ル)), promulgated 2025-06-24; authenticity via signatures by J-LIS and the holder's phone.
   — Q&A https://www.npa.go.jp/sosikihanzai/jafic/hourei/data/25062401qa.pdf
-- **[二次/Apple]** Wallet 版は ISO 18013-5 mdoc。Verify with Wallet API で Age Over N 等を取得可。
-  検証者は **Apple の entitlement 承認＋日本法上の機能認証**が必要。IACA 証明書は J-LIS が公開（https://www.j-lis.go.jp/pn/mdociaca.html）。
-  — https://developer.apple.com/wallet/get-started-with-verify-with-wallet/
-- **[推測]** 第三者アプリが Wallet 内データを端末上で直接読んでZK証明を作ることはできない → 本プロジェクトの「クライアント側証明」には使えない。
-  一方で **「年齢だけ開示」は Apple が既に提供** → 差別化は「サービス横断の一人一回（nullifier）」「オンチェーン検証」「Apple承認・認定不要」に置くべき。
+- **[Secondary / Apple]** The Wallet card is an ISO 18013-5 mdoc; the Verify with Wallet API returns Age Over N etc.
+  Verifiers need **Apple entitlement approval and certification under Japanese law**. J-LIS publishes the IACA certificate
+  (https://www.j-lis.go.jp/pn/mdociaca.html). — https://developer.apple.com/wallet/get-started-with-verify-with-wallet/
+- **[Inference]** Third-party apps cannot read Wallet data on device to build a ZK proof → not usable for client-side
+  proving. Apple already offers "age only" disclosure, so we differentiate on **cross-service one-per-person
+  (nullifiers), on-chain verification, and no Apple approval or government certification for verifiers**.
 
-## 5. 犯収法 2027年4月改正（Why Now の裏取り）
+## 5. April 2027 AML/CFT change (the "why now")
 
-- **[事実]** 令和7年6月24日公布の改正（なりすまし等のリスクの高い確認方法の廃止等）。Q&A で、旧ホ方式（画像送信）の廃止、IC チップ情報送信方式（新ホ・ヘ・ト）では
-  「ICチップ情報が真正なものであることの確認」として「秘密鍵で暗号化されている当該ICチップ情報…を公開鍵で復号」する検証が求められると回答（Q6）。
+- **[Fact]** Amendment promulgated 2025-06-24 abolishing high-impersonation-risk methods. The Q&A confirms the end of the
+  photo-upload method and requires, for IC-chip methods, confirming authenticity of the chip data "by decrypting with the
+  public key the chip data encrypted with the private key" (Q6).
   — https://www.npa.go.jp/sosikihanzai/jafic/hourei/data/25062402qa.pdf
-- **[二次]** 施行日 2027-04-01（令和7年共同命令第3号）。— https://www.primagest.co.jp/column/hanshuho-2027-kaisei/ （官報で要確認）
+- **[Secondary]** Effective 2027-04-01. — https://www.primagest.co.jp/column/hanshuho-2027-kaisei/ (confirm in the Official Gazette)
 
-## 6. 将来リスク
+## 6. Future risk
 
-- **[二次]** 次期マイナンバーカード（2028年度目標）で RSA→ECDSA へ変更方向、電子証明書期限を10年へ延長検討。
-  — デジタル庁 次期個人番号カードタスクフォース資料 https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/c6296242-c198-4fcd-8a17-b6168f9f5fa1/56bcc279/20231121_meeting_mynumber-card-renewal_outline_04.pdf
-  → 回路は「RSA-2048 現行カード」で作り、ECDSA は将来対応としてピッチで言及。
+- **[Secondary]** The next-generation card (target FY2028) is expected to move from RSA to ECDSA and extend certificate
+  validity to 10 years. — Digital Agency task force material
+  https://www.digital.go.jp/assets/contents/node/basic_page/field_ref_resources/c6296242-c198-4fcd-8a17-b6168f9f5fa1/56bcc279/20231121_meeting_mynumber-card-renewal_outline_04.pdf
+  → the circuit targets current RSA-2048 cards; ECDSA support is future work.
 
 ## TODO
-- [ ] プロファイル仕様書3.2版をブラウザで取得し、SAN OID・証明書サイズを一次資料で確認
-- [ ] 「失効情報を使わない端末内検証」の適法性をデジタル庁/総務省に照会（ハッカソン後でも可）
-- [ ] 実カードで署名用証明書の DER サイズ・SAN 位置を計測（※証明書そのものはリポジトリに入れない）
+- [ ] Fetch profile v3.2 in a browser; confirm SAN OIDs and certificate size from the primary source
+- [ ] Ask the Digital Agency / MIC about on-device verification without revocation data (can be after the hackathon)
+- [ ] Measure the real signing certificate's DER size and SAN layout (record sizes only; never commit the certificate)

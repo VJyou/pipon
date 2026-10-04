@@ -1,23 +1,26 @@
-# ADR-0002: MVPユースケースを「年齢＋都道府県＋一人一回 → ゲート付きミント」にする
+# ADR-0002: MVP = age + prefecture + one-per-person → gated mint
 
-- 日付: 2026-10-04
-- 状態: 承認
+- Date: 2026-10-04
+- Status: Accepted
 
-## 背景
-候補は (A) 年齢/固有性証明→ゲート付きミント、(B) 検証済み人間によるAI Agent委任。
-Apple Wallet 版マイナンバーカードが既に年齢の選択的開示（Age Over N）を提供しているため、年齢だけでは差別化が弱い。
+## Context
+Candidates were (A) age / uniqueness proofs → gated mint and (B) delegation to AI agents by verified humans.
+Apple Wallet's My Number Card already offers selective disclosure of age (Age Over N), so age alone differentiates poorly.
 
-## 選択肢
-1. (A) 年齢のみ
-2. (A') 年齢＋都道府県＋nullifier
-3. (B) AI Agent 委任
+## Options
+1. (A) Age only
+2. (A') Age + prefecture + nullifier
+3. (B) AI-agent delegation
 
-## 決定
-(A') を採用する。署名用電子証明書1枚から1回の証明で `age>=20`・`都道府県コード`・`サービス別nullifier` を出力し、
-Solana 上で Groth16 検証＋nullifier PDA による一人一回のゲート付きミントを行う。
+## Decision
+(A'). One proof from one signing certificate outputs `age ≥ 20`, the `prefecture code` and a per-service nullifier; on
+Solana, Groth16 verification plus a nullifier PDA gate a one-per-person mint.
 
-## 理由・トレードオフ
-- 都道府県は地域限定ミント/地域DAO/自治体ポイント等で「日本ならでは」を示せ、Apple Wallet と差別化できる。
-- 都道府県単位なら匿名集合は最小でも数十万人規模。市区町村は匿名性が下がるため MVP では扱わない。
-- 失効を見ないため、転居前の証明書で旧住所を証明できてしまう（最長5年）。「発行後N日以内」で緩和し、限界を明示する。
-- (B) は将来拡張としてピッチで言及する。
+## Consequences
+- Prefecture enables region-limited drops, local DAOs and municipal points — distinctly Japanese, and something Apple
+  Wallet does not offer.
+- At prefecture level the anonymity set is at least several hundred thousand people. Municipalities would shrink it too
+  much, so they are out of the MVP.
+- Without revocation, a certificate issued before a move can still prove the old address (up to 5 years). Mitigated by an
+  "issued within N days" policy; the limit is stated.
+- (B) is mentioned in the pitch as an extension.

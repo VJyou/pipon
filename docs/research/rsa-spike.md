@@ -1,66 +1,69 @@
-# RSA spike: JPKI 年齢＋都道府県＋nullifier 回路
+# Spike: JPKI age + prefecture + nullifier circuit
 
-日付: 2026-10-04 / 回路: `circuits/src/jpki_age_region.circom` / 再現: `cd circuits && npm i && scripts/build.sh`
+Date: 2026-10-04 · Circuit: `circuits/src/jpki_age_region.circom` · Reproduce: `cd circuits && npm i && scripts/build.sh`
 
-## 結論
-- **ダミーJPKI証明書で end-to-end（回路→Groth16証明→検証）が通った。** 改ざん系の否定テスト10件もすべて期待どおり拒否。
-- 制約数 **1.49M**（maxTbs=2048B）。PC（i7-10750H）で rapidsnark **4.6秒**、snarkjs 31秒。
-- **最大の課題は zkey 928MB**（モバイルへの配布）。実カードの TBS サイズを測って maxTbs を下げるのが最優先。
+## Result
+- **End to end with a dummy JPKI certificate: circuit → Groth16 proof → verification.** All 10 tampering tests are rejected.
+- **1.49M constraints** (maxTbs = 2048 B). On a laptop (i7-10750H): rapidsnark **4.6 s**, snarkjs 31 s.
+- **Main cost: a 928 MB zkey** to ship to phones. Measuring the real TBS size and lowering maxTbs is the first lever.
 
-## 回路が証明すること
-| # | 内容 | 主な部品 |
+## What the circuit proves
+| # | Statement | Building blocks |
 |---|---|---|
-| 1 | TBSCertificate が CA 鍵で署名されている（SHA-256 + RSA-2048 PKCS#1 v1.5） | zk-email `Sha256Bytes`, `RSAVerifier65537` |
-| 2 | TBS 内の利用者公開鍵（SPKIヘッダ/指数を照合して抽出） | `VarShiftLeft` |
-| 3 | SAN OID `.5.5.4` の生年月日 → `dob + 年齢×10000 <= currentDate` | |
-| 4 | SAN OID `.5.5.5` の住所先頭が `prefectureCode` の都道府県名（UTF-8, 47件表）。DER短/長形式両対応 | `gen/prefectures.circom` |
-| 5 | 利用者鍵が `chalMsg`（=SHA256(wallet‖nonce) を想定）に署名（カードの所持証明） | RSA 2回目 |
-| 6 | 出力 `caKeyHash = Poseidon(CA鍵)`、`nullifier = Poseidon(Poseidon(CA署名), scope)` | |
+| 1 | The TBSCertificate is signed by the CA key (SHA-256 + RSA-2048 PKCS#1 v1.5) | zk-email `Sha256Bytes`, `RSAVerifier65537` |
+| 2 | Extracts the holder's public key from the TBS (SPKI header and exponent checked) | `VarShiftLeft` |
+| 3 | Date of birth (SAN OID `.5.5.4`): `dob + age × 10000 ≤ currentDate` | |
+| 4 | The address (SAN OID `.5.5.5`) starts with the name of `prefectureCode` (UTF-8, 47-entry table); short and long DER lengths | `gen/prefectures.circom` |
+| 5 | The holder's key signed `chalMsg` (= SHA-256(wallet ‖ nonce)): possession of the card | second RSA |
+| 6 | Outputs `caKeyHash = Poseidon(CA key)` and `nullifier = Poseidon(Poseidon(CA signature), scope)` | |
 
-公開入力: `chalMsg[2], currentDate, ageThreshold, prefectureCode, scope`（+出力2）= 8 個。
+Public signals: `caKeyHash, nullifier` (outputs) + `chalMsg[2], currentDate, ageThreshold, prefectureCode, scope` = 8.
 
-## 計測（i7-10750H 6C/12T, 16GB RAM）
-| 項目 | 値 |
+## Measurements (i7-10750H, 6C/12T, 16 GB)
+| Item | Value |
 |---|---|
-| 非線形制約 | 1,485,099（maxTbs=2048） / 1,215,339（1536） / 942,500（1024） |
-| TBS 512B あたり | 約 27万制約（SHA-256 8ブロック＋選択回路） |
-| 固定部分（RSA×2・チャレンジSHA等）の目安 | 約 40万制約 |
-| ptau | 2^21（PSE Perpetual Powers of Tau `ppot_0080_21`） |
-| circom コンパイル | 54 s |
-| witness 生成（wasm/node） | 7.1 s |
-| groth16 setup + contribute | 500 s + 157 s |
-| **証明 rapidsnark** | **4.6 s** |
-| 証明 snarkjs | 31.3 s |
-| 検証 snarkjs | 0.37 s |
+| Non-linear constraints | 1,485,099 (maxTbs 2048) / 1,215,339 (1536) / 942,500 (1024) |
+| Per 512 B of TBS | ≈ 270k constraints (8 SHA-256 blocks + selectors) |
+| Fixed part (2 × RSA, challenge SHA, …) | ≈ 400k constraints |
+| ptau | 2^21 (PSE Perpetual Powers of Tau `ppot_0080_21`) |
+| circom compile | 54 s |
+| Witness (wasm / node) | 7.1 s |
+| Witness (native, rust-witness) | 3.5 s, 354 MB peak |
+| Groth16 setup + contribution | 500 s + 157 s |
+| **Prove, rapidsnark** | **4.6–6.0 s, 1.28 GB peak** |
+| Prove, snarkjs | 31.3 s |
+| Verify, snarkjs | 0.37 s |
 | zkey / r1cs / wasm | 928 MB / 384 MB / 9.4 MB |
-| ピークメモリ（setup） | 9.6 GB |
+| Peak memory (setup) | 9.6 GB |
 
-## テスト（`node test/witness.test.cjs`）
-受理: 正常入力、長形式（132B）住所。
-拒否: 別の都道府県、範囲外コード、年齢不足、誕生日前の日付、TBS 1バイト改ざん、別ウォレットのチャレンジ、
-DOB オフセットを住所に向ける、公開鍵オフセットずらし、ハッシュ範囲外のフィールド参照。
+## Tests (`node test/witness.test.cjs`)
+Accepted: valid input, long-form (132 B) address.
+Rejected: other prefecture, out-of-range code, under age, date before the 20th birthday, one tampered TBS byte,
+challenge for another wallet, DOB offset pointed at the address, shifted public-key offset, field outside the hashed data.
 
-## 前提・未確認（実カードで要確認）
-- ダミーの TBS は 707B。実 JPKI 署名用証明書は拡張（CRL配布点、ポリシー、発行者別名等）が多く**実サイズ不明** → maxTbs=2048 は安全側の仮置き。
-- 生年月日 `EYYYYMMDD` の YYYY を**西暦と仮定**（プロファイル仕様書で要確認）。
-- 住所の文字列型を UTF8String と仮定。0x82 長形式（256B超）は未対応。
-- カードのチャレンジ署名が `DigestInfo(SHA-256)` 付き PKCS#1 v1.5 であること（myna-card の `Sha256DigestInfo` と整合）を実カードで確認。
-- 証明書の `notBefore`（発行後N日以内ポリシー）は未実装。
+## Assumptions to confirm on a real card
+- The dummy TBS is 707 B. Real signing certificates carry more extensions (CRL distribution points, policies, issuer
+  alternative name), so **the real size is unknown**; maxTbs = 2048 is a safe placeholder.
+- `EYYYYMMDD`: the year is assumed Gregorian (check the profile specification).
+- The address is assumed to be a UTF8String; the `0x82` long form (> 255 bytes) is not handled.
+- The card's challenge signature is assumed PKCS#1 v1.5 with a SHA-256 DigestInfo (consistent with myna-card's `Sha256DigestInfo`).
+- `notBefore` ("issued within N days") is not implemented yet.
 
-## Solana 検証（`programs/zk_gate`）
-- `initialize_gate(scope, min_age, allowed_prefectures(bitmask), ca_key_hashes)` / `claim(proof)`。
-- `claim` はプログラム側で公開入力を再構成する（`chalMsg = SHA256(claimer‖nonce)`、`min_age`・`scope` はゲート設定、日付は Clock から JST で当日/前日のみ許可）。
-  → 他人のウォレットへの証明の流用、年齢閾値・都道府県の詐称、別ゲートへの使い回しはすべて検証失敗になる。
-- nullifier PDA `["nullifier", gate, nullifier]` を `init` → 同一人物の2回目は失敗（一人一回）。
-- **claim の消費 CU: 132,342**（Groth16 検証＋PDA作成込み、LiteSVM 計測）。デフォルト上限 200k 内に収まる。
-- テスト: `anchor build && cargo test -p zk_gate`（7件: 正常＋リプレイ、他人ウォレット、不許可県、県の詐称、未登録CA、古い日付、別scope）。
-- J-LIS 署名用CA の `caKeyHash`（`node circuits/scripts/export_solana.cjs cahash circuits/fixtures/jlis/*.cer`）:
+## Solana verification (`programs/zk_gate`)
+- `initialize_gate(scope, min_age, allowed_prefectures (bitmask), ca_key_hashes, name, uri)` / `claim(proof)`.
+- `claim` rebuilds the public inputs itself (`chalMsg = SHA-256(claimer ‖ nonce)`, `min_age` and `scope` from the gate,
+  the date from the Clock in JST, today or yesterday only) → proofs cannot be reused by another wallet, with another age
+  threshold or prefecture, or at another gate.
+- The nullifier PDA `["nullifier", gate, nullifier]` is created with `init` → a second claim by the same person fails.
+- A Metaplex Core asset is minted to the claimer (gate PDA as update authority).
+- **Compute: 145,205 CU** in LiteSVM, 143,945 CU on devnet (Groth16 verify + PDA + mint), within the default 200k.
+- Tests: `anchor build && scripts/fetch-programs.sh && cargo test -p zk_gate` (7: valid + replay, other wallet,
+  disallowed prefecture, lying about the prefecture, untrusted CA, stale date, other scope).
+- `caKeyHash` of the J-LIS signing CAs (`node circuits/scripts/export_solana.cjs cahash circuits/fixtures/jlis/*.cer`):
   - signca02: `0x0f8b63a80a1d2072363fd99ae06672d403b8ea2506aefba46c1076edd32f2e93`
   - signca03: `0x019d96eda27d0ab684f26405ef59ff856afd20fe36b9932a8a28434e6e55dfb8`
-- 未実装: 実際のミント（Metaplex Core 等の CPI）、ゲート設定の更新、devnet デプロイ。
 
-## 次の打ち手（優先順）
-1. **zkey サイズ削減**: 実 TBS を測り maxTbs を最小化（1024 なら約0.94M制約、zkey 約600MB見込み）。
-2. **モバイル証明**: mopro / rapidsnark iOS で iPhone 実測。zkey はアプリ初回にダウンロード＋キャッシュ。
-3. **ミント**: claim 成功時に Metaplex Core でミント、devnet デプロイ。
-4. 代替案（必要時のみ）: Noir/UltraHonk（trusted setup 不要・鍵小）だがオンチェーン検証コストが課題。
+## Next
+1. **Smaller zkey**: measure the real TBS and minimise maxTbs (1024 → ≈ 0.94M constraints, zkey ≈ 600 MB expected).
+2. **On-device proving**: mopro with rust-witness + rapidsnark on the iPhone (`docs/research/ios-plan.md`).
+3. Alternative only if needed: Noir/UltraHonk (no trusted setup, smaller keys) — on-chain verification cost is the open question.
