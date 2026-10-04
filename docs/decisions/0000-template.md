@@ -1,12 +1,12 @@
-# ADR-XXXX: タイトル
+# ADR-XXXX: Title
 
-- 日付:
-- 状態: 提案 / 承認 / 却下 / 置換
+- Date:
+- Status: Proposed / Accepted / Rejected / Superseded
 
-## 背景
+## Context
 
-## 選択肢
+## Options
 
-## 決定
+## Decision
 
-## 理由・トレードオフ
+## Consequences
