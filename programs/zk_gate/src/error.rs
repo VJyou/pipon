@@ -14,4 +14,6 @@ pub enum ErrorCode {
     StaleDate,
     #[msg("Groth16 proof verification failed")]
     InvalidProof,
+    #[msg("Name or URI too long")]
+    MetadataTooLong,
 }

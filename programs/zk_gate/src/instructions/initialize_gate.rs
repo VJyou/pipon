@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::{error::ErrorCode, Gate, GATE_SEED, MAX_CA_KEYS};
+use crate::{error::ErrorCode, Gate, GATE_SEED, MAX_CA_KEYS, MAX_NAME_LEN, MAX_URI_LEN};
 
 #[derive(Accounts)]
 #[instruction(scope: u64)]
@@ -24,8 +24,14 @@ pub fn handler(
     min_age: u8,
     allowed_prefectures: u64,
     ca_key_hashes: Vec<[u8; 32]>,
+    name: String,
+    uri: String,
 ) -> Result<()> {
     require!(ca_key_hashes.len() <= MAX_CA_KEYS, ErrorCode::TooManyCaKeys);
+    require!(
+        name.len() <= MAX_NAME_LEN && uri.len() <= MAX_URI_LEN,
+        ErrorCode::MetadataTooLong
+    );
     require!(allowed_prefectures >> 47 == 0, ErrorCode::InvalidPrefecture);
 
     let gate = &mut ctx.accounts.gate;
@@ -36,5 +42,7 @@ pub fn handler(
     gate.ca_key_hashes = ca_key_hashes;
     gate.claimed = 0;
     gate.bump = ctx.bumps.gate;
+    gate.name = name;
+    gate.uri = uri;
     Ok(())
 }

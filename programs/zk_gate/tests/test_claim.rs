@@ -56,6 +56,8 @@ fn setup() -> (LiteSVM, Keypair, Keypair) {
     let mut svm = LiteSVM::new();
     svm.add_program(zk_gate::id(), include_bytes!("../../../target/deploy/zk_gate.so"))
         .unwrap();
+    // scripts/fetch-programs.sh
+    svm.add_program(mpl_core::ID, include_bytes!("fixtures/mpl_core.so")).unwrap();
     let mut clock: Clock = svm.get_sysvar();
     clock.unix_timestamp = NOW;
     svm.set_sysvar(&clock);
@@ -71,10 +73,10 @@ fn gate_pda(scope: u64) -> Pubkey {
     Pubkey::find_program_address(&[GATE_SEED, &scope.to_le_bytes()], &zk_gate::id()).0
 }
 
-fn send(svm: &mut LiteSVM, payer: &Keypair, ixs: &[Instruction]) -> Result<u64, String> {
+fn send(svm: &mut LiteSVM, signers: &[&Keypair], ixs: &[Instruction]) -> Result<u64, String> {
     svm.expire_blockhash();
-    let msg = Message::new_with_blockhash(ixs, Some(&payer.pubkey()), &svm.latest_blockhash());
-    let tx = VersionedTransaction::try_new(VersionedMessage::Legacy(msg), &[payer]).unwrap();
+    let msg = Message::new_with_blockhash(ixs, Some(&signers[0].pubkey()), &svm.latest_blockhash());
+    let tx = VersionedTransaction::try_new(VersionedMessage::Legacy(msg), signers).unwrap();
     svm.send_transaction(tx)
         .map(|m| m.compute_units_consumed)
         .map_err(|e| format!("{:?}\n{}", e.err, e.meta.logs.join("\n")))
@@ -88,6 +90,8 @@ fn init_gate(svm: &mut LiteSVM, authority: &Keypair, scope: u64, prefectures: u6
             min_age: 20,
             allowed_prefectures: prefectures,
             ca_key_hashes: vec![ca],
+            name: "zkCredentials Tokyo".into(),
+            uri: "https://example.com/zkcred/tokyo.json".into(),
         }
         .data(),
         zk_gate::accounts::InitializeGate {
@@ -97,10 +101,10 @@ fn init_gate(svm: &mut LiteSVM, authority: &Keypair, scope: u64, prefectures: u6
         }
         .to_account_metas(None),
     );
-    send(svm, authority, &[ix]).unwrap();
+    send(svm, &[authority], &[ix]).unwrap();
 }
 
-fn claim_ix(claimer: &Pubkey, scope: u64, proof: &ClaimProof) -> Vec<Instruction> {
+fn claim_ix(claimer: &Pubkey, asset: &Pubkey, scope: u64, proof: &ClaimProof) -> Vec<Instruction> {
     let gate = gate_pda(scope);
     let record = Pubkey::find_program_address(
         &[NULLIFIER_SEED, gate.as_ref(), proof.nullifier.as_ref()],
@@ -116,11 +120,24 @@ fn claim_ix(claimer: &Pubkey, scope: u64, proof: &ClaimProof) -> Vec<Instruction
                 claimer: *claimer,
                 gate,
                 nullifier_record: record,
+                asset: *asset,
+                mpl_core_program: mpl_core::ID,
                 system_program: system_program::ID,
             }
             .to_account_metas(None),
         ),
     ]
+}
+
+fn claim(svm: &mut LiteSVM, claimer: &Keypair, scope: u64, proof: &ClaimProof) -> Result<u64, String> {
+    let asset = Keypair::new();
+    let ixs = claim_ix(&claimer.pubkey(), &asset.pubkey(), scope, proof);
+    let cu = send(svm, &[claimer, &asset], &ixs)?;
+    let acc = svm.get_account(&asset.pubkey()).expect("asset created");
+    assert_eq!(acc.owner, mpl_core::ID);
+    // BaseAssetV1: key(1) | owner(32) | ...
+    assert_eq!(&acc.data[1..33], claimer.pubkey().as_ref(), "asset owned by claimer");
+    Ok(cu)
 }
 
 #[test]
@@ -129,10 +146,10 @@ fn claim_once_then_reject_replay() {
     let (mut svm, authority, claimer) = setup();
     init_gate(&mut svm, &authority, SCOPE, 1 << (TOKYO - 1), f.proof.ca_key_hash);
 
-    let cu = send(&mut svm, &claimer, &claim_ix(&claimer.pubkey(), SCOPE, &f.proof)).unwrap();
+    let cu = claim(&mut svm, &claimer, SCOPE, &f.proof).unwrap();
     println!("claim compute units: {cu}");
 
-    let err = send(&mut svm, &claimer, &claim_ix(&claimer.pubkey(), SCOPE, &f.proof)).unwrap_err();
+    let err = claim(&mut svm, &claimer, SCOPE, &f.proof).unwrap_err();
     assert!(err.contains("already in use"), "replay must hit the existing nullifier PDA: {err}");
 }
 
@@ -144,7 +161,7 @@ fn reject_proof_from_another_wallet() {
     let thief = Keypair::new();
     svm.airdrop(&thief.pubkey(), 1_000_000_000).unwrap();
 
-    let err = send(&mut svm, &thief, &claim_ix(&thief.pubkey(), SCOPE, &f.proof)).unwrap_err();
+    let err = claim(&mut svm, &thief, SCOPE, &f.proof).unwrap_err();
     assert!(err.contains("InvalidProof"), "{err}");
 }
 
@@ -154,7 +171,7 @@ fn reject_disallowed_prefecture() {
     let (mut svm, authority, claimer) = setup();
     init_gate(&mut svm, &authority, SCOPE, 1 << (27 - 1), f.proof.ca_key_hash); // 大阪府 only
 
-    let err = send(&mut svm, &claimer, &claim_ix(&claimer.pubkey(), SCOPE, &f.proof)).unwrap_err();
+    let err = claim(&mut svm, &claimer, SCOPE, &f.proof).unwrap_err();
     assert!(err.contains("PrefectureNotAllowed"), "{err}");
 }
 
@@ -166,7 +183,7 @@ fn reject_lying_about_prefecture() {
     let mut p = f.proof.clone();
     p.prefecture_code = 27;
 
-    let err = send(&mut svm, &claimer, &claim_ix(&claimer.pubkey(), SCOPE, &p)).unwrap_err();
+    let err = claim(&mut svm, &claimer, SCOPE, &p).unwrap_err();
     assert!(err.contains("InvalidProof"), "{err}");
 }
 
@@ -176,7 +193,7 @@ fn reject_untrusted_ca() {
     let (mut svm, authority, claimer) = setup();
     init_gate(&mut svm, &authority, SCOPE, 1 << (TOKYO - 1), [1u8; 32]);
 
-    let err = send(&mut svm, &claimer, &claim_ix(&claimer.pubkey(), SCOPE, &f.proof)).unwrap_err();
+    let err = claim(&mut svm, &claimer, SCOPE, &f.proof).unwrap_err();
     assert!(err.contains("UntrustedCa"), "{err}");
 }
 
@@ -189,7 +206,7 @@ fn reject_stale_date() {
     clock.unix_timestamp = NOW + 2 * 86_400;
     svm.set_sysvar(&clock);
 
-    let err = send(&mut svm, &claimer, &claim_ix(&claimer.pubkey(), SCOPE, &f.proof)).unwrap_err();
+    let err = claim(&mut svm, &claimer, SCOPE, &f.proof).unwrap_err();
     assert!(err.contains("StaleDate"), "{err}");
 }
 
@@ -200,6 +217,6 @@ fn reject_other_scope() {
     let (mut svm, authority, claimer) = setup();
     init_gate(&mut svm, &authority, 2, 1 << (TOKYO - 1), f.proof.ca_key_hash);
 
-    let err = send(&mut svm, &claimer, &claim_ix(&claimer.pubkey(), 2, &f.proof)).unwrap_err();
+    let err = claim(&mut svm, &claimer, 2, &f.proof).unwrap_err();
     assert!(err.contains("InvalidProof"), "{err}");
 }

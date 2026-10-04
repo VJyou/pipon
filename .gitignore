@@ -34,3 +34,4 @@ inbox/*
 # OS / editor
 .DS_Store
 *.swp
+programs/zk_gate/tests/fixtures/*.so

@@ -1,6 +1,6 @@
 use anchor_lang::prelude::*;
 
-use crate::MAX_CA_KEYS;
+use crate::{MAX_CA_KEYS, MAX_NAME_LEN, MAX_URI_LEN};
 
 /// One gated drop / service. `scope` is the circuit's public `scope`, so nullifiers differ per gate.
 #[account]
@@ -15,6 +15,11 @@ pub struct Gate {
     pub ca_key_hashes: Vec<[u8; 32]>,
     pub claimed: u64,
     pub bump: u8,
+    /// Metaplex Core asset name / metadata URI minted to each claimer.
+    #[max_len(MAX_NAME_LEN)]
+    pub name: String,
+    #[max_len(MAX_URI_LEN)]
+    pub uri: String,
 }
 
 /// Exists iff the nullifier was used for this gate: one claim per person per gate.
@@ -25,4 +30,6 @@ pub struct NullifierRecord {
     pub claimer: Pubkey,
     pub prefecture_code: u8,
     pub slot: u64,
+    /// The Core asset minted for this claim.
+    pub asset: Pubkey,
 }

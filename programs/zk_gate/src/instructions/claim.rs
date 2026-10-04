@@ -1,5 +1,6 @@
 use anchor_lang::prelude::*;
 use groth16_solana::groth16::Groth16Verifier;
+use mpl_core::instructions::CreateV2CpiBuilder;
 
 use crate::{
     error::ErrorCode, vk::VERIFYINGKEY, Gate, NullifierRecord, DATE_TOLERANCE_DAYS, JST_OFFSET_SECS,
@@ -22,6 +23,12 @@ pub struct Claim<'info> {
         bump,
     )]
     pub nullifier_record: Account<'info, NullifierRecord>,
+    /// Fresh keypair for the Core asset; signs its own creation.
+    #[account(mut)]
+    pub asset: Signer<'info>,
+    /// CHECK: address-constrained to the Metaplex Core program.
+    #[account(address = mpl_core::ID)]
+    pub mpl_core_program: UncheckedAccount<'info>,
     pub system_program: Program<'info, System>,
 }
 
@@ -84,16 +91,29 @@ pub fn handler(ctx: Context<Claim>, proof: ClaimProof) -> Result<()> {
     .map_err(|_| ErrorCode::InvalidProof)?;
     verifier.verify().map_err(|_| ErrorCode::InvalidProof)?;
 
+    // The gate PDA is the asset's update authority; it does not need to sign creation.
+    CreateV2CpiBuilder::new(&ctx.accounts.mpl_core_program.to_account_info())
+        .asset(&ctx.accounts.asset.to_account_info())
+        .payer(&ctx.accounts.claimer.to_account_info())
+        .owner(Some(&ctx.accounts.claimer.to_account_info()))
+        .update_authority(Some(&ctx.accounts.gate.to_account_info()))
+        .system_program(&ctx.accounts.system_program.to_account_info())
+        .name(gate.name.clone())
+        .uri(gate.uri.clone())
+        .invoke()?;
+
     let record = &mut ctx.accounts.nullifier_record;
     record.gate = gate.key();
     record.claimer = claimer;
     record.prefecture_code = proof.prefecture_code;
     record.slot = Clock::get()?.slot;
+    record.asset = ctx.accounts.asset.key();
     ctx.accounts.gate.claimed += 1;
 
     emit!(Claimed {
         gate: record.gate,
         claimer,
+        asset: ctx.accounts.asset.key(),
         prefecture_code: proof.prefecture_code,
     });
     Ok(())
@@ -103,6 +123,7 @@ pub fn handler(ctx: Context<Claim>, proof: ClaimProof) -> Result<()> {
 pub struct Claimed {
     pub gate: Pubkey,
     pub claimer: Pubkey,
+    pub asset: Pubkey,
     pub prefecture_code: u8,
 }
 

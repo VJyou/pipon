@@ -13,7 +13,8 @@ pub use state::*;
 declare_id!("AsTtCWikB8EtHo3fophwB5EhVLY3FwwyuVFjLai86ZDK");
 
 /// Gated claim: a Groth16 proof over a JPKI signing certificate shows age >= gate.min_age and
-/// residence in an allowed prefecture; a per-gate nullifier PDA allows one claim per person.
+/// residence in an allowed prefecture; a per-gate nullifier PDA allows one claim per person, and
+/// each claim mints a Metaplex Core asset to the claimer.
 #[program]
 pub mod zk_gate {
     use super::*;
@@ -24,8 +25,10 @@ pub mod zk_gate {
         min_age: u8,
         allowed_prefectures: u64,
         ca_key_hashes: Vec<[u8; 32]>,
+        name: String,
+        uri: String,
     ) -> Result<()> {
-        initialize_gate::handler(ctx, scope, min_age, allowed_prefectures, ca_key_hashes)
+        initialize_gate::handler(ctx, scope, min_age, allowed_prefectures, ca_key_hashes, name, uri)
     }
 
     pub fn claim(ctx: Context<Claim>, proof: ClaimProof) -> Result<()> {

@@ -9,6 +9,9 @@ pub const NULLIFIER_SEED: &[u8] = b"nullifier";
 /// Accepted CA keys per gate (J-LIS rotates the signing CA roughly every 4 years).
 pub const MAX_CA_KEYS: usize = 4;
 
+pub const MAX_NAME_LEN: usize = 32;
+pub const MAX_URI_LEN: usize = 200;
+
 /// Proofs may carry today's or yesterday's date (JST), so a proof made just before midnight still lands.
 pub const DATE_TOLERANCE_DAYS: i64 = 1;
 
