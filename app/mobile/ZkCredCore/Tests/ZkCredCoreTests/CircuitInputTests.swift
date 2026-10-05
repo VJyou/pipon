@@ -35,8 +35,15 @@ struct CircuitInputTests {
             caModulus: try X509Parts.rsaModulus(der: ca), challengeMessage: msg, challengeSignature: sigBytes,
             currentDate: 20261004, ageThreshold: 20, scope: 1)
 
+        // Every field is a decimal string or an array of them. Compare typed values: String(describing:) of a
+        // Foundation array prints "(...)" on macOS but "[...]" on Linux.
         for (key, value) in expected {
-            #expect(String(describing: got[key]!) == String(describing: value), "field \(key)")
+            if let want = value as? [String] {
+                #expect(got[key] as? [String] == want, "field \(key)")
+            } else {
+                #expect(got[key] as? String == (value as? String), "field \(key)")
+                #expect(value is String, "field \(key)")
+            }
         }
         #expect(got.count == expected.count)
     }
