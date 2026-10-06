@@ -1,5 +1,7 @@
 import Foundation
 import Testing
+import Crypto
+import CryptoExtras
 @testable import ZkCredCore
 
 /// The fixture is circuits/fixtures/dummy (dummy CA, dummy person) produced by gen_dummy_jpki.py,
@@ -92,6 +94,16 @@ struct CircuitInputTests {
             try TrustAnchors.checkChallenge(
                 certificateDER: cert, message: CircuitInput.challengeMessage(binding: wallet, nonce: 43), signature: sig)
         }
+    }
+
+    @Test func devCardSignatureVerifiesLikeTheCard() throws {
+        let key = try _RSA.Signing.PrivateKey(keySize: .bits2048)
+        let msg = CircuitInput.challengeMessage(binding: [UInt8](repeating: 1, count: 32), nonce: 7)
+        let sig = try DevCard.sign(msg, privateKeyPEM: key.pemRepresentation)
+        #expect(sig.count == 256)
+        let modulus = try X509Parts.rsaModulus(der: Array(key.publicKey.derRepresentation))
+        #expect(TrustAnchors.verify(modulus: modulus, signature: sig, message: msg))
+        #expect(!TrustAnchors.verify(modulus: modulus, signature: sig, message: msg.reversed()))
     }
 
     @Test func deepLinkAndBinding() throws {

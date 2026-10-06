@@ -1,8 +1,9 @@
 import SwiftUI
 
-/// Card check (real card, layout only) and a proof of the dummy fixture (circuits/fixtures/dummy)
-/// with the deployed zkey, reporting time and memory. Run ./fetch-artifacts.sh first so MoproApp/Circuit/ holds the zkey and the input.
+/// The request flow, plus developer tools: card check (real card, layout only) and a proof of the dummy fixture
+/// (circuits/fixtures/dummy) reporting time and memory. Run ./fetch-artifacts.sh first (zkey, CA certs, inputs).
 struct ContentView: View {
+  @ObservedObject var flow: ProveFlow
   @State private var log: [String] = []
   @State private var running = false
 
@@ -10,22 +11,28 @@ struct ContentView: View {
   private let inputPath = Bundle.main.path(forResource: "dummy_input", ofType: "json")
 
   var body: some View {
-    VStack(alignment: .leading, spacing: 16) {
-      Text("zkCredentials prover").font(.title2).bold()
-      Button(running ? "Proving…" : "Prove dummy fixture") { run() }
-        .buttonStyle(.borderedProminent)
-        .disabled(running || zkeyPath == nil || inputPath == nil)
-      if zkeyPath == nil || inputPath == nil {
-        Text("Missing Circuit/ resources: run fetch-artifacts.sh").foregroundStyle(.red)
-      }
-      Divider()
-      CardCheckView()
-      Divider()
-      ScrollView {
-        Text(log.joined(separator: "\n"))
-          .font(.system(.footnote, design: .monospaced))
-          .frame(maxWidth: .infinity, alignment: .leading)
-          .textSelection(.enabled)
+    ScrollView {
+      VStack(alignment: .leading, spacing: 16) {
+        Text("zkCredentials").font(.title2).bold()
+        RequestView(flow: flow)
+        Divider()
+        DisclosureGroup("Developer") {
+          VStack(alignment: .leading, spacing: 12) {
+            Button(running ? "Proving…" : "Prove dummy fixture") { run() }
+              .buttonStyle(.bordered)
+              .disabled(running || zkeyPath == nil || inputPath == nil)
+            if zkeyPath == nil || inputPath == nil {
+              Text("Missing Circuit/ resources: run fetch-artifacts.sh").foregroundStyle(.red)
+            }
+            Text(log.joined(separator: "\n"))
+              .font(.system(.footnote, design: .monospaced))
+              .frame(maxWidth: .infinity, alignment: .leading)
+              .textSelection(.enabled)
+            Divider()
+            CardCheckView()
+          }
+          .padding(.top, 8)
+        }
       }
     }
     .padding()
@@ -80,5 +87,5 @@ struct ContentView: View {
 }
 
 #Preview {
-  ContentView()
+  ContentView(flow: ProveFlow())
 }
