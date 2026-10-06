@@ -1,4 +1,4 @@
-# Status and next steps (2026-10-06)
+# Status and next steps (2026-10-07)
 
 Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` and `app/mobile/README.md`.
 
@@ -19,14 +19,18 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
   reader + Card check screen (layout only) + dummy proof. Simulator: proof verifies, public inputs identical to snarkjs.
   Builds for iphoneos unsigned. **Not yet run on the iPhone** (not connected; no signing identity yet).
 
+## Done (2026-10-06/07)
+- App flow: deep link → request → card (NFC, or dummy card in dev) → checks → proof → relay. Web demo end to end with the
+  iOS simulator (`app/verifier-demo/e2e/`): Web2 all checks pass; Web3 mints on the demo gate (scope 1).
+- Real-card gate on devnet: scope 2, age 20+, all prefectures, J-LIS signca02/03 (`docs/deployments.md`). The web demo
+  has a gate selector (Web3) and trusts both gates' CA lists (Web2).
+
 ## Next
-1. [local] iPhone: connect + trust, Xcode Apple ID/team, Developer Mode (`docs/setup/mac.md` §6). Then run the app:
-   dummy proof time/memory on device; Card check on the holder's own card (assumptions 1–4 in `ios-plan.md`).
-   Find out whether a free personal team can sign the NFC entitlement.
-2. Connect the full flow in the app: deep link → request → password + NFC → `TrustAnchors` (J-LIS CA certs) →
-   `CircuitInput.json` → proof → relay → web demo; then the J-LIS-CA gate on devnet.
+1. [local] iPhone: connect + trust, Xcode Apple ID/team, Developer Mode (`docs/setup/mac.md` §6). Then on the device:
+   dummy proof time/memory; Card check on the holder's own card (assumptions 1–4 in `ios-plan.md`); a real-card claim
+   on the scope-2 gate. Find out whether a free personal team can sign the NFC entitlement.
+2. Demo video plan and recording (deadline 2026-10-12 PDT); English UI and README.
 3. Backup (decided 2026-10-06: iPhone stays primary): macOS + USB PC/SC reader path reusing ZkCredCore and the prover.
-   Needs a reader model that works with the My Number Card on macOS.
 4. Go/no-go on 2026-10-08.
 
 ## Gotchas

@@ -30,7 +30,9 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
     if (!result || !session) return
     ;(async () => {
       const t0 = performance.now()
-      const [vkey, gate] = await Promise.all([fetchVkey(), fetchGate(connection, 1)])
+      // Trust list: the CA keys of both devnet gates (scope 1: demo dummy CA, scope 2: J-LIS signing CAs).
+      const [vkey, demoGate, jlisGate] = await Promise.all([fetchVkey(), fetchGate(connection, 1), fetchGate(connection, 2)])
+      const trusted = [...(demoGate?.caKeyHashes ?? []), ...(jlisGate?.caKeyHashes ?? [])]
       // public = [caKeyHash, nullifier, chalHi, chalLo, currentDate, ageThreshold, prefectureCode, scope]
       const p = result.publicSignals.map(BigInt)
       const [hi, lo] = challengeHalves(fromHex(session), BigInt(result.claim.nonce))
@@ -38,7 +40,7 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
       const checks: Check[] = [
         { label: 'Groth16 proof is valid', ok: await snarkjs.groth16.verify(vkey, result.publicSignals, result.proof) },
         { label: 'Signed by the card for this session (no replay)', ok: p[2] === hi && p[3] === lo },
-        { label: 'Issuer CA is in the on-chain trust list', ok: !!gate?.caKeyHashes.includes(caHex) },
+        { label: 'Issuer CA is in the on-chain trust list', ok: trusted.includes(caHex) },
         { label: 'Proof is for today (JST)', ok: Number(p[4]) === todayJst() },
         { label: 'Age 20 or over', ok: p[5] >= 20n },
         { label: 'Pseudonymous ID is scoped to this shop', ok: p[7] === BigInt(SHOP_SCOPE) },

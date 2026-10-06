@@ -6,12 +6,14 @@ const BASE = process.env.BASE ?? 'http://localhost:5173'
 const CARD = process.env.CARD ?? 'tokyo20'
 const OUT = process.env.OUT ?? '.'
 const SIM = process.env.SIM ?? 'iPhone 17'
+const GATE = process.env.GATE ?? '1' // 1: demo gate (dummy CA), 2: real cards (J-LIS CA)
 const browser = await chromium.launch({ executablePath: process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' })
 const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } })
 page.on('pageerror', (e) => console.log('pageerror', e.message))
 await page.goto(BASE)
 await page.locator('.phone-mode select').selectOption('iphone')
 
+await page.locator('.gate-pick select').selectOption(GATE)
 await page.getByRole('button', { name: /Select Wallet/ }).click()
 await page.getByRole('button', { name: /Burner/ }).click()
 await page.getByRole('button', { name: 'Request proof' }).click()

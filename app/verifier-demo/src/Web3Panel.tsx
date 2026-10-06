@@ -6,7 +6,11 @@ import { claimIxs, fetchGate, gatePda, PREFECTURES, PROGRAM_ERRORS, type Gate } 
 import type { ProveResult } from './lib/prover'
 import type { ProofRequest } from './Phone'
 
-const SCOPE = 1
+// Two gates on devnet: scope 1 trusts the demo's dummy CA (Tokyo only); scope 2 trusts the J-LIS signing CAs (real cards).
+const GATES = [
+  { scope: 1, label: 'Demo gate · dummy cards' },
+  { scope: 2, label: 'Real cards · J-LIS CA' },
+]
 const explorer = (kind: 'address' | 'tx', id: string) => `https://explorer.solana.com/${kind}/${id}?cluster=devnet`
 
 type Outcome = { ok: true; asset: string; sig: string } | { ok: false; reason: string }
@@ -25,23 +29,35 @@ export function Web3Panel({ result, onRequest }: { result: ProveResult | null; o
   const [gate, setGate] = useState<Gate | null>(null)
   const [busy, setBusy] = useState(false)
   const [outcome, setOutcome] = useState<Outcome | null>(null)
+  const [scope, setScope] = useState(1)
 
-  const refresh = useCallback(() => fetchGate(connection, SCOPE).then(setGate), [connection])
+  const refresh = useCallback(() => fetchGate(connection, scope).then(setGate), [connection, scope])
   useEffect(() => {
-    refresh()
-  }, [refresh])
+    // Ignore a slower reply for the previously selected gate.
+    let live = true
+    fetchGate(connection, scope).then((g) => live && setGate(g))
+    return () => {
+      live = false
+    }
+  }, [connection, scope])
 
   const ready = result && publicKey
-  const prefs = gate?.allowedPrefectures.map((c) => PREFECTURES[c - 1]).join('・')
+  const prefs = gate?.allowedPrefectures.length === 47
+    ? 'all prefectures'
+    : gate?.allowedPrefectures.map((c) => PREFECTURES[c - 1]).join('・')
 
   function request() {
     if (!publicKey || !gate) return
     setOutcome(null)
     onRequest({
       binding: publicKey.toBase58(),
-      scope: SCOPE,
+      scope,
       service: gate.name,
-      statement: [`Age ${gate.minAge}+`, `Lives in ${prefs}`, 'Has not claimed before'],
+      statement: [
+        `Age ${gate.minAge}+`,
+        ...(gate.allowedPrefectures.length === 47 ? [] : [`Lives in ${prefs}`]),
+        'Has not claimed before',
+      ],
     })
   }
 
@@ -51,7 +67,7 @@ export function Web3Panel({ result, onRequest }: { result: ProveResult | null; o
     setOutcome(null)
     try {
       const asset = Keypair.generate()
-      const tx = new Transaction().add(...claimIxs(publicKey, asset.publicKey, SCOPE, result.claim))
+      const tx = new Transaction().add(...claimIxs(publicKey, asset.publicKey, scope, result.claim))
       tx.feePayer = publicKey
       tx.recentBlockhash = (await connection.getLatestBlockhash()).blockhash
       // Simulate first so a rejection shows the program's reason instead of a wallet error.
@@ -81,11 +97,25 @@ export function Web3Panel({ result, onRequest }: { result: ProveResult | null; o
         <WalletMultiButton />
       </header>
 
+      <label className="gate-pick">
+        Gate{' '}
+        <select
+          value={scope}
+          onChange={(e) => {
+            setScope(Number(e.target.value))
+            setGate(null)
+            setOutcome(null)
+          }}
+        >
+          {GATES.map((g) => <option key={g.scope} value={g.scope}>{g.label}</option>)}
+        </select>
+      </label>
+
       {gate ? (
         <dl className="facts">
           <div><dt>Requires</dt><dd>Age {gate.minAge}+ · {prefs}</dd></div>
           <div><dt>Claimed</dt><dd>{gate.claimed.toString()}</dd></div>
-          <div><dt>Gate</dt><dd><a href={explorer('address', gatePda(SCOPE).toBase58())} target="_blank">{gatePda(SCOPE).toBase58().slice(0, 8)}…</a></dd></div>
+          <div><dt>Gate</dt><dd><a href={explorer('address', gatePda(scope).toBase58())} target="_blank">{gatePda(scope).toBase58().slice(0, 8)}…</a></dd></div>
         </dl>
       ) : (
         <p className="muted">Loading gate from devnet…</p>
