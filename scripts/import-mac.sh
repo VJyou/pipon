@@ -40,7 +40,7 @@ done
 
 echo "== circuits/build (existing files are kept)"
 mkdir -p "$REPO/circuits/build"
-cp -Rn "$SRC/circuits-build/." "$REPO/circuits/build/"
+cp -Rn "$SRC/circuits-build/." "$REPO/circuits/build/" || true  # macOS cp -n exits 1 when it skips a file
 # The zkey must be the one behind the deployed verifying key.
 a=$(shasum -a 256 "$SRC/circuits-build/jpki_age_region.zkey" | cut -d' ' -f1)
 b=$(shasum -a 256 "$REPO/circuits/build/jpki_age_region.zkey" | cut -d' ' -f1)
