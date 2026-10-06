@@ -144,7 +144,6 @@ impl Into<CircomProverProofLib> for ProofLib {
 // Main functions for proof generation and verification
 //
 
-#[cfg_attr(feature = "uniffi", uniffi::export)]
 /// circom-prover 0.1.4 (`witness::json_to_hashmap`) only reads arrays of strings and silently drops scalars and
 /// numbers, which leaves those signals at 0. Rewrite every value as an array of decimal strings.
 fn normalize_inputs(json: &str) -> Result<String, MoproError> {
@@ -170,6 +169,7 @@ fn normalize_inputs(json: &str) -> Result<String, MoproError> {
     Ok(Value::Object(out).to_string())
 }
 
+#[cfg_attr(feature = "uniffi", uniffi::export)]
 pub fn generate_circom_proof(
     zkey_path: String,
     circuit_inputs: String,
