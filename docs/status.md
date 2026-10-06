@@ -31,8 +31,12 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 
 ## Gotchas
 - Use **the same zkey** as the deployed verifying key (copied via USB). A new setup means a new `vk.rs` and a program upgrade.
-- The devnet upgrade-authority keypair lives only on the Linux box (`~/.config/solana/zkcred-devnet.json`). Do program
-  upgrades there, or move the keypair by USB yourself — never through git.
+- Keypairs were moved from the Linux box to the Mac on 2026-10-06 (`scripts/export-linux.sh` / `import-mac.sh`):
+  `~/.config/solana/zkcred-devnet.json` (upgrade authority `7LQS…`), `id.json`, and `target/deploy/zk_gate-keypair.json`
+  (program ID `AsTt…`). Never through git. Never run `anchor keys sync`.
+- Mac Solana tooling: Solana CLI 4.1.2, Anchor via avm **1.0.2** (matches `anchor-lang` in `programs/zk_gate/Cargo.toml`).
+  `anchor build` passes; `programs/zk_gate/tests/fixtures/mpl_core.so` is dumped from devnet
+  (`solana program dump -u devnet CoREENxT6tW1HoK8ypY1SxRMZTcVPm7R94rH4PZNhX7d <path>`).
 - Dummy CA / persona keys (`circuits/build/*.pem`) are test-only and stay out of git.
 - Real card: the holder's own card only; never log, save or commit the certificate or any personal value.
 - Commit as `VJyou <37763328+VJyou@users.noreply.github.com>` (repo-local git config), messages in English.
