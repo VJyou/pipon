@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Run on the Linux box: copy everything the Mac mini needs onto a USB stick (exFAT; FAT32 cannot hold files > 4 GB).
 #   scripts/export-linux.sh /media/$USER/<USB>/zkcred-export
-# Copies: Solana keypairs (~/.config/solana/*.json), ptau files (~/ptau), all of circuits/build/.
+# Copies: Solana keypairs (~/.config/solana/*.json), program keypairs (target/deploy), ptau files (~/ptau), all of circuits/build/.
 # Never prints key contents. Keypairs are secrets: delete them from the USB stick after the import.
 set -euo pipefail
 DEST=${1:?usage: $0 <destination directory on the USB stick>}
@@ -18,7 +18,7 @@ if [ -n "$(git log --oneline origin/main..HEAD 2>/dev/null)" ]; then
   echo "WARNING: local commits not pushed:"; git log --oneline origin/main..HEAD
 fi
 
-mkdir -p "$DEST"/{solana,ptau,circuits-build}
+mkdir -p "$DEST"/{solana,program,ptau,circuits-build}
 
 echo "== Solana keypairs (names only)"
 shopt -s nullglob
@@ -26,6 +26,9 @@ for f in "$HOME"/.config/solana/*.json; do
   cp "$f" "$DEST/solana/" && echo "  $(basename "$f")"
 done
 [ -f "$HOME/.config/solana/cli/config.yml" ] && cp "$HOME/.config/solana/cli/config.yml" "$DEST/solana/cli-config.yml"
+
+echo "== program keypair (its pubkey is the program ID)"
+for f in "$REPO"/target/deploy/*-keypair.json; do cp "$f" "$DEST/program/" && echo "  $(basename "$f")"; done
 
 echo "== ptau"
 for f in "$HOME"/ptau/*.ptau; do cp "$f" "$DEST/ptau/" && echo "  $(basename "$f")"; done

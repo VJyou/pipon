@@ -21,6 +21,16 @@ for f in "$SRC"/solana/*.json; do
   echo "  $(basename "$f") -> $pub"
 done
 
+echo "== program keypair"
+mkdir -p "$REPO/target/deploy"
+for f in "$SRC"/program/*-keypair.json; do
+  [ -e "$f" ] || continue
+  dst="$REPO/target/deploy/$(basename "$f")"
+  if [ -e "$dst" ]; then echo "  exists, skipped: $(basename "$f") (anchor may have generated a new one: compare with Anchor.toml)"; continue; fi
+  cp "$f" "$dst" && chmod 600 "$dst"
+  echo "  $(basename "$f") -> $(solana-keygen pubkey "$dst" 2>/dev/null || echo "?") (Anchor.toml: AsTtCWikB8EtHo3fophwB5EhVLY3FwwyuVFjLai86ZDK)"
+done
+
 echo "== ptau"
 mkdir -p "$HOME/ptau"
 for f in "$SRC"/ptau/*.ptau; do
@@ -37,4 +47,4 @@ b=$(shasum -a 256 "$REPO/circuits/build/jpki_age_region.zkey" | cut -d' ' -f1)
 [ "$a" = "$b" ] && echo "  zkey matches the Mac copy" || echo "  WARNING: zkey differs from the Mac copy"
 
 echo "done. Upgrade authority in docs/deployments.md: 7LQSbKRwxW7argJ4mUcLyRsPvq8yuzfzvxVr8aightAR"
-echo "Delete the keypairs from the USB stick now: rm $SRC/solana/*.json"
+echo "Delete the keypairs from the USB stick now: rm $SRC/solana/*.json $SRC/program/*.json"
