@@ -1,7 +1,7 @@
 import SwiftUI
 
-/// Proves the dummy fixture (circuits/fixtures/dummy) with the deployed zkey and reports time and memory.
-/// Run ../fetch-artifacts.sh first so MoproApp/Circuit/ holds the zkey and the input.
+/// Card check (real card, layout only) and a proof of the dummy fixture (circuits/fixtures/dummy)
+/// with the deployed zkey, reporting time and memory. Run ./fetch-artifacts.sh first so MoproApp/Circuit/ holds the zkey and the input.
 struct ContentView: View {
   @State private var log: [String] = []
   @State private var running = false
@@ -18,6 +18,9 @@ struct ContentView: View {
       if zkeyPath == nil || inputPath == nil {
         Text("Missing Circuit/ resources: run fetch-artifacts.sh").foregroundStyle(.red)
       }
+      Divider()
+      CardCheckView()
+      Divider()
       ScrollView {
         Text(log.joined(separator: "\n"))
           .font(.system(.footnote, design: .monospaced))

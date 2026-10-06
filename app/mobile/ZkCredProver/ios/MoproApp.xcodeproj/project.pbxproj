@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		2A5992392CC77A7E00135402 /* MoproBindings.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2A5992372CC77A7E00135402 /* MoproBindings.xcframework */; };
 		2A59923A2CC77A7E00135402 /* mopro.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2A5992362CC77A7E00135402 /* mopro.swift */; };
+		ZC0000000000000000000001 /* ZkCredCore in Frameworks */ = {isa = PBXBuildFile; productRef = ZC0000000000000000000002 /* ZkCredCore */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -52,6 +53,12 @@
 			path = MoproAppUITests;
 			sourceTree = "<group>";
 		};
+		ZC0000000000000000000004 /* ZkCredAppSources */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			name = ZkCredAppSources;
+			path = ../../ZkCredApp/Sources;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +67,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				2A5992392CC77A7E00135402 /* MoproBindings.xcframework in Frameworks */,
+				ZC0000000000000000000001 /* ZkCredCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,6 +92,7 @@
 			isa = PBXGroup;
 			children = (
 				2A5991EE2CC7722900135402 /* MoproApp */,
+				ZC0000000000000000000004 /* ZkCredAppSources */,
 				2A5991FF2CC7722A00135402 /* MoproAppTests */,
 				2A5992092CC7722A00135402 /* MoproAppUITests */,
 				2A5991ED2CC7722900135402 /* Products */,
@@ -127,9 +136,11 @@
 			);
 			fileSystemSynchronizedGroups = (
 				2A5991EE2CC7722900135402 /* MoproApp */,
+				ZC0000000000000000000004 /* ZkCredAppSources */,
 			);
 			name = MoproApp;
 			packageProductDependencies = (
+				ZC0000000000000000000002 /* ZkCredCore */,
 			);
 			productName = MoproApp;
 			productReference = 2A5991EC2CC7722900135402 /* MoproApp.app */;
@@ -213,6 +224,9 @@
 			);
 			mainGroup = 2A5991E32CC7722900135402;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				ZC0000000000000000000003 /* XCLocalSwiftPackageReference "../../ZkCredCore" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2A5991ED2CC7722900135402 /* Products */;
 			projectDirPath = "";
@@ -414,11 +428,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ../../ZkCredApp/ZkCredApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MoproApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ../../ZkCredApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -430,7 +446,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_SWIFT_FLAGS = "-Xcc -fmodule-map-file=$(SRCROOT)/MoproiOSBindings/module/module.modulemap";
-				PRODUCT_BUNDLE_IDENTIFIER = mopro.MoproApp;
+				PRODUCT_BUNDLE_IDENTIFIER = app.zkcredentials.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -443,11 +459,13 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = ../../ZkCredApp/ZkCredApp.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_ASSET_PATHS = "\"MoproApp/Preview Content\"";
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = ../../ZkCredApp/Info.plist;
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -459,7 +477,7 @@
 				);
 				MARKETING_VERSION = 1.0;
 				OTHER_SWIFT_FLAGS = "-Xcc -fmodule-map-file=$(SRCROOT)/MoproiOSBindings/module/module.modulemap";
-				PRODUCT_BUNDLE_IDENTIFIER = mopro.MoproApp;
+				PRODUCT_BUNDLE_IDENTIFIER = app.zkcredentials.ios;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
@@ -577,6 +595,20 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		ZC0000000000000000000003 /* XCLocalSwiftPackageReference "../../ZkCredCore" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../../ZkCredCore;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		ZC0000000000000000000002 /* ZkCredCore */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = ZkCredCore;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2A5991E42CC7722900135402 /* Project object */;
 }
