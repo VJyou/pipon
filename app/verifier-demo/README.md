@@ -22,3 +22,17 @@ Use a devnet wallet (Phantom etc. set to devnet) with a little SOL. For automate
 
 Dummy cards: 東京都・1999年生 (passes), 大阪府・1985年生 (valid proof, rejected by the Tokyo-only gate), 東京都・2009年生 (under 20: no proof can be made).
 Each dummy card is stable (`circuits/build/persona-*.pem`), so its nullifier is the same across proofs.
+
+## End-to-end with the iOS app (simulator)
+
+The "Real iPhone app" phone mode, driven from a script: the page shows the QR link, the app (iOS simulator, dummy card
+from `fetch-artifacts.sh --dev`) proves and posts back, the page verifies (Web2) or mints on devnet (Web3).
+
+```bash
+node server/mock-prover.mjs &                 # relay
+VITE_BURNER=1 npx vite --host &               # burner wallet for web3.mjs
+caffeinate -i node e2e/web2.mjs               # SIM="iPhone 17" CARD=tokyo20 OUT=<screenshot dir>
+caffeinate -i node e2e/web3.mjs               # funds the burner with 0.05 SOL from the default Solana CLI keypair
+```
+Run under `caffeinate -i`: if the Mac idles into sleep mid-proof, the relay session (10 min) expires and the app gets 404.
+A dummy card mints once per scope (its nullifier stays on-chain); `tokyo30` was added for a fresh first mint.
