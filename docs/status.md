@@ -39,7 +39,9 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
    dummy proof time/memory; Card check on the holder's own card (assumptions 1–4 in `ios-plan.md`); a real-card claim
    on the scope-2 gate. Find out whether a free personal team can sign the NFC entitlement.
 2. Demo video plan and recording (deadline 2026-10-12 PDT); English UI and README.
-3. Backup (decided 2026-10-06: iPhone stays primary): macOS + USB PC/SC reader path reusing ZkCredCore and the prover.
+3. Backup (decided 2026-10-06: iPhone stays primary): `app/mobile/ZkCredMac` (`zkcred-mac`, CryptoTokenKit + the
+   `prove` bin). Web2 e2e with a dummy card passes (proof 4.0 s). **Not yet tried with a real reader/card** (no reader
+   connected on 2026-10-07).
 4. Go/no-go on 2026-10-08.
 
 ## Gotchas
