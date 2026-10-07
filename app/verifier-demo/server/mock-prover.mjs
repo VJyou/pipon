@@ -17,9 +17,9 @@ const PORT = Number(process.env.PORT || 8787);
 
 // Dummy people only. DOB = EYYYYMMDD (era digit + Gregorian date).
 const PERSONAS = {
-  tokyo20: { label: "東京都・1999年生", ADDR: "東京都千代田区霞が関一丁目１番１号", DOB: "419990401", PREFECTURE_CODE: "13" },
-  osaka40: { label: "大阪府・1985年生", ADDR: "大阪府大阪市北区中之島一丁目３番２０号", DOB: "319850715", PREFECTURE_CODE: "27" },
-  tokyo17: { label: "東京都・2009年生", ADDR: "東京都新宿区西新宿二丁目８番１号", DOB: "420090401", PREFECTURE_CODE: "13" },
+  tokyo20: { label: "Tokyo · born 1999", ADDR: "東京都千代田区霞が関一丁目１番１号", DOB: "419990401", PREFECTURE_CODE: "13" },
+  osaka40: { label: "Osaka · born 1985", ADDR: "大阪府大阪市北区中之島一丁目３番２０号", DOB: "319850715", PREFECTURE_CODE: "27" },
+  tokyo17: { label: "Tokyo · born 2009", ADDR: "東京都新宿区西新宿二丁目８番１号", DOB: "420090401", PREFECTURE_CODE: "13" },
 };
 
 // make-claim.sh shares build/claim-tmp, so run one proof at a time.

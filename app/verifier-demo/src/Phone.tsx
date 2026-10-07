@@ -5,7 +5,7 @@ export type ProofRequest = { binding: string; scope: number; service: string; st
 
 type Stage = 'idle' | 'reading' | 'proving' | 'done' | 'unsatisfiable' | 'error'
 
-const NEVER_LEAVES = ['氏名 Name', '生年月日 Date of birth', '住所（番地）Street address', '個人番号 My Number (never read)']
+const NEVER_LEAVES = ['Name', 'Date of birth', 'Street address', 'Individual Number (never read)']
 
 export function Phone({ request, onResult }: { request: ProofRequest | null; onResult: (r: ProveResult) => void }) {
   const [personas, setPersonas] = useState<Record<string, string>>({})

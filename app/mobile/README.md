@@ -21,6 +21,18 @@ open ios/MoproApp.xcodeproj                                 # select your team, 
 ```
 In the simulator, launch with `-autoprove` to prove the dummy fixture on start (results also go to stdout).
 
+Signing: the NFC Tag Reading capability needs a paid Apple Developer Program team; a free Personal Team cannot sign it.
+To try the prover on a device with a free team, build with an entitlements file that keeps only
+`increased-memory-limit`, then run the dummy proof:
+```bash
+xcodebuild -project ios/MoproApp.xcodeproj -scheme MoproApp -configuration Release \
+  -destination 'id=<device udid>' -allowProvisioningUpdates \
+  DEVELOPMENT_TEAM=<team id> CODE_SIGN_ENTITLEMENTS=<no-nfc.entitlements> build
+xcrun devicectl device install app --device <udid> <path to MoproApp.app>
+xcrun devicectl device process launch --console --device <udid> app.zkcredentials.ios -- -autoprove
+```
+(Trust the developer once on the phone: Settings → General → VPN & Device Management.)
+
 Flow: request (binding, scope, nonce) → password → NFC read + card signature → `TrustAnchors` picks the J-LIS CA and
 checks the card signature → `CircuitInput.json(...)` → mopro proof → claim to the web demo / Solana.
 Nothing personal leaves the phone; only `CertificateLayout` (sizes/offsets) may be logged while debugging.

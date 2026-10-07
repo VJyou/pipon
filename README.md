@@ -39,16 +39,17 @@ the national CA is the root of trust, and the phone does the proving.
 | `circuits/` | `jpki_age_region.circom` (1.49M constraints), dummy-certificate generator, witness tests, Solana export |
 | `programs/zk_gate/` | Anchor program: gate config, Groth16 verify, nullifier PDA, Core mint; LiteSVM tests |
 | `app/verifier-demo/` | Web demo: Web3 gated mint and Web2 age check; simulated phone or the real iPhone app via QR |
-| `app/mobile/` | iPhone app: `ZkCredCore` Swift package (tested) + Core NFC JPKI reader |
+| `app/mobile/` | iPhone app (SwiftUI + Core NFC + mopro): deep link → read card → on-device proof → send; `ZkCredCore` Swift package (tested) |
 | `sdk/` | Minimal JS client and devnet demo script |
 | `docs/` | Decisions (ADR), research, legal notes, deployment record |
 
 ## Status (devnet)
 - `zk_gate`: [`AsTtCWikB8EtHo3fophwB5EhVLY3FwwyuVFjLai86ZDK`](https://explorer.solana.com/address/AsTtCWikB8EtHo3fophwB5EhVLY3FwwyuVFjLai86ZDK?cluster=devnet)
-- End to end with **dummy** certificates (dummy CA, dummy people): proof → on-chain verify → mint; replays and
-  other prefectures rejected. See `docs/deployments.md`.
-- Proving: rapidsnark 4.6 s on a laptop; native witness 3.5 s. iPhone on-device proving in progress
-  (`docs/research/ios-plan.md`).
+- Two gates: a demo gate for **dummy** certificates (dummy CA, dummy people), and a gate that trusts the real J-LIS
+  signing CAs (age 20+, all prefectures). See `docs/deployments.md`.
+- End to end with dummy certificates: web demo → iPhone app (simulator) → proof → browser verify or on-chain verify
+  and mint; replays and other prefectures rejected.
+- Proving with rapidsnark: **9.1 s on an iPhone 15 Pro Max** (on device, ~470 MB), 3.5 s on a Mac mini.
 
 ## Run the demo
 ```bash
@@ -59,6 +60,8 @@ cd app/verifier-demo && npm i
 node server/mock-prover.mjs &   # simulated phone + relay
 npm run dev                     # http://localhost:5173 (devnet wallet)
 ```
+The page can also hand the request to the iPhone app over a QR code (`zkcred://` link); see `app/verifier-demo/README.md`
+and `app/mobile/README.md`.
 Program tests: `anchor build && scripts/fetch-programs.sh && cargo test -p zk_gate`.
 Swift core tests: `cd app/mobile/ZkCredCore && swift test`.
 

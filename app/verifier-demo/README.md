@@ -20,7 +20,7 @@ npm run dev                        # terminal 2, http://localhost:5173
 
 Use a devnet wallet (Phantom etc. set to devnet) with a little SOL. For automated tests only, `VITE_BURNER=1 npm run dev` adds an in-browser burner wallet.
 
-Dummy cards: 東京都・1999年生 (passes), 大阪府・1985年生 (valid proof, rejected by the Tokyo-only gate), 東京都・2009年生 (under 20: no proof can be made).
+Dummy cards: Tokyo · born 1999 (passes), Osaka · born 1985 (valid proof, rejected by the Tokyo-only gate), Tokyo · born 2009 (under 20: no proof can be made).
 Each dummy card is stable (`circuits/build/persona-*.pem`), so its nullifier is the same across proofs.
 
 ## End-to-end with the iOS app (simulator)

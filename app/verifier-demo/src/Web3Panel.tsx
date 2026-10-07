@@ -44,7 +44,7 @@ export function Web3Panel({ result, onRequest }: { result: ProveResult | null; o
   const ready = result && publicKey
   const prefs = gate?.allowedPrefectures.length === 47
     ? 'all prefectures'
-    : gate?.allowedPrefectures.map((c) => PREFECTURES[c - 1]).join('・')
+    : gate?.allowedPrefectures.map((c) => PREFECTURES[c - 1]).join(', ')
 
   function request() {
     if (!publicKey || !gate) return

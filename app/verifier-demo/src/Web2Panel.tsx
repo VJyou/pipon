@@ -23,7 +23,7 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
     const s = toHex(crypto.getRandomValues(new Uint8Array(32)))
     setSession(s)
     setVerdict(null)
-    onRequest({ binding: s, scope: SHOP_SCOPE, service: 'Sakaya Online (酒屋)', statement: ['Age 20+'] })
+    onRequest({ binding: s, scope: SHOP_SCOPE, service: 'Sakaya Online', statement: ['Age 20+'] })
   }
 
   useEffect(() => {
@@ -61,7 +61,7 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
       <header className="panel-head">
         <div>
           <div className="eyebrow">Web2 · no wallet, no signup</div>
-          <h2>Sakaya Online 酒屋</h2>
+          <h2>Sakaya Online</h2>
         </div>
       </header>
       <p>Alcohol can only be sold to people aged 20+. Today the shop asks for a photo of your ID card.</p>
