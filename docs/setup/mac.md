@@ -26,7 +26,7 @@ git clone --depth 1 -b v2.2.2 https://github.com/iden3/circom.git ~/src/circom &
 ## 3. GitHub access [local]
 ```bash
 gh auth login        # GitHub.com → SSH → generate a new key → login with browser (or device code from your phone)
-git clone git@github.com:VJyou/zkcredentials.git ~/zkcredentials
+git clone git@github.com:VJyou/pipon.git ~/zkcredentials   # repo renamed from zkcredentials on 2026-10-07
 cd ~/zkcredentials
 git config user.name VJyou
 git config user.email 37763328+VJyou@users.noreply.github.com
