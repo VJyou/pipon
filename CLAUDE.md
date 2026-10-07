@@ -24,6 +24,8 @@ ZK credentials for Web2 and Web3 that use the cryptographic authenticity of gove
 - ~~Root of trust~~ → **Decided: JPKI (signing certificate = attributes, user-authentication certificate = uniqueness)** (ADR-0001, docs/legal/proof-sources.md)
 - Revocation (J-LIS revocation data requires certification; for now "only certificates issued within N days")
 - ~~Mobile~~ → **Decided: native SwiftUI + Core NFC + mopro** (ADR-0003)
+- ~~Organisation~~ → **Decided: p!pon as a company; a vendor-neutral industry association co-founded with peers to
+  win legal standing for ZK proofs in Japan** (ADR-0004)
 - Hackathon deadline: **2026-10-12 11:59pm PDT (= 2026-10-13 15:59 JST)** (official rules §5, docs/legal/hackathon-rules-check.md)
   - iPhone app (NFC read + on-device proof): **go/no-go on 10/8**. If not ready, submit the web demo and limit the iPhone to NFC reading
   - 10/9–10/12: submission prep (English, video, publish the repository)

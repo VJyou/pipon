@@ -1,7 +1,7 @@
 # ADR-0004: p!pon as a company; a separate industry association for the legal standing of ZK proofs
 
 - Date: 2026-10-07
-- Status: Proposed (draft; legal and tax details to be confirmed with a judicial scrivener / tax accountant)
+- Status: Accepted 2026-10-07 (legal and tax details still to be confirmed with a judicial scrivener / tax accountant)
 
 ## Context
 - p!pon needs revenue and outside investment (verification fees, SDK, attestations; accelerator funding).
@@ -17,7 +17,7 @@
 2. Association only (一般社団法人).
 3. Company for the product, plus a separate, vendor-neutral association co-founded with peers.
 
-## Decision (proposed)
+## Decision
 Option 3.
 - **p!pon (company)**: product, SDK, fees, investment. One member of the association, not its owner.
 - **Association** (chain-neutral theme: "zero-knowledge identity and data minimisation"), with ZK/Ethereum projects,
