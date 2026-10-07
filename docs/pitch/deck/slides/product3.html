@@ -1,0 +1,25 @@
+<section id="product3" data-transition="fade" style="background:#f4efe6;color:#2a1f1c;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:36px">
+<p style="font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b3281e">Roadmap · product design · Web3</p>
+<h2 style="font-family:'Fredoka', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1">Scan once. After that, just sign with your wallet.</h2>
+<div style="display:flex;flex-direction:row;align-items:stretch;gap:24px">
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#2a1f1c;padding:32px;border-radius:24px">
+<p style="font-size:24px;font-weight:700;color:#fdc84a">ONCE · ABOUT A MINUTE</p>
+<p style="font-size:28px;line-height:1.35;color:#f4efe6"><b>1.</b> Tap the card; the proof "20+, one per person" is bound to your wallet.</p>
+<p style="font-size:28px;line-height:1.35;color:#f4efe6"><b>2.</b> zk_gate verifies it on-chain and issues a <b>non-transferable attestation</b> to the wallet (Solana Attestation Service), with an expiry.</p>
+</div>
+<x-shape kind="arrow-right" style="width:72px;height:36px;background:#d6372b;align-self:center"></x-shape>
+<div style="flex:1;display:flex;flex-direction:column;gap:14px;background:#fdc84a;padding:32px;border-radius:24px">
+<p style="font-size:24px;font-weight:700;color:#2a1f1c">EVERY TIME AFTER · SECONDS</p>
+<p style="font-size:28px;line-height:1.35;color:#2a1f1c"><b>3.</b> A service asks the wallet to sign — no card, no password.</p>
+<p style="font-size:28px;line-height:1.35;color:#2a1f1c"><b>4.</b> It reads the attestation on-chain: issued by zk_gate, not expired, held by this wallet.</p>
+</div>
+</div>
+<div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:16px">
+<div style="display:flex;flex-direction:column;gap:6px;background:#ebe2d2;padding:20px 24px;border-radius:16px"><h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:28px;font-weight:600">Bound to the wallet</h3><p style="font-size:24px;line-height:1.35;color:#4f4440">Non-transferable: it can't be sold or lent.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;background:#ebe2d2;padding:20px 24px;border-radius:16px"><h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:28px;font-weight:600">It expires</h3><p style="font-size:24px;line-height:1.35;color:#4f4440">Re-scan yearly or when the certificate renews; address facts sooner.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;background:#ebe2d2;padding:20px 24px;border-radius:16px"><h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:28px;font-weight:600">One per person</h3><p style="font-size:24px;line-height:1.35;color:#4f4440">The nullifier stops a second wallet for the same card.</p></div>
+<div style="display:flex;flex-direction:column;gap:6px;background:#ebe2d2;padding:20px 24px;border-radius:16px"><h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:28px;font-weight:600">Your choice of linkage</h3><p style="font-size:24px;line-height:1.35;color:#4f4440">One wallet everywhere is convenient; separate wallets keep services apart.</p></div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7a6e68">Planned. Today's demo proves on every request; the attestation turns that one proof into a reusable credential.</p>
+<aside>How the Web3 product will work: you scan your card once. The proof "20 or over, one per person" is bound to your wallet; zk_gate verifies it on-chain and issues a non-transferable attestation to that wallet through the Solana Attestation Service, with an expiry. From then on, a service just asks your wallet to sign and reads the attestation on-chain: issued by zk_gate, not expired, held by this wallet. No card, no password. The attestation can't be sold or lent, it expires so you re-scan about once a year, the nullifier stops a second wallet for the same card, and you choose whether to use one wallet everywhere or separate ones to keep services apart.</aside>
+</section>
