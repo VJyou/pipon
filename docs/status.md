@@ -37,7 +37,8 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 ## Rename (2026-10-07)
 - Project name **p!pon** (said "pippon"); `pipon` wherever `!` cannot go: deep link `pipon://`, bundle id
   `app.pipon.ios`, GitHub repo (rename pending). Internal code names (`ZkCredCore`, `zk_gate`, program ID) stay.
-- Gate names are immutable: the demo's real-card gate is now scope 4 ("p!pon Japan 20+"); scope 2 keeps the old name.
+- Gate names are immutable: the demo now uses scope 5 ("p!pon Tokyo 20+", dummy CA) and scope 4 ("p!pon Japan 20+",
+  J-LIS); scopes 1 and 2 keep the old name. Fresh dummy cards for first mints: `tokyo30`, `tokyo25` (used on scope 5).
 
 ## Next
 1. [local] iPhone: connect + trust, Xcode Apple ID/team, Developer Mode (`docs/setup/mac.md` §6). Then on the device:

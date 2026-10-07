@@ -6,10 +6,10 @@ import { claimIxs, fetchGate, gatePda, PREFECTURES, PROGRAM_ERRORS, type Gate } 
 import type { ProveResult } from './lib/prover'
 import type { ProofRequest } from './Phone'
 
-// Gates on devnet: scope 1 trusts the demo's dummy CA (Tokyo only); scopes 2–4 trust the J-LIS signing CAs (real
-// cards). 4 is the demo's (named "p!pon Japan 20+"; 2 has the old name), 3 is for tests: a card claims once per scope.
+// Gates on devnet: scopes 1 and 5 trust the demo's dummy CA (Tokyo only); scopes 2–4 trust the J-LIS signing CAs (real
+// cards). The demo shows 5 and 4 (named "p!pon …"; 1 and 2 keep the old name), 3 is for tests: a card claims once per scope.
 const GATES = [
-  { scope: 1, label: 'Demo gate · dummy cards' },
+  { scope: 5, label: 'Demo gate · dummy cards' },
   { scope: 4, label: 'Real cards · J-LIS CA' },
   { scope: 3, label: 'Real cards · test gate' },
 ]
@@ -31,7 +31,7 @@ export function Web3Panel({ result, onRequest }: { result: ProveResult | null; o
   const [gate, setGate] = useState<Gate | null>(null)
   const [busy, setBusy] = useState(false)
   const [outcome, setOutcome] = useState<Outcome | null>(null)
-  const [scope, setScope] = useState(1)
+  const [scope, setScope] = useState(5)
 
   const refresh = useCallback(() => fetchGate(connection, scope).then(setGate), [connection, scope])
   useEffect(() => {

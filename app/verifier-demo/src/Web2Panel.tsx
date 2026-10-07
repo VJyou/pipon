@@ -30,8 +30,8 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
     if (!result || !session) return
     ;(async () => {
       const t0 = performance.now()
-      // Trust list: the CA keys of both devnet gates (scope 1: demo dummy CA, scope 2: J-LIS signing CAs).
-      const [vkey, demoGate, jlisGate] = await Promise.all([fetchVkey(), fetchGate(connection, 1), fetchGate(connection, 2)])
+      // Trust list: the CA keys of the demo's two devnet gates (scope 5: dummy CA, scope 4: J-LIS signing CAs).
+      const [vkey, demoGate, jlisGate] = await Promise.all([fetchVkey(), fetchGate(connection, 5), fetchGate(connection, 4)])
       const trusted = [...(demoGate?.caKeyHashes ?? []), ...(jlisGate?.caKeyHashes ?? [])]
       // public = [caKeyHash, nullifier, chalHi, chalLo, currentDate, ageThreshold, prefectureCode, scope]
       const p = result.publicSignals.map(BigInt)
