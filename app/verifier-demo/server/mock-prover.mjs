@@ -35,7 +35,9 @@ const PROOFS_PER_IP_HOUR = 20;
 const MAX_WAITING = 6;
 const proofLog = new Map(); // ip -> timestamps
 let waiting = 0;
-const clientIp = (req) => String(req.headers["cf-connecting-ip"] || req.socket.remoteAddress || "");
+// The proxy in front sets the client address in a header; trust only the one named by IP_HEADER.
+const IP_HEADER = process.env.IP_HEADER; // "cf-connecting-ip" (Cloudflare tunnel) or "fly-client-ip" (Fly.io)
+const clientIp = (req) => String((IP_HEADER && req.headers[IP_HEADER]) || req.socket.remoteAddress || "");
 function allowProof(ip) {
   const now = Date.now();
   const recent = (proofLog.get(ip) ?? []).filter((t) => now - t < 3_600_000);
@@ -163,7 +165,7 @@ createServer(async (req, res) => {
   } catch (e) {
     json(res, 500, { error: String(e) });
   }
-}).listen(PORT, "127.0.0.1", () => console.log(`mock prover on http://127.0.0.1:${PORT}${PUBLIC ? " (public: dist/, limits)" : ""}`));
+}).listen(PORT, process.env.HOST || "127.0.0.1", () => console.log(`mock prover on http://${process.env.HOST || "127.0.0.1"}:${PORT}${PUBLIC ? " (public: dist/, limits)" : ""}`));
 
 // Built page (npm run build) for the public demo; unknown paths fall back to index.html.
 const TYPES = { ".html": "text/html; charset=utf-8", ".js": "text/javascript", ".css": "text/css", ".png": "image/png",
