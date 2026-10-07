@@ -9,7 +9,7 @@ const NEVER_LEAVES = ['Name', 'Date of birth', 'Street address', 'Individual Num
 
 export function Phone({ request, onResult }: { request: ProofRequest | null; onResult: (r: ProveResult) => void }) {
   const [personas, setPersonas] = useState<Record<string, string>>({})
-  const [persona, setPersona] = useState('tokyo20')
+  const [persona, setPersona] = useState('guest')
   const [stage, setStage] = useState<Stage>('idle')
   const [ms, setMs] = useState(0)
   const [err, setErr] = useState('')

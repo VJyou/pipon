@@ -40,6 +40,10 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - Gate names are immutable: the demo now uses scope 5 ("p!pon Tokyo 20+", dummy CA) and scope 4 ("p!pon Japan 20+",
   J-LIS); scopes 1 and 2 keep the old name. Fresh dummy cards for first mints: `tokyo30`, `tokyo25` (used on scope 5).
 
+## Public demo (2026-10-07)
+- Temporary: Mac mini + Cloudflare quick tunnel, `PUBLIC=1` server (`app/verifier-demo/README.md`). URL changes on
+  restart; plan: move to a cloud host before submission/judging. Web2 flow verified through the public URL.
+
 ## Next
 1. [local] iPhone: connect + trust, Xcode Apple ID/team, Developer Mode (`docs/setup/mac.md` §6). Then on the device:
    dummy proof time/memory; Card check on the holder's own card (assumptions 1–4 in `ios-plan.md`); a real-card claim

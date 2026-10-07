@@ -6,6 +6,19 @@ export type ProveResult = { claim: Claim; proof: Groth16Proof; publicSignals: st
 
 export class Unsatisfiable extends Error {}
 
+/** This browser's own dummy card ("guest" persona): a random id kept in localStorage. */
+function guestId(): string {
+  const fresh = () => Array.from(crypto.getRandomValues(new Uint8Array(16)), (b) => b.toString(16).padStart(2, '0')).join('')
+  try {
+    const id = localStorage.getItem('pipon-guest') ?? fresh()
+    localStorage.setItem('pipon-guest', id)
+    return id
+  } catch {
+    return (sessionGuest ??= fresh())
+  }
+}
+let sessionGuest: string | undefined
+
 export async function fetchPersonas(): Promise<Record<string, string>> {
   const r = await fetch('/api/personas')
   if (!r.ok) throw new Error('mock prover is not running (node server/mock-prover.mjs)')
@@ -20,9 +33,10 @@ export async function prove(binding: string, persona: string, scope: number): Pr
   const r = await fetch('/api/prove', {
     method: 'POST',
     headers: { 'content-type': 'application/json' },
-    body: JSON.stringify({ binding, persona, scope }),
+    body: JSON.stringify({ binding, persona, scope, guestId: guestId() }),
   })
   if (r.status === 422) throw new Unsatisfiable('This card does not satisfy the request')
+  if (r.status === 429 || r.status === 503) throw new Error((await r.json().catch(() => null))?.error ?? 'the demo prover is busy')
   if (!r.ok) throw new Error(`prover error (${r.status})`)
   return r.json()
 }

@@ -36,3 +36,15 @@ caffeinate -i node e2e/web3.mjs               # funds the burner with 0.05 SOL f
 ```
 Run under `caffeinate -i`: if the Mac idles into sleep mid-proof, the relay session (10 min) expires and the app gets 404.
 A dummy card mints once per scope (its nullifier stays on-chain); `tokyo30` was added for a fresh first mint.
+
+## Public demo (temporary, from the Mac mini)
+
+```bash
+npm run build
+PUBLIC=1 node server/mock-prover.mjs          # serves dist/ and /api on 127.0.0.1:8787
+cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8787   # prints a https://*.trycloudflare.com URL
+```
+`PUBLIC=1` adds limits (20 proofs per IP per hour, at most 6 waiting) and the default "Your own dummy card": each
+browser gets its own dummy card (key made on first use, `circuits/build/guest-cards/`), so every visitor can mint once
+and see the second claim rejected. The quick-tunnel URL changes whenever cloudflared restarts; a cloud host replaces
+this before judging.
