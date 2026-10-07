@@ -1,0 +1,13 @@
+<section id="tech" data-transition="fade" style="background:#2a1f1c;color:#f4efe6;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:56px">
+<p style="font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#fdc84a">Technical demo · architecture</p>
+<h2 style="font-family:'Fredoka', Arial, sans-serif;font-size:72px;font-weight:600;line-height:1.1;color:#f4efe6">No issuer. The national CA is the root of trust; the phone does the proving.</h2>
+<table style="font-size:28px;color:#f4efe6;font-family:'Nunito Sans', Arial, sans-serif">
+<tr><th style="width:24%;text-align:left">Layer</th><th style="width:76%;text-align:left">Built with</th></tr>
+<tr><td>Circuit</td><td>Circom · Groth16 · 1.49M constraints</td></tr>
+<tr><td>Prover</td><td>mopro + rapidsnark on iPhone · Rust CLI on Mac</td></tr>
+<tr><td>Card I/O</td><td>Core NFC (iPhone) · CryptoTokenKit / PC/SC (Mac)</td></tr>
+<tr><td>On-chain</td><td>Anchor program zk_gate · alt_bn128 · Metaplex Core</td></tr>
+<tr><td>Web verifier</td><td>snarkjs in the browser · CA trust list read from Solana</td></tr>
+</table>
+<aside>Stack: a Circom circuit with 1.49 million constraints and Groth16; on-device proving with mopro and rapidsnark; an Anchor program, zk_gate, on Solana; and a web verifier with snarkjs. There is no issuer server: the national certificate authority is the root of trust, and the phone does the proving.</aside>
+</section>

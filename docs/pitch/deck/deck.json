@@ -1,0 +1,18 @@
+{
+  "v": 4,
+  "createdOnFiles": {"v": 1, "at": "2026-10-07T05:40:00Z"},
+  "lists": "css",
+  "title": "p!pon Pitch",
+  "order": ["cover", "global", "trend", "breach", "lesson", "whynow", "how", "who", "solana", "roadmap", "status", "tech", "circuit", "web2flow", "web2", "web3flow", "web3", "realcard", "limits"],
+  "cover": "cover",
+  "sections": {
+    "pitch": {"description": "Pitch video: why services should stop holding ID data, and how p!pon makes that possible.", "start": "cover"},
+    "demo": {"description": "Technical demo: stack, circuit, Web2 and Web3 flows, real-card results, limits.", "start": "tech"}
+  },
+  "faces": {
+    "fredoka": {"family": "Fredoka", "href": "https://fonts.googleapis.com/css2?family=Fredoka:wght@500..700&display=swap"},
+    "nunito-sans": {"family": "Nunito Sans", "href": "https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@400;600;700&display=swap"},
+    "jetbrains-mono": {"family": "JetBrains Mono", "href": "https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&display=swap"}
+  },
+  "designSystems": []
+}

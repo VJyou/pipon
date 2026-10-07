@@ -1,0 +1,33 @@
+<section id="solana" data-transition="fade" style="background:#ebe2d2;color:#2a1f1c;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b3281e">Why Solana</p>
+<h2 style="font-family:'Fredoka', Arial, sans-serif;font-size:68px;font-weight:600;line-height:1.1">A shared "one per person" registry<br>that no company has to own.</h2>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:32px;background:#2a1f1c;padding:32px 40px;border-radius:24px">
+<p style="font-family:'Fredoka', Arial, sans-serif;font-size:96px;font-weight:700;line-height:1;color:#fdc84a;white-space:nowrap">~144k</p>
+<p style="font-size:28px;line-height:1.4;color:#dccfc0">compute units: Groth16 verify (alt_bn128), nullifier and NFT mint in <b>one transaction</b></p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#f4efe6;padding:32px 40px;border-radius:24px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:16px">
+<x-icon name="Users" style="color:#d6372b;width:44px;height:44px"></x-icon>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:38px;font-weight:600">One per person, no list of people</h3>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4f4440">Each card leaves a per-gate nullifier in a PDA. A second claim fails on-chain.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#f4efe6;padding:32px 40px;border-radius:24px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:16px">
+<x-icon name="Trust" style="color:#d6372b;width:44px;height:44px"></x-icon>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:38px;font-weight:600">A trust list anyone can read</h3>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4f4440">Gates hold the trusted J-LIS CA keys on-chain. Our Web2 store reads the same list: no API key, no vendor.</p>
+</div>
+<div style="display:flex;flex-direction:column;gap:12px;background:#f4efe6;padding:32px 40px;border-radius:24px">
+<div style="display:flex;flex-direction:row;align-items:center;gap:16px">
+<x-icon name="Lightning" style="color:#d6372b;width:44px;height:44px"></x-icon>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:38px;font-weight:600">Next: attestations and agents</h3>
+</div>
+<p style="font-size:28px;line-height:1.4;color:#4f4440">Solana Attestation Service for reusable credentials; x402 so an AI agent can show a verified human stands behind it.</p>
+</div>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7a6e68">Live on devnet: zk_gate program with real-card and demo gates · see the technical demo</p>
+<aside>Why Solana? It gives us a shared "one per person" registry that no company has to own. Verifying the Groth16 proof with the alt_bn128 syscalls, recording the nullifier and minting the NFT all fit in one transaction, about 144k compute units. Each card leaves a per-gate nullifier, so a second claim simply fails on-chain — and nobody keeps a list of people. The trusted government CA keys live on-chain too, so any website can read the same trust list; our Web2 store does exactly that. Next: the Solana Attestation Service for reusable credentials, and x402 so an AI agent can show there is a verified human behind it.</aside>
+</section>

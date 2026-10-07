@@ -1,0 +1,28 @@
+<section id="circuit" data-transition="fade" style="background:#f4efe6;color:#2a1f1c;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b3281e">Inside the proof</p>
+<h2 style="font-family:'Fredoka', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1">Four checks in private. This sample reveals two facts.</h2>
+<div style="display:flex;flex-direction:row;gap:40px">
+<div style="flex:3;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;line-height:1.35"><b>1.</b> J-LIS CA signature over the certificate (RSA-2048, SHA-256)</p>
+<p style="font-size:30px;line-height:1.35"><b>2.</b> The card's signature over a challenge bound to the wallet or browser session</p>
+<p style="font-size:30px;line-height:1.35"><b>3.</b> Date of birth + N years ≤ today</p>
+<p style="font-size:30px;line-height:1.35"><b>4.</b> Address starts with the chosen prefecture</p>
+</div>
+<div style="flex:2;display:flex;flex-direction:column;gap:12px;background:#2a1f1c;padding:32px 40px;border-radius:24px">
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:34px;font-weight:600;color:#f4efe6">Revealed in this sample</h3>
+<p style="font-size:30px;line-height:1.4;color:#fdc84a"><b>Age ≥ 20</b> · <b>Prefecture</b></p>
+<p style="font-size:24px;line-height:1.4;color:#dccfc0">Plus the plumbing: CA key hash, a per-service nullifier, challenge, date, scope.</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:column;gap:16px;background:#ebe2d2;padding:28px 32px;border-radius:24px;border:3px dashed #a39689">
+<p style="font-size:26px;font-weight:700;color:#2a1f1c">Room to grow — the certificate also holds name, date of birth, sex and full address, so the same pattern can prove (not built yet):</p>
+<div style="display:flex;flex-direction:row;flex-wrap:wrap;gap:12px">
+<p style="font-size:26px;background:#f4efe6;padding:8px 20px;border-radius:999px">Other age lines: 18+, 65+, under 25</p>
+<p style="font-size:26px;background:#f4efe6;padding:8px 20px;border-radius:999px">City or ward</p>
+<p style="font-size:26px;background:#f4efe6;padding:8px 20px;border-radius:999px">Sex, only where a service must know</p>
+<p style="font-size:26px;background:#f4efe6;padding:8px 20px;border-radius:999px">Name matches the account (hash, not the name)</p>
+<p style="font-size:26px;background:#f4efe6;padding:8px 20px;border-radius:999px">Certificate issued within N days</p>
+</div>
+</div>
+<aside>Inside the proof: four checks happen in private — the J-LIS CA signature over the certificate, the card's signature over a challenge bound to the wallet or browser session, the age, and the prefecture. This sample product reveals just two facts: age 20 or over, and the prefecture — plus technical values like the CA key hash and a per-service nullifier. That is only today's sample. The certificate also holds the name, date of birth, sex and full address, so the same pattern can prove other facts: other age lines, a city or ward, sex only where a service must know it, that a name matches an account without revealing it, or that the certificate is recent. Each service asks for exactly what it needs, nothing more.</aside>
+</section>

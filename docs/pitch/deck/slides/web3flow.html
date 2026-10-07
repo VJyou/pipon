@@ -1,0 +1,37 @@
+<section id="web3flow" data-transition="fade" style="background:#f4efe6;color:#2a1f1c;font-family:'Nunito Sans', Arial, sans-serif;padding:128px 128px 160px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b3281e">Flow 2 · Web3 · one-per-person mint</p>
+<h2 style="font-family:'Fredoka', Arial, sans-serif;font-size:64px;font-weight:600;line-height:1.1">How Solana enforces "20+, one per person"</h2>
+<div style="display:flex;flex-direction:row;gap:16px">
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#ebe2d2;padding:24px;border-radius:24px">
+<p style="font-size:24px;font-weight:700;color:#b3281e">WALLET</p>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:32px;font-weight:600;line-height:1.15">1 · Open the gate</h3>
+<p style="font-size:24px;line-height:1.35;color:#4f4440">The gate account on Solana holds the rules: minimum age, prefectures, trusted CA keys, scope.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#ebe2d2;padding:24px;border-radius:24px">
+<p style="font-size:24px;font-weight:700;color:#b3281e">PHONE</p>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:32px;font-weight:600;line-height:1.15">2 · Bound to the wallet</h3>
+<p style="font-size:24px;line-height:1.35;color:#4f4440">The challenge is SHA-256(wallet address ‖ nonce), so the proof only works for this wallet.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#ebe2d2;padding:24px;border-radius:24px">
+<p style="font-size:24px;font-weight:700;color:#b3281e">CARD + PHONE</p>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:32px;font-weight:600;line-height:1.15">3 · Tap and prove</h3>
+<p style="font-size:24px;line-height:1.35;color:#4f4440">The card signs the challenge; the phone makes the same Groth16 proof as in Web2, with the gate's scope.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#2a1f1c;padding:24px;border-radius:24px">
+<p style="font-size:24px;font-weight:700;color:#fdc84a">SOLANA · zk_gate</p>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:32px;font-weight:600;line-height:1.15;color:#f4efe6">4 · Verify on-chain</h3>
+<p style="font-size:24px;line-height:1.35;color:#dccfc0">Groth16 via alt_bn128 syscalls; CA, age, prefecture, date and the signer's wallet checked against the gate.</p>
+</div>
+<div style="flex:1;display:flex;flex-direction:column;gap:12px;background:#2a1f1c;padding:24px;border-radius:24px">
+<p style="font-size:24px;font-weight:700;color:#fdc84a">SOLANA · zk_gate</p>
+<h3 style="font-family:'Fredoka', Arial, sans-serif;font-size:32px;font-weight:600;line-height:1.15;color:#f4efe6">5 · Mint or reject</h3>
+<p style="font-size:24px;line-height:1.35;color:#dccfc0">New nullifier → PDA created, Core NFT minted, same transaction (~144k CU). Nullifier exists → "Already claimed".</p>
+</div>
+</div>
+<div style="display:flex;flex-direction:row;gap:16px">
+<p style="flex:1;font-size:26px;line-height:1.35;background:#fdc84a;padding:20px 24px;border-radius:16px"><b>Public on-chain:</b> the proof and its values — CA key hash, nullifier, date, age threshold, prefecture code.</p>
+<p style="flex:1;font-size:26px;line-height:1.35;background:#ebe2d2;padding:20px 24px;border-radius:16px"><b>Never on-chain:</b> name, date of birth, address, ID image, My Number.</p>
+</div>
+<p style="position:absolute;left:128px;bottom:64px;width:1664px;font-size:24px;color:#7a6e68">The nullifier is per card and per gate: another gate gets a different one, so wallets can't be linked across services.</p>
+<aside>And the Web3 flow. The user connects a wallet to a gate; the gate account on Solana holds the rules: minimum age, allowed prefectures, trusted CA keys and a scope. The request is bound to the wallet: the card signs a challenge made from the wallet address and a nonce, so the proof only works for that wallet. The phone makes the same Groth16 proof as before, with the gate's scope. Then one transaction: zk_gate verifies the proof with the alt_bn128 syscalls and checks the CA, age, prefecture, date and the signer against the gate. If the nullifier is new, it creates the nullifier account and mints a Metaplex Core NFT in the same transaction, about 144k compute units. If the nullifier already exists, the claim is rejected: one per person. On-chain you only find the proof and its public values; never a name, birthday, address or ID image.</aside>
+</section>

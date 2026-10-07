@@ -1,0 +1,13 @@
+<section id="web3" data-transition="fade" style="background:#ebe2d2;color:#2a1f1c;font-family:'Nunito Sans', Arial, sans-serif;padding:128px;display:flex;flex-direction:column;gap:40px">
+<p style="font-size:28px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#b3281e">Demo 2 · Web3 gated mint</p>
+<h2 style="font-family:'Fredoka', Arial, sans-serif;font-size:72px;font-weight:600;line-height:1.1">One transaction: verify, record, mint.</h2>
+<div style="display:flex;flex-direction:row;gap:40px;flex:1">
+<img src="/_blob/3635c05a8d027a9f164ee380e423d076" alt="Web demo, Web3 tab: the p!pon Tokyo 20+ gate on Solana devnet shows 'Minted' after the wallet-bound proof was verified on-chain; dummy card" style="width:900px;height:620px;object-fit:contain;background:#f4efe6;border:2px solid #d8ccb9;border-radius:24px">
+<div style="flex:2;display:flex;flex-direction:column;gap:16px">
+<p style="font-size:30px;line-height:1.4">Proof bound to the wallet</p>
+<p style="font-size:30px;line-height:1.4">Same card again → <b>Already claimed</b></p>
+<p style="font-size:30px;line-height:1.4">Card from another prefecture → <b>rejected by the gate</b></p>
+</div>
+</div>
+<aside>The proof is bound to the wallet. zk_gate verifies Groth16 with the alt_bn128 syscalls, stores the nullifier in a PDA and mints a Metaplex Core NFT in one transaction, about 144k compute units. Then: the same card again is rejected as already claimed; a card from another prefecture is rejected by the gate policy.</aside>
+</section>

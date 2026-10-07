@@ -5,6 +5,8 @@ Japan's My Number Card, without handing over your ID.** Verifiable by any websit
 
 > IC chips solve authenticity. Zero-knowledge credentials solve privacy.
 
+Pitch and business overview: [docs/pitch/deck/pipon-pitch.pdf](docs/pitch/deck/pipon-pitch.pdf)
+
 ## Why now
 - Japan is moving identity checks to IC chips: from April 2027, remote KYC under the Act on Prevention of Transfer of
   Criminal Proceeds drops photo-upload methods in favour of reading the chip ([JAFIC Q&A](https://www.npa.go.jp/sosikihanzai/jafic/hourei/data/25062402qa.pdf)).
