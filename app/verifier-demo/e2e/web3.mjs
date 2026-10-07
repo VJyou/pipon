@@ -1,12 +1,15 @@
-// Web3 gated mint on devnet with the "Real iPhone app" phone mode (iOS simulator) and the dev burner wallet.
+// Web3 gated mint on devnet with the "Real iPhone app" phone mode and the dev burner wallet.
+// The phone is the iOS simulator, or PHONE=mac for the macOS reader CLI (CARD=reader: the card in the USB reader).
 import { chromium } from 'playwright-core'
-import { execFileSync } from 'node:child_process'
+import { execFileSync, spawnSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 
 const BASE = process.env.BASE ?? 'http://localhost:5173'
 const CARD = process.env.CARD ?? 'tokyo20'
 const OUT = process.env.OUT ?? '.'
 const SIM = process.env.SIM ?? 'iPhone 17'
-const GATE = process.env.GATE ?? '1' // 1: demo gate (dummy CA), 2: real cards (J-LIS CA)
+const GATE = process.env.GATE ?? '1' // 1: demo gate (dummy CA), 2: real cards (J-LIS CA), 3: real cards, test gate
+const PHONE = process.env.PHONE ?? 'sim'
 const browser = await chromium.launch({ executablePath: process.env.CHROME ?? '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome' })
 const page = await browser.newPage({ viewport: { width: 1280, height: 1000 } })
 page.on('pageerror', (e) => console.log('pageerror', e.message))
@@ -25,12 +28,18 @@ console.log('wallet', request.binding, '| service', request.service, '|', reques
 const sol = (...a) => execFileSync(process.env.HOME + '/.local/share/solana/install/active_release/bin/solana', a, { encoding: 'utf8' })
 console.log(sol('transfer', request.binding, '0.05', '--allow-unfunded-recipient', '-u', 'devnet').trim().split('\n').pop())
 
-const sim = (...a) => execFileSync('xcrun', ['simctl', ...a], { stdio: 'pipe' })
-try { sim('terminate', SIM, 'app.zkcredentials.ios') } catch {}
 const t0 = Date.now()
-sim('launch', SIM, 'app.zkcredentials.ios', '-autoDevCard', CARD, '-openLink', link)
 const st = async () => { const r = await fetch(session); return r.status + (r.ok && (await r.json()).result ? ' +result' : '') }
-console.log('session before launch:', await st())
+if (PHONE === 'mac') {
+  const cli = fileURLToPath(new URL('../../mobile/ZkCredMac/.build/release/zkcred-mac', import.meta.url))
+  const run = spawnSync(cli, ['prove', link, ...(CARD === 'reader' ? [] : ['--dev', CARD])], { stdio: 'inherit' })
+  if (run.status !== 0) console.log('zkcred-mac exited with', run.status)
+} else {
+  const sim = (...a) => execFileSync('xcrun', ['simctl', ...a], { stdio: 'pipe' })
+  try { sim('terminate', SIM, 'app.zkcredentials.ios') } catch {}
+  sim('launch', SIM, 'app.zkcredentials.ios', '-autoDevCard', CARD, '-openLink', link)
+  console.log('session before launch:', await st())
+}
 for (let i = 0; i < 40; i++) {
   await new Promise((r) => setTimeout(r, 3000))
   const cur = (await page.locator('.mono.small.muted.break').textContent()).trim()
