@@ -4,7 +4,7 @@ import ZkCredCore
 // zkcred-mac — the iPhone app's request flow on a Mac with a USB smart card reader.
 //
 //   zkcred-mac readers
-//   zkcred-mac prove '<zkcred://prove?s=...>' [--reader <name>] [--dev <card>]
+//   zkcred-mac prove '<pipon://prove?s=...>' [--reader <name>] [--dev <card>]
 //
 // Request → card (PC/SC reader, or a dummy card with --dev) → checks → proof (ZkCredProver `prove`) → relay.
 // Only the proof, its public signals and the nonce leave this process; circuit inputs go to the prover over a pipe.
@@ -27,7 +27,7 @@ enum CLIError: LocalizedError {
 
     var errorDescription: String? {
         switch self {
-        case .usage: return "usage: zkcred-mac readers | zkcred-mac prove '<zkcred://prove?s=...>' [--reader <name>] [--dev <card>]"
+        case .usage: return "usage: zkcred-mac readers | zkcred-mac prove '<pipon://prove?s=...>' [--reader <name>] [--dev <card>]"
         case .missing(let what): return "Missing \(what)."
         case .relay(let code): return "The demo site answered HTTP \(code)."
         case .underAge: return "This card does not satisfy age \(ageThreshold)+, so no proof exists."

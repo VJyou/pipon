@@ -108,7 +108,7 @@ struct CircuitInputTests {
 
     @Test func deepLinkAndBinding() throws {
         let url = try ProofRequest.sessionURL(
-            fromDeepLink: "zkcred://prove?s=http%3A%2F%2F192.168.1.5%3A5173%2Fapi%2Fsession%2Fabc")
+            fromDeepLink: "pipon://prove?s=http%3A%2F%2F192.168.1.5%3A5173%2Fapi%2Fsession%2Fabc")
         #expect(url.absoluteString == "http://192.168.1.5:5173/api/session/abc")
         #expect(throws: ProofRequest.RequestError.badLink) { try ProofRequest.sessionURL(fromDeepLink: "https://x/y") }
 

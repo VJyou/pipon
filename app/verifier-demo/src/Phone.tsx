@@ -44,7 +44,7 @@ export function Phone({ request, onResult }: { request: ProofRequest | null; onR
     <div className="phone">
       <div className="phone-notch" />
       <div className="phone-screen">
-        <div className="phone-title">zkCredentials</div>
+        <div className="phone-title">p!pon</div>
         <label className="field">
           <span>Dummy card</span>
           <select value={persona} onChange={(e) => setPersona(e.target.value)} disabled={stage === 'reading' || stage === 'proving'}>

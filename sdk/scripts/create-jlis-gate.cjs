@@ -1,6 +1,6 @@
 // Create a real-card gate on devnet: age 20+, all 47 prefectures, trusting the J-LIS signing CAs.
 //   WALLET_KEYPAIR=~/.config/solana/zkcred-devnet.json [SCOPE=3 NAME="..."] node scripts/create-jlis-gate.cjs
-// Scope 2 is the demo's real-card gate; scope 3 is for tests (each card claims once per scope).
+// Scope 4 is the demo's real-card gate ("p!pon Japan 20+"; scope 2 has the old name); scope 3 is for tests (each card claims once per scope).
 // caKeyHash values: node circuits/scripts/export_solana.cjs cahash circuits/fixtures/jlis/*.cer
 // signca01 expired on 2025-10-19 and is left out.
 const fs = require("fs");
@@ -28,8 +28,8 @@ const CA_KEY_HASHES = [
     minAge: 20,
     allowedPrefectures: Array.from({ length: 47 }, (_, i) => i + 1),
     caKeyHashes: CA_KEY_HASHES,
-    name: process.env.NAME || "zkCredentials Japan 20+",
-    uri: process.env.METADATA_URI || "https://example.com/zkcred/japan.json",
+    name: process.env.NAME || "p!pon Japan 20+",
+    uri: process.env.METADATA_URI || "https://example.com/pipon/japan.json",
   });
   const sig = await sendAndConfirmTransaction(conn, new Transaction().add(ix), [payer]);
   console.log("gate created", gate.toBase58(), "authority", payer.publicKey.toBase58());

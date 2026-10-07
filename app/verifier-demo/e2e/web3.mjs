@@ -36,8 +36,8 @@ if (PHONE === 'mac') {
   if (run.status !== 0) console.log('zkcred-mac exited with', run.status)
 } else {
   const sim = (...a) => execFileSync('xcrun', ['simctl', ...a], { stdio: 'pipe' })
-  try { sim('terminate', SIM, 'app.zkcredentials.ios') } catch {}
-  sim('launch', SIM, 'app.zkcredentials.ios', '-autoDevCard', CARD, '-openLink', link)
+  try { sim('terminate', SIM, 'app.pipon.ios') } catch {}
+  sim('launch', SIM, 'app.pipon.ios', '-autoDevCard', CARD, '-openLink', link)
   console.log('session before launch:', await st())
 }
 for (let i = 0; i < 40; i++) {

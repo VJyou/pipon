@@ -28,7 +28,7 @@ export default function App() {
     <div className="app">
       <header className="top">
         <div className="brand">
-          <span className="logo" aria-hidden>◆</span> zkCredentials
+          <img className="logo" src="/pipon-logo.png" alt="" /> p!pon
         </div>
         <p className="tagline">IC chips solve authenticity. Zero-knowledge credentials solve privacy.</p>
       </header>

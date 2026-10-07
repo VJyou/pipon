@@ -1,4 +1,4 @@
-# zkCredentials verifier demo
+# p!pon verifier demo
 
 Web demo for the pitch: a simulated phone proves facts from a (dummy) My Number Card, and two services verify them.
 

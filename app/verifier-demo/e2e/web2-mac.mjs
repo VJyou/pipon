@@ -14,7 +14,7 @@ page.on('pageerror', (e) => console.log('pageerror', e.message))
 await page.goto(BASE)
 await page.getByRole('tab', { name: /Web2/ }).click()
 await page.locator('.phone-mode select').selectOption('iphone')
-await page.getByRole('button', { name: /Verify age with zkCredentials/ }).click()
+await page.getByRole('button', { name: /Verify age with p!pon/ }).click()
 const link = (await page.locator('.mono.small.muted.break').textContent({ timeout: 15000 })).trim()
 console.log('deep link', link.slice(0, 60) + '…')
 

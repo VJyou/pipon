@@ -66,7 +66,7 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
       </header>
       <p>Alcohol can only be sold to people aged 20+. Today the shop asks for a photo of your ID card.</p>
 
-      <button className="primary" onClick={request}>Verify age with zkCredentials</button>
+      <button className="primary" onClick={request}>Verify age with p!pon</button>
 
       {verdict && (
         <div className={`result ${passed ? 'ok-box' : 'bad-box'}`}>

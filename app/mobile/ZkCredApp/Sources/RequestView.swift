@@ -24,19 +24,19 @@ struct RequestView: View {
             } else {
                 Text("Scan the QR code on the demo site with the iPhone camera.").foregroundStyle(.secondary)
                 HStack {
-                    TextField("or paste a zkcred:// link", text: $pastedLink)
+                    TextField("or paste a pipon:// link", text: $pastedLink)
                         .textFieldStyle(.roundedBorder)
                         .autocorrectionDisabled()
                         .textInputAutocapitalization(.never)
                     Button("Open") { Task { await flow.open(deepLink: pastedLink) } }
-                        .disabled(!pastedLink.hasPrefix("zkcred://"))
+                        .disabled(!pastedLink.hasPrefix("pipon://"))
                 }
             }
             status
         }
         .onAppear {
             devCard = flow.devCards.first ?? ""
-            // `-openLink <zkcred://…>` launch argument: open a request without the system's "Open in…" prompt (simctl).
+            // `-openLink <pipon://…>` launch argument: open a request without the system's "Open in…" prompt (simctl).
             if let link = UserDefaults.standard.string(forKey: "openLink"), flow.request == nil {
                 Task { await flow.open(deepLink: link) }
             }

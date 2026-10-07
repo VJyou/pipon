@@ -1,4 +1,4 @@
-# zkCredentials iPhone app
+# p!pon iPhone app
 
 - `ZkCredCore/` — platform-independent Swift package: X.509/DER parsing, circuit input builder
   (byte-for-byte identical to `circuits/scripts/gen_dummy_jpki.py`), JPKI APDUs, CA selection and signature pre-checks.
@@ -6,9 +6,9 @@
 - `ZkCredApp/` — app sources and settings used by the Xcode project:
   - `Sources/JPKIReader.swift` — Core NFC session: verify signing password, read the signing certificate, sign the challenge.
   - `Sources/CardCheckView.swift` — reads the holder's own card and shows only `CertificateLayout` and the challenge check.
-  - `ZkCredApp.entitlements`, `Info.plist` — NFC (ISO 7816, JPKI AID), increased memory limit, `zkcred://` deep link.
+  - `ZkCredApp.entitlements`, `Info.plist` — NFC (ISO 7816, JPKI AID), increased memory limit, `pipon://` deep link.
 - `ZkCredProver/` — mopro 0.3.7 crate (`rustwitness` + `rapidsnark`), see `docs/research/ios-plan.md`.
-  - `ZkCredProver/ios/MoproApp.xcodeproj` — the app (bundle id `app.zkcredentials.ios`); links `ZkCredCore` as a local
+  - `ZkCredProver/ios/MoproApp.xcodeproj` — the app (bundle id `app.pipon.ios`); links `ZkCredCore` as a local
     package and compiles `ZkCredApp/Sources`.
 
 Build:
@@ -29,7 +29,7 @@ xcodebuild -project ios/MoproApp.xcodeproj -scheme MoproApp -configuration Relea
   -destination 'id=<device udid>' -allowProvisioningUpdates \
   DEVELOPMENT_TEAM=<team id> CODE_SIGN_ENTITLEMENTS=<no-nfc.entitlements> build
 xcrun devicectl device install app --device <udid> <path to MoproApp.app>
-xcrun devicectl device process launch --console --device <udid> app.zkcredentials.ios -- -autoprove
+xcrun devicectl device process launch --console --device <udid> app.pipon.ios -- -autoprove
 ```
 (Trust the developer once on the phone: Settings → General → VPN & Device Management.)
 

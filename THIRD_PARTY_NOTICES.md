@@ -1,6 +1,6 @@
 # Third-party notices
 
-zkCredentials is licensed under GPL-3.0 (see `LICENSE`). It builds on the following open-source work.
+p!pon is licensed under GPL-3.0 (see `LICENSE`). It builds on the following open-source work.
 
 | Component | License | Used in | How |
 |---|---|---|---|

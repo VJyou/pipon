@@ -16,8 +16,8 @@ codesign -f -s - --entitlements zkcred-mac.entitlements .build/release/zkcred-ma
 Use:
 ```bash
 .build/release/zkcred-mac readers                                   # readers and whether a card is present
-.build/release/zkcred-mac prove '<zkcred://prove?s=...>'            # asks for the signing password
-.build/release/zkcred-mac prove '<zkcred://prove?s=...>' --dev tokyo20   # dummy card, no reader
+.build/release/zkcred-mac prove '<pipon://prove?s=...>'            # asks for the signing password
+.build/release/zkcred-mac prove '<pipon://prove?s=...>' --dev tokyo20   # dummy card, no reader
 ```
 The deep link is the text under the QR code in the web demo ("Real iPhone app" phone mode).
 End to end against the web demo: `app/verifier-demo/e2e/web2-mac.mjs` (`CARD=reader` for the real card).

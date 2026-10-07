@@ -1,7 +1,7 @@
 // Demo backend:
 //  - mock prover: stands in for the phone app (NFC read + on-device proving). It issues a dummy JPKI
 //    certificate for a chosen persona and proves with circuits/build artifacts.
-//  - relay: hands a request to the real iPhone app (QR -> zkcred://) and the proof back to the page.
+//  - relay: hands a request to the real iPhone app (QR -> pipon://) and the proof back to the page.
 //   node server/mock-prover.mjs   (port 8787; Vite proxies /api)
 import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";

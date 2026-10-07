@@ -8,7 +8,7 @@ type RelayResult = { proof: Groth16Proof & { pi_a: string[]; pi_b: string[][]; p
 
 const isLoopback = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)
 
-/** Hands the request to the real iPhone app: QR -> zkcred://prove?s=<session URL>; the app posts the proof back. */
+/** Hands the request to the real iPhone app: QR -> pipon://prove?s=<session URL>; the app posts the proof back. */
 export function RealPhone({ request, onResult }: { request: ProofRequest | null; onResult: (r: ProveResult) => void }) {
   const [qr, setQr] = useState<string | null>(null)
   const [link, setLink] = useState('')
@@ -28,7 +28,7 @@ export function RealPhone({ request, onResult }: { request: ProofRequest | null;
       if (!r.ok) return setStatus('error')
       const { id } = await r.json()
       const sessionUrl = `${location.origin}/api/session/${id}`
-      const deepLink = `zkcred://prove?s=${encodeURIComponent(sessionUrl)}`
+      const deepLink = `pipon://prove?s=${encodeURIComponent(sessionUrl)}`
       setLink(deepLink)
       setQr(await QRCode.toDataURL(deepLink, { margin: 1, width: 240 }))
       while (!stop) {
@@ -63,7 +63,7 @@ export function RealPhone({ request, onResult }: { request: ProofRequest | null;
         ) : (
           <div className="request">
             <div className="request-from">Scan with the iPhone camera</div>
-            {qr && <img className="qr" src={qr} alt="QR code that opens the zkCredentials app" />}
+            {qr && <img className="qr" src={qr} alt="QR code that opens the p!pon app" />}
             <ul className="claims">
               {request.statement.map((s) => <li key={s}>{s}</li>)}
             </ul>

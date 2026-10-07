@@ -1,4 +1,4 @@
-# zkCredentials — Solana Colosseum Hackathon
+# p!pon (pipon; formerly zkCredentials) — Solana Colosseum Hackathon
 
 ## One-line definition
 ZK credentials for Web2 and Web3 that use the cryptographic authenticity of government-issued IC chips

@@ -6,11 +6,11 @@ import { claimIxs, fetchGate, gatePda, PREFECTURES, PROGRAM_ERRORS, type Gate } 
 import type { ProveResult } from './lib/prover'
 import type { ProofRequest } from './Phone'
 
-// Gates on devnet: scope 1 trusts the demo's dummy CA (Tokyo only); scopes 2 and 3 trust the J-LIS signing CAs
-// (real cards; 3 is for tests, since a card claims once per scope).
+// Gates on devnet: scope 1 trusts the demo's dummy CA (Tokyo only); scopes 2–4 trust the J-LIS signing CAs (real
+// cards). 4 is the demo's (named "p!pon Japan 20+"; 2 has the old name), 3 is for tests: a card claims once per scope.
 const GATES = [
   { scope: 1, label: 'Demo gate · dummy cards' },
-  { scope: 2, label: 'Real cards · J-LIS CA' },
+  { scope: 4, label: 'Real cards · J-LIS CA' },
   { scope: 3, label: 'Real cards · test gate' },
 ]
 const explorer = (kind: 'address' | 'tx', id: string) => `https://explorer.solana.com/${kind}/${id}?cluster=devnet`

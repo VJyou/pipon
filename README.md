@@ -1,4 +1,4 @@
-# zkCredentials
+# p!pon
 
 **Prove only the facts you need — "20 or over", "lives in Tokyo", "hasn't claimed before" — from the IC chip of
 Japan's My Number Card, without handing over your ID.** Verifiable by any website in the browser and on Solana.
@@ -13,7 +13,7 @@ Japan's My Number Card, without handing over your ID.** Verifiable by any websit
 - The chip already carries a certificate signed by the national CA (J-LIS). A zero-knowledge proof can check that
   signature and reveal only the attribute.
 
-zkCredentials is **not** a replacement for statutory KYC. It targets the places where ID is over-collected.
+p!pon is **not** a replacement for statutory KYC. It targets the places where ID is over-collected.
 
 ## How it works
 ```
@@ -60,7 +60,7 @@ cd app/verifier-demo && npm i
 node server/mock-prover.mjs &   # simulated phone + relay
 npm run dev                     # http://localhost:5173 (devnet wallet)
 ```
-The page can also hand the request to the iPhone app over a QR code (`zkcred://` link); see `app/verifier-demo/README.md`
+The page can also hand the request to the iPhone app over a QR code (`pipon://` link); see `app/verifier-demo/README.md`
 and `app/mobile/README.md`.
 Program tests: `anchor build && scripts/fetch-programs.sh && cargo test -p zk_gate`.
 Swift core tests: `cd app/mobile/ZkCredCore && swift test`.

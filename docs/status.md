@@ -5,7 +5,7 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 ## Done (Linux box)
 - Circuit `circuits/src/jpki_age_region.circom` (1.49M constraints), Groth16 artifacts in `circuits/build/` (not in git).
 - `zk_gate` deployed on devnet (`docs/deployments.md`); claim = Groth16 verify + nullifier PDA + Core mint (~144k CU).
-- Web demo `app/verifier-demo` (simulated phone, or real iPhone via QR `zkcred://prove?s=<relay session>`).
+- Web demo `app/verifier-demo` (simulated phone, or real iPhone via QR `pipon://prove?s=<relay session>`).
 - Witness backend for mopro: **rust-witness** (graph-based circom-witnesscalc cannot build this circuit). Prover: rapidsnark.
 
 ## Done (Mac mini)
@@ -15,7 +15,7 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - `app/mobile/ZkCredProver` (mopro crate) proves `circuits/fixtures/dummy` with the deployed zkey: Mac 3.5 s / ~1.9 GB;
   snarkjs verifies against `circuits/build/vkey.json`. Inputs are normalized because circom-prover 0.1.4 drops scalars.
   `libc` pinned to 0.2.186 for the iOS build.
-- iOS app `app/mobile/ZkCredProver/ios/MoproApp.xcodeproj` (bundle id `app.zkcredentials.ios`): ZkCredCore + Core NFC
+- iOS app `app/mobile/ZkCredProver/ios/MoproApp.xcodeproj` (bundle id `app.pipon.ios`): ZkCredCore + Core NFC
   reader + Card check screen (layout only) + dummy proof. Simulator: proof verifies, public inputs identical to snarkjs.
   Builds for iphoneos unsigned. **Not yet run on the iPhone** (not connected; no signing identity yet).
 
@@ -33,6 +33,11 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
   (rapidsnark) **9.07 s**, verify OK 0.39 s, footprint after prove 471 MB, no jetsam.
   Build: `xcodebuild … -allowProvisioningUpdates DEVELOPMENT_TEAM=<team> CODE_SIGN_ENTITLEMENTS=<no-nfc.entitlements>`,
   install with `devicectl device install app`, run with `devicectl device process launch --console … -- -autoprove`.
+
+## Rename (2026-10-07)
+- Project name **p!pon** (said "pippon"); `pipon` wherever `!` cannot go: deep link `pipon://`, bundle id
+  `app.pipon.ios`, GitHub repo (rename pending). Internal code names (`ZkCredCore`, `zk_gate`, program ID) stay.
+- Gate names are immutable: the demo's real-card gate is now scope 4 ("p!pon Japan 20+"); scope 2 keeps the old name.
 
 ## Next
 1. [local] iPhone: connect + trust, Xcode Apple ID/team, Developer Mode (`docs/setup/mac.md` §6). Then on the device:

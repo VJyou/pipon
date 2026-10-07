@@ -1,6 +1,6 @@
 import Foundation
 
-/// A request handed over by the web demo: `zkcred://prove?s=<relay session URL>`.
+/// A request handed over by the web demo: `pipon://prove?s=<relay session URL>`.
 /// GET <session URL> returns `{ request: ProofRequest }`; POST <session URL>/result takes `ProofResult`.
 public struct ProofRequest: Codable, Equatable, Sendable {
     /// Wallet pubkey (base58) or a 32-byte hex session id the card's signature is bound to.
@@ -24,7 +24,7 @@ public struct ProofRequest: Codable, Equatable, Sendable {
 
     /// Relay session URL from the deep link.
     public static func sessionURL(fromDeepLink link: String) throws -> URL {
-        guard let comps = URLComponents(string: link), comps.scheme == "zkcred", comps.host == "prove",
+        guard let comps = URLComponents(string: link), comps.scheme == "pipon", comps.host == "prove",
               let s = comps.queryItems?.first(where: { $0.name == "s" })?.value, let url = URL(string: s),
               url.scheme == "http" || url.scheme == "https"
         else { throw RequestError.badLink }
