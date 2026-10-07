@@ -3,7 +3,7 @@
 // <x-icon> and <x-shape> become inline SVG, speaker notes (<aside>) are hidden, /_blob/<id> maps to assets/<id>.png.
 //   node docs/pitch/deck/build-pdf.mjs      (uses playwright-core from app/verifier-demo and the local Chrome)
 import { readFileSync, readdirSync } from 'node:fs'
-import { fileURLToPath, pathToFileURL } from 'node:url'
+import { fileURLToPath } from 'node:url'
 import { createRequire } from 'node:module'
 
 const here = fileURLToPath(new URL('.', import.meta.url))
@@ -25,7 +25,8 @@ const style = (attrs) => (attrs.match(/style="([^"]*)"/) || [])[1] || ''
 
 function convert(html) {
   return html
-    .replace(/src="\/_blob\/([0-9a-f]+)"/g, (_, id) => `src="${pathToFileURL(here + 'assets/' + id + '.png')}"`)
+    // inlined: a page set with setContent cannot load file:// images
+    .replace(/src="\/_blob\/([0-9a-f]+)"/g, (_, id) => `src="data:image/png;base64,${readFileSync(here + 'assets/' + id + '.png').toString('base64')}"`)
     .replace(/<x-icon name="(\w+)"([^>]*)><\/x-icon>/g, (_, name, a) => svg(ICONS[name] ?? '<circle cx="12" cy="12" r="9"/>', style(a) + ';flex:none'))
     .replace(/<x-shape kind="arrow-right"([^>]*)><\/x-shape>/g, (_, a) => {
       const fill = (style(a).match(/background:([^;]+)/) || [])[1] || '#000'
