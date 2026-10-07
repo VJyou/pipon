@@ -44,7 +44,8 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
    USB contact reader ("Generic EMV Smartcard Reader", CCID) → Web2 age check, all six checks OK (proof 3.6 s,
    14 s including the password). First real-card proof: the circuit, the J-LIS CA list and the APDUs work on a real card.
    Then a real-card **claim on devnet** (scope-3 test gate): on-chain Groth16 verify, nullifier, Core mint
-   (`docs/deployments.md`). Scope 2 stays unclaimed for the video.
+   (`docs/deployments.md`). A second claim with the same card from a new wallet is rejected (Already claimed).
+   Scope 2 stays unclaimed for the video.
 4. Go/no-go on 2026-10-08.
 
 ## Gotchas
