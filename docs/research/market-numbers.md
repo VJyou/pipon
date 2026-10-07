@@ -39,3 +39,27 @@ Facts with sources; inferences are marked as such.
 - Inference: a car-sharing service must check the driving licence itself, which zkCredentials (My Number Card
   attributes) does not prove today. The pitch uses the breach as evidence that **stored ID images leak**, not as a
   case zkCredentials would have solved directly. Do not name or show Park24 / Times branding in the video.
+
+## Worldwide ID-document leaks (for the "global problem" slide)
+- **US/Canada, Sep 2026 — IDScan.net** (ID-verification / KYC vendor): confirmed that attackers took full names,
+  driver's licence numbers and numbers from other government IDs such as passports; reported as 150M+ records
+  (hackers' claim; another listing claims 170M+ documents). [TechCrunch 2026-09-10](https://techcrunch.com/2026/09/10/id-verification-giant-idscan-confirms-data-breach-with-more-than-150-million-drivers-licenses-stolen/),
+  [Biometric Update 2026-10](https://www.biometricupdate.com/202610/data-breaches-make-the-case-for-minimizing-identity-data-in-kyc)
+  (argues for not holding identity data at all: "a breach of that provider cannot expose data it never received").
+- **Global, Oct 2025 — Discord**: ~70,000 users' government ID photos exposed via a third-party support vendor used for
+  age-related appeals. [TechCrunch 2025-10-09](https://techcrunch.com/2025/10/09/discord-suffers-data-breach-impacting-at-least-70000-users),
+  [NBC News](https://www.nbcnews.com/tech/tech-news/70000-government-id-photos-exposed-discord-user-hack-rcna236714).
+- **US, Jul 2025 — Tea app**: 72,000 images, including 13,000 selfies and photo IDs submitted for account verification.
+  [Fortune 2025-07-26](https://fortune.com/2025/07/26/tea-app-hack-images-online-leaks-users-selfies).
+- **Australia, Mar 2023 — Latitude Financial**: 14M people; 7.9M driver's licence numbers, ~53,000 passport numbers.
+  [The New Daily](https://www.thenewdaily.com.au/finance/2023/03/27/latitude-financial-drivers-licence).
+- Slides describe these by type (vendor, platform, lender) and cite the outlets in the footer.
+
+## Age-check laws (the "it is about to grow" slide)
+- UK Online Safety Act: "highly effective" age assurance for adult content enforced from July 2025.
+- Australia: minimum age 16 for social media from 2025-12-10.
+- US: about half of the states mandate some form of age gating (industry tracker, not a primary source:
+  [Jumio snapshot](https://www.jumio.com/age-verification-laws/)) — replace with a primary count before external use.
+- Japan: remote KYC moves to IC-chip reading in April 2027 (JAFIC, see README).
+- **IBM Cost of a Data Breach 2025**: global average USD 4.44M per breach (US: USD 10.22M).
+  [CyberScoop summary](https://cyberscoop.com/ibm-cost-data-breach-2025/).
