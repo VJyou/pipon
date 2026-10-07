@@ -23,3 +23,19 @@ Facts with sources; inferences are marked as such.
   Source: [Tokyo Shoko Research, 2026-01-30](https://www.tsr-net.co.jp/data/detail/1202348_1527.html).
 - Inference: these incidents are not all ID-document leaks; the claim the pitch can support is "personal data
   leaks at record scale", and that **data that is never collected cannot leak**.
+
+## Times Car breach (September–October 2026)
+- Park24 detected unauthorised access to the Times Car (car-sharing) website on **2026-09-25 09:07** and cut the
+  route by 2026-09-26 07:25 ([1st report](https://www.park24.co.jp/news/2026/09/web1.html)).
+- **About 6.6 million** member and former-member accounts; data: name, address, date of birth, phone, email, member
+  number, licence information, ID-document images, corporate member data, linked service IDs. **About 1.6 million**
+  accounts had **ID-document images** (driver's licences, student cards, etc.). No credit card data confirmed.
+  ([2nd report, 2026-09-28](https://www.park24.co.jp/news/2026/09/20260928-1.html),
+  [3rd report, 2026-09-29](https://www.park24.co.jp/news/2026/09/20260929-1.html);
+  [Nikkei](https://www.nikkei.com/article/DGXZQOUC284OR0Y6A920C2000000/))
+- Public safety commissions (e.g. Kansai) are reissuing driver's licences for affected people
+  ([NHK, 2026-10-06](https://news.web.nhk/newsweb/na/nd-20261006de55511)). Police received about 190 consultations on
+  2026-09-30–10-01 ([piyolog summary](https://piyolog.hatenadiary.jp/entry/2026/09/28/214857)).
+- Inference: a car-sharing service must check the driving licence itself, which zkCredentials (My Number Card
+  attributes) does not prove today. The pitch uses the breach as evidence that **stored ID images leak**, not as a
+  case zkCredentials would have solved directly. Do not name or show Park24 / Times branding in the video.

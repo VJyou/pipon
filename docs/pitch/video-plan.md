@@ -10,7 +10,8 @@ Two videos for the Colosseum submission ([submission workshop notes](https://blo
 Rules that apply (`docs/legal/hackathon-rules-check.md`, CLAUDE.md): English only; **no real card and no real personal
 data on screen**; no Colosseum logos. Voice-over pace ≈ 150 words/min → ~420 words for 2:50.
 
-Open items are marked **[TBD]**. Numbers and sources: `docs/research/market-numbers.md`.
+Open items are marked **[TBD]**. Story: the September 2026 Times Car breach (driver's-licence images) as the turning point
+towards services that do not hold personal data. Numbers and sources: `docs/research/market-numbers.md`.
 
 ---
 
@@ -18,13 +19,14 @@ Open items are marked **[TBD]**. Numbers and sources: `docs/research/market-numb
 
 | Time | Slide / visual | Voice-over |
 |---|---|---|
-| 0:00–0:15 | Title: "zkCredentials — prove the fact, not your ID" | Hi, I'm Yu Ayato, co-founder of Japan Blockchain Week. I'm building zkCredentials: zero-knowledge credentials from the IC chip in Japan's My Number Card. |
-| 0:15–0:45 | A shop form asking for an ID photo → name, birthday, address highlighted; only "20+" is needed | To buy a drink online, join a one-per-person drop, or get into an event, services ask for a photo of your ID. They need one bit — "over 20", "a real, unique person" — and they collect your name, birthday and address. Most of them have no legal duty to. And that data leaks: in 2025, listed companies in Japan alone reported leaks affecting over 30 million people. Data you never collect cannot leak. |
-| 0:45–1:10 | "April 2027" timeline: photo upload → IC chip reading | Japan is already moving identity checks to the chip. From April 2027, remote KYC under the anti–money-laundering law drops photo uploads in favour of reading the IC chip. Over 100 million My Number Cards are in people's hands today, and each chip can carry a certificate signed by the national authority. |
-| 1:10–1:45 | Diagram: card → phone (proof) → website / Solana | IC chips solve authenticity. Zero-knowledge proofs solve privacy. The phone reads the card, checks the government signature inside a zero-knowledge proof, and sends only the facts: over 20, lives in a prefecture, hasn't claimed before. No issuer server, no ID copy, nothing to leak. |
-| 1:45–2:10 | Use cases grid: age gates, one-per-person mints/airdrops, events, Sybil-resistant votes, AI-agent delegation | Who is it for? Anyone who over-collects ID today without needing to: age-gated shops, NFT and token drops that want one per person, event tickets, DAO votes, and soon AI agents acting for a verified human. It is not a replacement for legal KYC — it's for everything else. |
-| 2:10–2:30 | Why Solana: nullifier registry, on-chain Groth16, Solana Attestation Service, x402 | Solana makes "one per person" a public registry: a per-service nullifier, a Groth16 proof verified on-chain in about 144k compute units, and a mint in the same transaction. |
-| 2:30–2:50 | Status + vision | It works today on devnet, with a real My Number Card end to end. **[TBD — confirm before recording]** No user interviews yet; candidate wording: "As an event organiser at Japan Blockchain Week, I see this problem first-hand: event check-in and one-per-person drops — that is where I want to pilot first." Next: an iPhone app in TestFlight, attestations on Solana, and the same model for other national ID chips. zkCredentials — prove the fact, not your ID. |
+| 0:00–0:10 | Title: "zkCredentials — prove the fact, not your ID" | Hi, I'm Yu Ayato. I'm building zkCredentials: zero-knowledge credentials from the IC chip in Japan's My Number Card. |
+| 0:10–0:45 | News headlines (no logos): car-sharing service, 6.6M accounts, 1.6M driver's-licence images; police reissuing licences | Two weeks ago, one of Japan's largest car-sharing services was breached: about 6.6 million member accounts, and 1.6 million images of driver's licences and other ID documents that members had uploaded to sign up. Police are now reissuing licences. And it is not an isolated case: in 2025, listed companies in Japan alone reported leaks affecting over 30 million people. |
+| 0:45–1:05 | "Collect → store → leak" crossed out → "Verify → forget" | The lesson is simple: data you never collect cannot leak. Every service that keeps a copy of your ID is a breach waiting to happen. This is the turning point — companies will have to stop holding personal data wherever they can. zkCredentials makes that possible. |
+| 1:05–1:25 | "April 2027" timeline: photo upload → IC chip reading; "100M+ cards" | Japan is already moving identity checks from photos to the IC chip: from April 2027, remote KYC drops photo uploads. Over 100 million My Number Cards are in people's hands, each able to carry a certificate signed by the national authority. |
+| 1:25–1:55 | Diagram: card → phone (proof) → website / Solana | IC chips solve authenticity. Zero-knowledge proofs solve privacy. The phone reads the card, checks the government signature inside a zero-knowledge proof, and sends only the facts: over 20, lives in a prefecture, hasn't claimed before. The service gets a yes — no name, no birthday, no address, no ID image. No issuer server, nothing to leak. |
+| 1:55–2:15 | Use cases grid: age-gated shops, sign-up checks, one-per-person drops and airdrops, Sybil-resistant votes, AI-agent delegation | Who is it for? Every service that asks for an ID today only to learn one fact: age-gated shops, sign-ups that need "a real, unique person", one-per-person drops, DAO votes, and AI agents acting for a verified human. It is not a replacement for legal KYC — it's for everything else. |
+| 2:15–2:30 | Why Solana: nullifier registry, on-chain Groth16, Solana Attestation Service | Solana makes "one per person" a public registry: a per-service nullifier, a Groth16 proof verified on-chain in about 144k compute units, and a mint in the same transaction. |
+| 2:30–2:50 | Status + vision | It works today on devnet, with a real My Number Card end to end. Next: an iPhone app in TestFlight, attestations on Solana, and the same model for other national ID chips. Stop collecting IDs. Prove the fact. zkCredentials. |
 
 ## 2. Technical demo (target 2:45)
 
