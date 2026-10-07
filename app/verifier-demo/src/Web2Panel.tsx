@@ -8,7 +8,7 @@ import type { ProofRequest } from './Phone'
 type Check = { label: string; ok: boolean }
 type Verdict = { checks: Check[]; ms: number; prefecture: string; nullifier: string }
 
-// This shop's own scope: its pseudonymous IDs differ from the gate's (scope 1) for the same card.
+// This store's own scope: its pseudonymous IDs differ from the gates' for the same card.
 const SHOP_SCOPE = 1001
 
 const todayJst = () => Number(new Date(Date.now() + 9 * 3600_000).toISOString().slice(0, 10).replaceAll('-', ''))
@@ -23,7 +23,7 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
     const s = toHex(crypto.getRandomValues(new Uint8Array(32)))
     setSession(s)
     setVerdict(null)
-    onRequest({ binding: s, scope: SHOP_SCOPE, service: 'Sakaya Online', statement: ['Age 20+'] })
+    onRequest({ binding: s, scope: SHOP_SCOPE, service: 'Kura Online Store', statement: ['Age 20+'] })
   }
 
   useEffect(() => {
@@ -43,7 +43,7 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
         { label: 'Issuer CA is in the on-chain trust list', ok: trusted.includes(caHex) },
         { label: 'Proof is for today (JST)', ok: Number(p[4]) === todayJst() },
         { label: 'Age 20 or over', ok: p[5] >= 20n },
-        { label: 'Pseudonymous ID is scoped to this shop', ok: p[7] === BigInt(SHOP_SCOPE) },
+        { label: 'Pseudonymous ID is scoped to this store', ok: p[7] === BigInt(SHOP_SCOPE) },
       ]
       setVerdict({
         checks,
@@ -60,11 +60,12 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
     <section className="panel">
       <header className="panel-head">
         <div>
-          <div className="eyebrow">Web2 · no wallet, no signup</div>
-          <h2>Sakaya Online</h2>
+          <div className="eyebrow">Web2 · online store checkout · no wallet, no signup</div>
+          <h2>Kura Online Store</h2>
         </div>
       </header>
-      <p>Alcohol can only be sold to people aged 20+. Today the shop asks for a photo of your ID card.</p>
+      <p className="small muted">Cart: Junmai sake, 720 ml × 1 — delivered to your home</p>
+      <p>Alcohol can only be sold to people aged 20+. Today online stores ask you to upload a photo of your ID card at checkout.</p>
 
       <button className="primary" onClick={request}>Verify age with p!pon</button>
 
@@ -80,12 +81,12 @@ export function Web2Panel({ result, onRequest }: { result: ProveResult | null; o
 
       <div className="compare">
         <div>
-          <h3>What the shop received</h3>
+          <h3>What the store received</h3>
           {verdict ? (
             <ul>
               <li>Age ≥ 20: <b>yes</b></li>
               <li>Prefecture: {verdict.prefecture}</li>
-              <li>Pseudonymous ID (this shop only): <span className="mono small">{verdict.nullifier.slice(0, 12)}…</span></li>
+              <li>Pseudonymous ID (this store only): <span className="mono small">{verdict.nullifier.slice(0, 12)}…</span></li>
             </ul>
           ) : <p className="muted">Nothing yet.</p>}
         </div>
