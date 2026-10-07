@@ -38,7 +38,7 @@ Screen recording + voice-over. Dummy cards on screen (dummy CA, dummy people) un
 | 0:20–0:50 | Circuit walkthrough (slides) | Inside the proof: RSA-2048/SHA-256 check of the J-LIS CA signature over the certificate; the card's signature over a challenge bound to the wallet or browser session; date-of-birth + N years ≤ today; address prefix = prefecture; output = CA-key hash + per-scope nullifier. Nothing else is public. |
 | 0:50–1:30 | Web demo, **Web2 · Age check**: QR → phone proves → six checks turn green | No wallet, no signup. The shop verifies the proof in the browser in ~200 ms and checks the issuer CA against the trust list stored on Solana. It learns: 20+, the prefecture, and a pseudonymous ID for this shop only. Point at "What it never sees". |
 | 1:30–2:15 | **Web3 · Gated mint**: connect wallet → proof → Mint → explorer tx | The proof is bound to the wallet. `zk_gate` verifies Groth16 with the alt_bn128 syscalls, stores the nullifier in a PDA and mints a Metaplex Core NFT in one transaction (~144k CU). Then: same card again → "Already claimed"; a card from another prefecture → rejected by the gate policy. |
-| 2:15–2:35 | Real-card evidence **[TBD, see decision below]** | Same flow on a real My Number Card: proof in 3.5 s on a Mac with a USB reader, claim on devnet, second claim rejected. iPhone: 9 s on-device proving. |
+| 2:15–2:35 | One slide: "Tested on a real My Number Card" — timings + devnet tx links (`docs/deployments.md`, scope-3 claim and the rejected second claim). No card, no holder data, no holder wallet on screen | The same flow runs on a real My Number Card: proof in 3.5 s on a Mac with a USB reader, claim verified on devnet, and a second claim from a new wallet rejected. On an iPhone 15 Pro Max the proof takes 9 s on device. |
 | 2:35–2:45 | Limits + next | Honest limits: no revocation check yet (lists are only for certified verifiers), single-contributor trusted setup. Next: iPhone NFC in TestFlight, Solana Attestation Service. |
 
 ### Shot list (what to record)
@@ -49,10 +49,6 @@ Screen recording + voice-over. Dummy cards on screen (dummy CA, dummy people) un
 4. Terminal: `zkcred-mac prove … --dev tokyo20` with the proving time.
 5. iPhone screen recording of the app (after the paid team is approved).
 
-## Decision needed: real card in the video
-CLAUDE.md says no real card and no real personal data in the video. Options:
-- **A (recommended)**: all on-screen flows use dummy cards; the real-card result is one slide with the devnet tx
-  links (`docs/deployments.md`) and timings — no card, no screen with a prefecture or wallet tied to the holder.
-- **B**: record the real-card terminal + Web3 mint on scope 2 (gate shows "all prefectures", the UI shows no
-  personal value), card itself never on camera. Uses the card's one claim on scope 2.
-- **C**: no mention of the real card.
+## Decision: real card in the video (2026-10-07)
+**A**: every on-screen flow uses dummy cards; the real-card result is one slide with timings and devnet tx links.
+No card, no screen showing the holder's prefecture, nullifier or wallet. Scope 2 stays unclaimed.
