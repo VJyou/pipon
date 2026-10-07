@@ -52,6 +52,20 @@ export default function App() {
         </label>
       </nav>
 
+      {phone === 'simulated' && (
+        <section className="demo-note" aria-label="How this demo works">
+          <strong>How this demo works.</strong> In the real p!pon app you tap your My Number Card on an iPhone (NFC) and
+          the proof is made on the phone. Here the phone on the left is <b>simulated</b>: a <b>dummy card</b> issued by a
+          test authority stands in for your card, and our demo server makes the proof with the same circuit. The service on
+          the right receives only the proof.
+          <ol>
+            <li>Press the service's button on the right</li>
+            <li>On the simulated phone, press <i>Simulate card tap &amp; prove</i></li>
+            <li>See what the service checks — and what it never sees</li>
+          </ol>
+        </section>
+      )}
+
       <main className="stage">
         {phone === 'simulated' ? (
           <Phone request={request} onResult={setResult} />
@@ -66,8 +80,8 @@ export default function App() {
       </main>
 
       <footer className="foot">
-        Demo with dummy certificates issued by a dummy CA. The phone is simulated by a local prover running the real circuit
-        (1.49M constraints, Groth16). No real personal data is used.
+        Simulated phone: dummy certificates from a test CA stand in for the My Number Card, which the real app reads over
+        NFC; the demo server proves with the real circuit (1.49M constraints, Groth16). No real personal data is used.
       </footer>
     </div>
   )

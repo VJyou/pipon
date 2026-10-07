@@ -44,9 +44,10 @@ export function Phone({ request, onResult }: { request: ProofRequest | null; onR
     <div className="phone">
       <div className="phone-notch" />
       <div className="phone-screen">
-        <div className="phone-title">p!pon</div>
+        <div className="phone-title">p!pon <span className="badge">Simulated iPhone</span></div>
+        <p className="sim-note">Real app: tap your My Number Card (NFC). Here: a dummy card.</p>
         <label className="field">
-          <span>Dummy card</span>
+          <span>Dummy card (stands in for your My Number Card)</span>
           <select value={persona} onChange={(e) => setPersona(e.target.value)} disabled={stage === 'reading' || stage === 'proving'}>
             {Object.entries(personas).map(([k, v]) => (
               <option key={k} value={k}>{v}</option>
@@ -69,16 +70,16 @@ export function Phone({ request, onResult }: { request: ProofRequest | null; onR
             </details>
             <button className="primary wide" onClick={run} disabled={stage === 'reading' || stage === 'proving'}>
               {stage === 'idle' || stage === 'done' || stage === 'unsatisfiable' || stage === 'error'
-                ? 'Tap My Number Card & prove'
+                ? 'Simulate card tap & prove'
                 : 'Working…'}
             </button>
           </div>
         )}
 
         <ol className="stages">
-          <li className={stage === 'reading' ? 'active' : ['proving', 'done'].includes(stage) ? 'ok' : ''}>Read IC chip (signed by J-LIS)</li>
+          <li className={stage === 'reading' ? 'active' : ['proving', 'done'].includes(stage) ? 'ok' : ''}>Read the card's IC chip <span className="small muted">— here: dummy card, real app: NFC</span></li>
           <li className={stage === 'proving' ? 'active' : stage === 'done' ? 'ok' : stage === 'unsatisfiable' ? 'bad' : ''}>
-            Generate ZK proof on device
+            Make the ZK proof <span className="small muted">— here: demo server, real app: on the iPhone</span>
           </li>
           <li className={stage === 'done' ? 'ok' : ''}>Send proof only{stage === 'done' && ` · ${(ms / 1000).toFixed(1)}s`}</li>
         </ol>

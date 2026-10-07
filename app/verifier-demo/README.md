@@ -41,7 +41,7 @@ A dummy card mints once per scope (its nullifier stays on-chain); `tokyo30` was 
 
 ```bash
 npm run build
-PUBLIC=1 node server/mock-prover.mjs          # serves dist/ and /api on 127.0.0.1:8787
+PUBLIC=1 IP_HEADER=cf-connecting-ip node server/mock-prover.mjs   # serves dist/ and /api on 127.0.0.1:8787
 cloudflared tunnel --no-autoupdate --url http://127.0.0.1:8787   # prints a https://*.trycloudflare.com URL
 ```
 `PUBLIC=1` adds limits (20 proofs per IP per hour, at most 6 waiting) and the default "Your own dummy card": each
