@@ -40,8 +40,9 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
    on the scope-2 gate. Find out whether a free personal team can sign the NFC entitlement.
 2. Demo video plan and recording (deadline 2026-10-12 PDT); English UI and README.
 3. Backup (decided 2026-10-06: iPhone stays primary): `app/mobile/ZkCredMac` (`zkcred-mac`, CryptoTokenKit + the
-   `prove` bin). Web2 e2e with a dummy card passes (proof 4.0 s). **Not yet tried with a real reader/card** (no reader
-   connected on 2026-10-07).
+   `prove` bin). Web2 e2e with a dummy card passes (proof 4.0 s). **Real card, 2026-10-07**: the holder's own My Number Card in a
+   USB contact reader ("Generic EMV Smartcard Reader", CCID) → Web2 age check, all six checks OK (proof 3.6 s,
+   14 s including the password). First real-card proof: the circuit, the J-LIS CA list and the APDUs work on a real card.
 4. Go/no-go on 2026-10-08.
 
 ## Gotchas
