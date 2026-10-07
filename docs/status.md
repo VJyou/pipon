@@ -44,19 +44,22 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - Temporary: Mac mini + Cloudflare quick tunnel, `PUBLIC=1` server (`app/verifier-demo/README.md`). URL changes on
   restart; plan: move to a cloud host before submission/judging. Web2 flow verified through the public URL.
 
-## Next
-1. [local] iPhone: connect + trust, Xcode Apple ID/team, Developer Mode (`docs/setup/mac.md` §6). Then on the device:
-   dummy proof time/memory; Card check on the holder's own card (assumptions 1–4 in `ios-plan.md`); a real-card claim
-   on the scope-2 gate. Find out whether a free personal team can sign the NFC entitlement.
-2. Demo video plan and recording (deadline 2026-10-12 PDT); English UI and README.
-3. Backup (decided 2026-10-06: iPhone stays primary): `app/mobile/ZkCredMac` (`zkcred-mac`, CryptoTokenKit + the
-   `prove` bin). Web2 e2e with a dummy card passes (proof 4.0 s). **Real card, 2026-10-07**: the holder's own My Number Card in a
-   USB contact reader ("Generic EMV Smartcard Reader", CCID) → Web2 age check, all six checks OK (proof 3.6 s,
-   14 s including the password). First real-card proof: the circuit, the J-LIS CA list and the APDUs work on a real card.
-   Then a real-card **claim on devnet** (scope-3 test gate): on-chain Groth16 verify, nullifier, Core mint
-   (`docs/deployments.md`). A second claim with the same card from a new wallet is rejected (Already claimed).
-   Scope 2 stays unclaimed for the video.
-4. Go/no-go on 2026-10-08.
+## Next (end of 2026-10-07; the Mac mini was shut down, so the public tunnel URL is gone)
+1. **Fly.io deploy** (`deploy/fly/`, ADR: Fly over Render). Waiting on the user: sign up + card, then
+   `flyctl auth login` on the Mac. Then: `(cd app/verifier-demo && npm run build)` and
+   `flyctl launch --no-deploy --copy-config --config deploy/fly/fly.toml` (app name may need changing) →
+   `flyctl deploy --config deploy/fly/fly.toml --dockerfile deploy/fly/Dockerfile .` (uploads the 0.9 GB zkey).
+   Until then, a temporary URL: `PUBLIC=1 IP_HEADER=cf-connecting-ip node server/mock-prover.mjs` +
+   `cloudflared tunnel --url http://127.0.0.1:8787` (`app/verifier-demo/README.md`).
+2. **iPhone NFC**: waiting for the paid Apple Developer Program (dev Apple ID, separate from the phone's). Then add the
+   account in Xcode, switch DEVELOPMENT_TEAM (local edit, not committed), build with the real entitlements, trust the
+   developer on the phone, Card check + real-card claim (use scope 3 for tests; scope 4 is for the video).
+3. **Video**: pick ~10 of the 23 slides for a ≤3 min pitch cut (`docs/pitch/deck/`, online deck
+   https://claude.ai/artifact/VtF16apDZiiFoRaChQZGvn); record narration (notes in each slide's `<aside>`) and screen
+   captures. Each dummy card mints once per scope: make a fresh one (`circuits/scripts/make-dev-cards.sh`) or use the
+   public demo's per-browser guest card.
+4. Submission prep (deadline 2026-10-12 11:59pm PDT): live demo URL (Fly), repository public just before submitting.
+5. Mac + USB reader backup works with a real card (`app/mobile/ZkCredMac`).
 
 ## Gotchas
 - Use **the same zkey** as the deployed verifying key (copied via USB). A new setup means a new `vk.rs` and a program upgrade.
@@ -69,4 +72,6 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - Dummy CA / persona keys (`circuits/build/*.pem`) are test-only and stay out of git.
 - Real card: the holder's own card only; never log, save or commit the certificate or any personal value.
 - Commit as `VJyou <37763328+VJyou@users.noreply.github.com>` (repo-local git config), messages in English.
+- Pitch deck: edit `docs/pitch/deck/slides/*.html` (or the online deck, then copy back) and rebuild the PDF with
+  `node docs/pitch/deck/build-pdf.mjs`.
 - Generated / large files stay out of git: `MoproiOSBindings/`, `ios/MoproApp/Circuit/` (run `ios/fetch-artifacts.sh`).
