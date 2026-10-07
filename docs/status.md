@@ -25,6 +25,15 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - Real-card gate on devnet: scope 2, age 20+, all prefectures, J-LIS signca02/03 (`docs/deployments.md`). The web demo
   has a gate selector (Web3) and trusts both gates' CA lists (Web2).
 
+## iPhone (2026-10-07, iPhone 15 Pro Max)
+- A free Personal Team **cannot sign the NFC Tag Reading capability** (Xcode: "Personal development teams … do not
+  support the NFC Tag Reading capability"). `increased-memory-limit` is fine. Paid Apple Developer Program enrollment
+  requested; NFC on the device waits for it.
+- Dummy proof on the device with a no-NFC build (entitlements override at build time, not committed): prove
+  (rapidsnark) **9.07 s**, verify OK 0.39 s, footprint after prove 471 MB, no jetsam.
+  Build: `xcodebuild … -allowProvisioningUpdates DEVELOPMENT_TEAM=<team> CODE_SIGN_ENTITLEMENTS=<no-nfc.entitlements>`,
+  install with `devicectl device install app`, run with `devicectl device process launch --console … -- -autoprove`.
+
 ## Next
 1. [local] iPhone: connect + trust, Xcode Apple ID/team, Developer Mode (`docs/setup/mac.md` §6). Then on the device:
    dummy proof time/memory; Card check on the holder's own card (assumptions 1–4 in `ios-plan.md`); a real-card claim
