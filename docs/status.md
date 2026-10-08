@@ -40,7 +40,11 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - Card check with the holder's own card: certificate and 256 B challenge signature read over NFC, challenge signature
   verifies (PKCS#1 v1.5, SHA-256), and the circuit layout parses (padded TBS 1472 B, within the 2048 B limit; short-form
   address). Values deliberately not recorded beyond that.
-- Next: real-card claim end to end through the web demo (scope 3 for tests, scope 4 for the video).
+- **Web2 end to end with the real card on the iPhone** (local demo: `mock-prover.mjs` + `vite --host`, page opened at
+  the Mac's LAN IP): QR → app → NFC → on-device proof → relay → all six browser checks pass (verify 333 ms).
+  Gotcha: the Mac's LAN IP changed mid-session; the page must be reopened at the new IP (the QR embeds the page origin).
+- Next: Web3 on scope 3 (already claimed by this card via `zkcred-mac`, so expect the nullifier rejection);
+  scope 4 stays unclaimed for the video.
 
 ## Rename (2026-10-07)
 - Project name **p!pon** (said "pippon"); `pipon` wherever `!` cannot go: deep link `pipon://`, bundle id
