@@ -21,6 +21,9 @@ final class ProveFlow: ObservableObject {
         case nfc(password: [UInt8])
         /// Dummy card bundled in development builds (Circuit/dev/<name>.der + .pem).
         case dev(String)
+        /// Demo card for people without a My Number Card: a dummy card (dummy CA, dummy person, TEST key) issued once
+        /// per install by the demo site that sent the request (`POST /api/demo-card`), then kept on this phone.
+        case demo
     }
 
     enum FlowError: LocalizedError {
@@ -75,11 +78,13 @@ final class ProveFlow: ObservableObject {
             let message = CircuitInput.challengeMessage(binding: try request.bindingBytes(), nonce: nonce)
 
             stage = .reading
-            let (certificate, signature) = try await read(card, message: message)
+            let (certificate, signature, demoCA) = try await read(card, message: message)
 
             // Cheap checks before seconds of proving: the card signed this challenge, a trusted CA signed the card.
             try TrustAnchors.checkChallenge(certificateDER: certificate, message: message, signature: signature)
-            let caModulus = try TrustAnchors.issuerModulus(of: certificate, among: try Self.trustedCAs())
+            // The demo card's dummy CA is trusted for the demo card only; real cards need a J-LIS CA.
+            let caModulus = try TrustAnchors.issuerModulus(
+                of: certificate, among: try Self.trustedCAs() + (demoCA.map { [$0] } ?? []))
             let input = try CircuitInput(certificateDER: certificate)
             let today = Self.todayJST()
             guard input.facts.age(on: today) >= Self.ageThreshold else {
@@ -118,12 +123,12 @@ final class ProveFlow: ObservableObject {
         }
     }
 
-    private func read(_ card: Card, message: [UInt8]) async throws -> ([UInt8], [UInt8]) {
+    private func read(_ card: Card, message: [UInt8]) async throws -> ([UInt8], [UInt8], [UInt8]?) {
         switch card {
         case .nfc(let password):
             #if canImport(CoreNFC)
             let out = try await JPKIReader().readAndSign(password: password, message: message)
-            return (out.certificateDER, out.challengeSignature)
+            return (out.certificateDER, out.challengeSignature, nil)
             #else
             throw FlowError.missing("NFC")
             #endif
@@ -133,7 +138,11 @@ final class ProveFlow: ObservableObject {
             else { throw FlowError.missing("dev card \(name)") }
             let certificate = Array(try Data(contentsOf: der))
             let signature = try DevCard.sign(message, privateKeyPEM: try String(contentsOf: pem, encoding: .utf8))
-            return (certificate, signature)
+            return (certificate, signature, nil)
+        case .demo:
+            guard let sessionURL else { throw FlowError.missing("request") }
+            let card = try await DemoCard.load(site: sessionURL)
+            return (card.certificate, try DevCard.sign(message, privateKeyPEM: card.privateKeyPEM), card.caCertificate)
         }
     }
 

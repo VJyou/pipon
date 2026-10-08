@@ -20,7 +20,8 @@ await page.screenshot({ path: `${OUT}/web2-qr.png` })
 const sim = (...a) => execFileSync('xcrun', ['simctl', ...a], { stdio: 'pipe' })
 try { sim('terminate', SIM, 'app.pipon.ios') } catch {}
 const t0 = Date.now()
-sim('launch', SIM, 'app.pipon.ios', '-autoDevCard', CARD, '-openLink', link)
+// CARD=demo: the demo card the site issues to the app (needs a server with /api/demo-card)
+sim('launch', SIM, 'app.pipon.ios', ...(CARD === 'demo' ? ['-autoDemoCard', 'YES'] : ['-autoDevCard', CARD]), '-openLink', link)
 
 const verdict = page.locator('.result strong')
 await verdict.waitFor({ timeout: 120000 })

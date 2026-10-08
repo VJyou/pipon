@@ -94,3 +94,14 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - Pitch deck: edit `docs/pitch/deck/slides/*.html` (or the online deck, then copy back) and rebuild the PDF with
   `node docs/pitch/deck/build-pdf.mjs`.
 - Generated / large files stay out of git: `MoproiOSBindings/`, `ios/MoproApp/Circuit/` (run `ios/fetch-artifacts.sh`).
+
+## Demo card for judges (2026-10-08)
+- App: "My Number Card / Demo card" picker. The demo card is issued once per install by the demo site that sent the
+  request (`POST /api/demo-card`: dummy CA, the guest dummy person, a TEST key per install) and trusted only for that
+  card. Works in release builds (no `--dev` artifacts needed); only the demo gate (scope 5) and the Web2 store accept it.
+- Verified: simulator → public Railway URL, Web2 all six checks pass (proof sent in 13.9 s on the simulator).
+  `BASE=https://pipon-demo-production.up.railway.app CARD=demo node e2e/web2.mjs`.
+- Signed device builds hang while the Mac is unattended (codesign waiting on the keychain); unsigned and simulator
+  builds are fine. Build to the device or archive with someone at the Mac.
+- Next for TestFlight: App Store Connect app record (bundle id `app.pipon.ios`), privacy policy URL, review notes,
+  release archive with `fetch-artifacts.sh` (no `--dev`).

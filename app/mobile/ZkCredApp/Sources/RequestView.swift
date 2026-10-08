@@ -5,7 +5,7 @@ import ZkCredCore
 struct RequestView: View {
     @ObservedObject var flow: ProveFlow
     @State private var password = ""
-    @State private var useDevCard = false
+    @State private var source: CardSource = .myNumber
     @State private var devCard = ""
     @State private var pastedLink = ""
 
@@ -47,18 +47,32 @@ struct RequestView: View {
                flow.devCards.contains(name) {
                 Task { await flow.prove(with: .dev(name)) }
             }
+            // `-autoDemoCard YES` launch argument: the same with the demo card (e2e against the public demo).
+            if stage == .ready, UserDefaults.standard.bool(forKey: "autoDemoCard") {
+                Task { await flow.prove(with: .demo) }
+            }
         }
     }
 
+    enum CardSource: Hashable { case myNumber, demo, dev }
+
     @ViewBuilder private var cardPicker: some View {
-        if !flow.devCards.isEmpty {
-            Toggle("Use a dummy card (development)", isOn: $useDevCard)
+        Picker("Card", selection: $source) {
+            Text("My Number Card").tag(CardSource.myNumber)
+            Text("Demo card").tag(CardSource.demo)
+            if !flow.devCards.isEmpty { Text("Dev").tag(CardSource.dev) }
         }
-        if useDevCard {
+        .pickerStyle(.segmented)
+        switch source {
+        case .demo:
+            Text("No My Number Card? The demo site issues a dummy card (test authority, dummy person) to this phone. "
+                + "Proving is the same as with a real card; only the demo services accept it.")
+                .font(.footnote).foregroundStyle(.secondary)
+        case .dev:
             Picker("Dummy card", selection: $devCard) {
                 ForEach(flow.devCards, id: \.self) { Text($0) }
             }
-        } else {
+        case .myNumber:
             SecureField("Signing password (6–16 characters)", text: $password)
                 .keyboardType(.asciiCapable)
                 .textContentType(.password)
@@ -90,16 +104,21 @@ struct RequestView: View {
     }
 
     private var canStart: Bool {
-        useDevCard ? !devCard.isEmpty : JPKIAPDU.normalizedPassword(password) != nil
+        switch source {
+        case .myNumber: return JPKIAPDU.normalizedPassword(password) != nil
+        case .demo: return true
+        case .dev: return !devCard.isEmpty
+        }
     }
 
     private func start() {
         let card: ProveFlow.Card
-        if useDevCard {
-            card = .dev(devCard)
-        } else {
+        switch source {
+        case .myNumber:
             guard let secret = JPKIAPDU.normalizedPassword(password) else { return }
             card = .nfc(password: secret)
+        case .demo: card = .demo
+        case .dev: card = .dev(devCard)
         }
         password = ""
         Task { await flow.prove(with: card) }

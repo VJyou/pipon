@@ -8,6 +8,7 @@ import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
 import { execFile } from "node:child_process";
 import { readFile, mkdtemp, rm, mkdir, readdir } from "node:fs/promises";
+import { existsSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -17,6 +18,9 @@ const circuits = path.resolve(here, "../../../circuits");
 const PORT = Number(process.env.PORT || 8787);
 const PUBLIC = process.env.PUBLIC === "1";
 const dist = path.resolve(here, "../dist");
+// Same choice as circuits/scripts/make-claim.sh: gen_dummy_jpki.py needs Python >= 3.10 with `cryptography`.
+const venvPython = path.join(process.env.HOME ?? "", ".venvs/zkcred/bin/python3");
+const PYTHON = process.env.PYTHON || (existsSync(venvPython) ? venvPython : "python3");
 
 // Dummy people only. DOB = EYYYYMMDD (era digit + Gregorian date).
 const PERSONAS = {
@@ -127,6 +131,40 @@ createServer(async (req, res) => {
         }
         s.result = { proof, publicSignals, nonce: String(nonce) };
         return json(res, 200, { ok: true });
+      }
+    }
+    if (req.method === "POST" && req.url === "/api/demo-card") {
+      // The iPhone app's "demo card" for people without a My Number Card (hackathon judges): the same dummy person as
+      // the web guest card, with a key of its own per install. Returns the dummy certificate, its TEST key and the
+      // dummy CA certificate. The phone then signs and proves exactly as with a real card.
+      const { cardId } = await readBody(req);
+      if (typeof cardId !== "string" || !/^[0-9a-f]{32}$/.test(cardId)) return json(res, 400, { error: "bad request" });
+      if (PUBLIC && !allowProof(clientIp(req))) return json(res, 429, { error: "too many requests from this address; try again later" });
+      await mkdir(guestDir, { recursive: true });
+      const userKey = path.join(guestDir, `${cardId}.pem`);
+      const guests = await readdir(guestDir);
+      if (guests.length >= MAX_GUESTS && !guests.includes(`${cardId}.pem`)) {
+        return json(res, 503, { error: "the demo has run out of guest cards" });
+      }
+      const { label, ...fields } = GUEST;
+      const dir = await mkdtemp(path.join(tmpdir(), "zkcred-card-"));
+      try {
+        await new Promise((resolve, reject) =>
+          execFile(PYTHON, [path.join(circuits, "scripts/gen_dummy_jpki.py")], {
+            env: {
+              ...process.env, ...fields, OUT_DIR: dir, CA_KEY: path.join(circuits, "build/dummy-ca.pem"),
+              USER_KEY: userKey, SERIAL: String(100000 + parseInt(cardId.slice(0, 7), 16)),
+            },
+          }, (err, _stdout, stderr) => (err ? reject(new Error(stderr || err.message)) : resolve())),
+        );
+        const [certificate, ca, key] = await Promise.all([
+          readFile(path.join(dir, "user.der")), readFile(path.join(dir, "ca.der")), readFile(userKey, "utf8"),
+        ]);
+        return json(res, 200, {
+          label, certificate: certificate.toString("base64"), caCertificate: ca.toString("base64"), privateKeyPEM: key,
+        });
+      } finally {
+        await rm(dir, { recursive: true, force: true });
       }
     }
     if (req.method === "POST" && req.url === "/api/prove") {
