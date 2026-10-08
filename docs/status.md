@@ -51,7 +51,7 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 
 ## Public demo on Railway (2026-10-08)
 - https://pipon-demo-production.up.railway.app — replaces the Fly.io plan (no spending cap there). See
-  `docs/deployments.md`. The real-iPhone mode works from the public URL too (HTTPS, so wallets connect).
+  `docs/deployments.md`. The real-iPhone mode should work from the public URL too (HTTPS, so wallets connect): not yet tested.
 
 ## Rename (2026-10-07)
 - Project name **p!pon** (said "pippon"); `pipon` wherever `!` cannot go: deep link `pipon://`, bundle id
