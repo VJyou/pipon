@@ -60,6 +60,7 @@ struct RequestView: View {
             }
         } else {
             SecureField("Signing password (6–16 characters)", text: $password)
+                .keyboardType(.asciiCapable)
                 .textContentType(.password)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.characters)

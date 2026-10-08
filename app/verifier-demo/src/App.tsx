@@ -80,8 +80,9 @@ export default function App() {
       </main>
 
       <footer className="foot">
-        Simulated phone: dummy certificates from a test CA stand in for the My Number Card, which the real app reads over
-        NFC; the demo server proves with the real circuit (1.49M constraints, Groth16). No real personal data is used.
+        {phone === 'simulated'
+          ? 'Simulated phone: dummy certificates from a test CA stand in for the My Number Card, which the real app reads over NFC; the demo server proves with the real circuit (1.49M constraints, Groth16). No real personal data is used.'
+          : 'Real iPhone app: the phone reads the My Number Card over NFC and makes the proof on the device (1.49M constraints, Groth16). Only the proof and the facts above reach this page; the card data never leaves the phone.'}
       </footer>
     </div>
   )

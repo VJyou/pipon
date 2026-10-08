@@ -13,6 +13,7 @@ struct CardCheckView: View {
         VStack(alignment: .leading, spacing: 12) {
             Text("Card check (layout only)").font(.headline)
             SecureField("Signing password (6–16 characters)", text: $password)
+                .keyboardType(.asciiCapable)
                 .textContentType(.password)
                 .autocorrectionDisabled()
                 .textInputAutocapitalization(.characters)

@@ -13,7 +13,7 @@ struct ContentView: View {
   var body: some View {
     ScrollView {
       VStack(alignment: .leading, spacing: 16) {
-        Text("zkCredentials").font(.title2).bold()
+        Text("p!pon").font(.title2).bold()
         RequestView(flow: flow)
         Divider()
         DisclosureGroup("Developer") {
