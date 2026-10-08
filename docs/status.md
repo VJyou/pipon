@@ -43,8 +43,11 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - **Web2 end to end with the real card on the iPhone** (local demo: `mock-prover.mjs` + `vite --host`, page opened at
   the Mac's LAN IP): QR → app → NFC → on-device proof → relay → all six browser checks pass (verify 333 ms).
   Gotcha: the Mac's LAN IP changed mid-session; the page must be reopened at the new IP (the QR embeds the page origin).
-- Next: Web3 on scope 3 (already claimed by this card via `zkcred-mac`, so expect the nullifier rejection);
-  scope 4 stays unclaimed for the video.
+- **Web3 on scope 3 with the iPhone**: proof made on the phone, bound to a different wallet than the 10/7 claim; the
+  gate rejects it as already claimed (nullifier on-chain). One person, one claim holds across wallets.
+  Gotcha: Phantom stays on "Connecting…" on a plain-http LAN origin; open
+  `http://localhost:5173/?relay=http://<Mac LAN IP>:5173` instead (the QR uses the relay origin).
+- Scope 4 stays unclaimed for the video.
 
 ## Rename (2026-10-07)
 - Project name **p!pon** (said "pippon"); `pipon` wherever `!` cannot go: deep link `pipon://`, bundle id
