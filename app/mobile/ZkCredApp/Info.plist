@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
-<!-- Merged with the generated Info.plist (GENERATE_INFOPLIST_FILE) -->
 <plist version="1.0">
 <dict>
-	<key>NFCReaderUsageDescription</key>
-	<string>Reads the signing certificate on your My Number Card to prove facts about you without sharing them.</string>
-	<!-- pipon://prove?s=<relay session URL> from the web demo's QR code -->
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -17,14 +13,11 @@
 			</array>
 		</dict>
 	</array>
-	<!-- the demo relay runs on the Mac over plain HTTP on the LAN -->
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
-	<key>NSLocalNetworkUsageDescription</key>
-	<string>Sends the proof to the demo website running on your computer.</string>
 	<key>com.apple.developer.nfc.readersession.iso7816.select-identifiers</key>
 	<array>
 		<string>D392F000260100000001</string>
