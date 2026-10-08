@@ -29,7 +29,7 @@ Placeholders in brackets are still open.
 > Web3: the "Web3 · Gated mint" tab does the same with a Solana devnet wallet; a second claim by the same card is
 > rejected.
 
-**Feedback email:** [CONTACT EMAIL]
+**Feedback email:** pipon.zkid@outlook.com
 
 **Sign-in required:** No
 
@@ -51,7 +51,8 @@ Placeholders in brackets are still open.
 
 - The app uses encryption only through Apple's operating system (HTTPS) and for zero-knowledge proofs and signature
   checks, which authenticate data and do not encrypt it. Expected answer: exempt; set
-  `ITSAppUsesNonExemptEncryption = NO` in the build so the question is not asked per build. [confirm before submitting]
+  `ITSAppUsesNonExemptEncryption = NO` in the build so the question is not asked per build (done; see
+  `docs/legal/export-encryption.md`).
 
 ## App privacy (for the App Store later; TestFlight does not need it)
 
