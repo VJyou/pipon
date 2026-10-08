@@ -3,7 +3,8 @@
 #   circuits/build/{jpki_age_region.zkey, jpki_age_region_js/, vkey.json, dummy-ca.pem, persona-*.pem}
 #   app/verifier-demo/dist/  (npm run build)
 # The dummy CA and persona keys are test keys for dummy cards; no real card data is involved.
-FROM node:22-bookworm-slim
+# trixie: the rapidsnark v0.0.8 binary needs GLIBCXX_3.4.32 (bookworm has 3.4.30)
+FROM node:22-trixie-slim
 
 RUN apt-get update \
  && apt-get install -y --no-install-recommends python3 python3-cryptography curl unzip ca-certificates \

@@ -20,3 +20,13 @@ Notes:
 - The scope-2 gate trusts the J-LIS signing CAs (signca02/03) by their `caKeyHash` (`docs/research/rsa-spike.md`); signca01
   expired on 2025-10-19. Dummy-card proofs are rejected there (`Untrusted CA`). Gates cannot be changed after creation.
 - Re-run the demo: `circuits/scripts/make-claim.sh <wallet> out.json` → `cd sdk && WALLET_KEYPAIR=... CLAIM=out.json npm run demo:devnet`
+
+## Public web demo (Railway, since 2026-10-08)
+- URL: https://pipon-demo-production.up.railway.app (project `pipon-demo`, Hobby plan, usage hard limit set by the owner).
+- Deploy: `(cd app/verifier-demo && npm run build) && deploy/railway/stage.sh <dir> && (cd <dir> && railway up --no-gitignore)`.
+  The zkey is on the volume `pipon-demo-volume` (`/data`), uploaded once with `railway volume files upload`
+  (needs an SSH key registered with `railway ssh keys add`); sha256 checked against the local copy.
+- Image base is Debian trixie: the rapidsnark v0.0.8 binary needs GLIBCXX_3.4.32.
+- Measured: dummy proof 13.5 s warm (28 s first), Web2 flow passes in a browser. Guest cards live in the container and
+  reset on redeploy (a visitor then gets a fresh dummy card).
+- Fly.io was dropped: no spending cap. Railway stops workloads at the hard limit.

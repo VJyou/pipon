@@ -49,6 +49,10 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
   `http://localhost:5173/?relay=http://<Mac LAN IP>:5173` instead (the QR uses the relay origin).
 - Scope 4 stays unclaimed for the video.
 
+## Public demo on Railway (2026-10-08)
+- https://pipon-demo-production.up.railway.app — replaces the Fly.io plan (no spending cap there). See
+  `docs/deployments.md`. The real-iPhone mode works from the public URL too (HTTPS, so wallets connect).
+
 ## Rename (2026-10-07)
 - Project name **p!pon** (said "pippon"); `pipon` wherever `!` cannot go: deep link `pipon://`, bundle id
   `app.pipon.ios`, GitHub repo (rename pending). Internal code names (`ZkCredCore`, `zk_gate`, program ID) stay.
