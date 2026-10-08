@@ -60,4 +60,4 @@ and the generated mopro bindings.
 ## Decision
 
 - TestFlight build: answer that the app uses only exempt encryption; set `ITSAppUsesNonExemptEncryption = NO` in the
-  build settings. [pending the owner's go]
+  build (`app/mobile/ZkCredApp/Info.plist`), decided 2026-10-08.
