@@ -78,7 +78,7 @@ h3 { font-size: 0.95rem; margin: 0 0 6px; }
 .request { background: var(--surface-2); border-radius: 12px; padding: 12px; }
 .request-from { font-weight: 600; font-size: 0.9rem; }
 .claims { margin: 8px 0; padding-left: 18px; }
-.claims li::marker { content: '✓  '; color: var(--ok); }
+.claims li::marker { content: '•  '; color: var(--muted); }
 .never { margin-top: 8px; font-size: 0.82rem; color: var(--muted); }
 .never ul { margin: 6px 0 0; padding-left: 18px; }
 

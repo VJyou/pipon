@@ -58,7 +58,7 @@ export function Web3Panel({ result, onRequest }: { result: ProveResult | null; o
       statement: [
         `Age ${gate.minAge}+`,
         ...(gate.allowedPrefectures.length === 47 ? [] : [`Lives in ${prefs}`]),
-        'Has not claimed before',
+        'One claim per person (checked on-chain)',
       ],
     })
   }

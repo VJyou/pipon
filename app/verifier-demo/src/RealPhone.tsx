@@ -67,6 +67,7 @@ export function RealPhone({ request, onResult }: { request: ProofRequest | null;
           <div className="request">
             <div className="request-from">Scan with the iPhone camera</div>
             {qr && <img className="qr" src={qr} alt="QR code that opens the p!pon app" />}
+            <div className="muted small">{request.service} asks you to prove:</div>
             <ul className="claims">
               {request.statement.map((s) => <li key={s}>{s}</li>)}
             </ul>
