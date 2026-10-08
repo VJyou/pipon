@@ -7,6 +7,9 @@ import type { ProofRequest } from './Phone'
 type RelayResult = { proof: Groth16Proof & { pi_a: string[]; pi_b: string[][]; pi_c: string[] }; publicSignals: string[]; nonce: string }
 
 const isLoopback = ['localhost', '127.0.0.1', '[::1]'].includes(location.hostname)
+// `?relay=http://<Mac LAN IP>:5173`: the origin the phone uses, for a page opened on localhost (some wallets only
+// connect from a secure context, and plain-http LAN addresses are not one). The page itself keeps polling locally.
+const relayOrigin = new URLSearchParams(location.search).get('relay')?.replace(/\/+$/, '') || location.origin
 
 /** Hands the request to the real iPhone app: QR -> pipon://prove?s=<session URL>; the app posts the proof back. */
 export function RealPhone({ request, onResult }: { request: ProofRequest | null; onResult: (r: ProveResult) => void }) {
@@ -27,8 +30,8 @@ export function RealPhone({ request, onResult }: { request: ProofRequest | null;
       })
       if (!r.ok) return setStatus('error')
       const { id } = await r.json()
-      const sessionUrl = `${location.origin}/api/session/${id}`
-      const deepLink = `pipon://prove?s=${encodeURIComponent(sessionUrl)}`
+      const sessionUrl = `/api/session/${id}`
+      const deepLink = `pipon://prove?s=${encodeURIComponent(relayOrigin + sessionUrl)}`
       setLink(deepLink)
       setQr(await QRCode.toDataURL(deepLink, { margin: 1, width: 240 }))
       while (!stop) {
@@ -74,8 +77,8 @@ export function RealPhone({ request, onResult }: { request: ProofRequest | null;
           <li className={status === 'waiting' ? 'active' : status === 'done' ? 'ok' : ''}>Tap your My Number Card on the iPhone</li>
           <li className={status === 'done' ? 'ok' : ''}>Proof received from the phone</li>
         </ol>
-        {isLoopback && request && (
-          <p className="bad-text small">Open this page via the Mac's LAN address (npm run dev -- --host) so the phone can reach it.</p>
+        {isLoopback && relayOrigin === location.origin && request && (
+          <p className="bad-text small">Open this page via the Mac's LAN address (npm run dev -- --host), or add ?relay=http://&lt;LAN IP&gt;:5173, so the phone can reach it.</p>
         )}
         {status === 'error' && <p className="bad-text small">Relay error — is the demo server running?</p>}
       </div>
