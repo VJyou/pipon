@@ -105,3 +105,13 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
   builds are fine. Build to the device or archive with someone at the Mac.
 - Next for TestFlight: App Store Connect app record (bundle id `app.pipon.ios`), privacy policy URL, review notes,
   release archive with `fetch-artifacts.sh` (no `--dev`).
+
+## Next (end of 2026-10-08; the Mac mini is shut down)
+1. **TestFlight** (target: submit for Beta App Review on 10/9), at the Mac:
+   App Store Connect app record (`app.pipon.ios`, name p!pon, SKU `pipon-ios`) → `ios/fetch-artifacts.sh` without
+   `--dev` → archive and upload (signed builds need someone at the Mac) → paste `docs/testflight/review-notes.md`
+   → external testing group with a public link. Contact: pipon.zkid@outlook.com.
+2. Real iPhone on the public URL (Web2 and Web3 scope 3) — not yet tried; scope 4 stays for the video.
+3. Video (≤3 min) and submission prep; deadline 2026-10-12 11:59pm PDT.
+- Push from this Mac without the SSH agent: `git -c credential.helper= -c 'credential.helper=!gh auth git-credential'
+  push https://github.com/VJyou/pipon.git main`.
