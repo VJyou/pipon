@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>p!pon Privacy Policy</title>
+<link rel="icon" href="/pipon-logo.png">
+<style>
+  :root { --bg: #f4efe6; --text: #2a1f1c; --muted: #6d6862; --accent: #b3281e; }
+  @media (prefers-color-scheme: dark) { :root { --bg: #1f1815; --text: #f4efe6; --muted: #a39d95; --accent: #fdc84a; } }
+  body { margin: 0; background: var(--bg); color: var(--text); font: 17px/1.6 -apple-system, "Segoe UI", sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 40px 16px 64px; }
+  h1 { font-size: 30px; margin: 0 0 4px; } h2 { font-size: 20px; margin: 32px 0 8px; color: var(--accent); }
+  .muted { color: var(--muted); } ul { padding-left: 20px; } li { margin: 4px 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; } th, td { text-align: left; vertical-align: top; padding: 8px 6px; border-bottom: 1px solid rgba(127,127,127,.3); }
+</style>
+</head>
+<body>
+<main>
+<h1>p!pon Privacy Policy</h1>
+<p class="muted">Covers the p!pon iPhone app and the p!pon demo site. Last updated: 8 October 2026.</p>
+
+<p>p!pon lets you prove a fact about yourself, such as "age 20 or over", from the IC chip of your My Number Card
+without handing over the data on the card. The proof is made on your iPhone. This page lists everything that leaves
+your phone and what the demo site keeps.</p>
+
+<h2>What stays on your phone</h2>
+<ul>
+  <li>The certificate read from your My Number Card, which holds your name, date of birth, sex and address. It is used
+    in memory to build the proof and is never sent, stored or logged.</li>
+  <li>The card's signing password. It is sent only to the card over NFC, as the card requires, and is never stored.</li>
+  <li>Your Individual Number (My Number). The app never reads it.</li>
+</ul>
+
+<h2>What the app sends</h2>
+<p>Only when you approve a request, and only to the site that made the request (the address in the QR code):</p>
+<table>
+  <tr><th>Data</th><th>Why</th></tr>
+  <tr><td>A zero-knowledge proof</td><td>Lets the site check the facts below without seeing your card data.</td></tr>
+  <tr><td>Age threshold met (for example 20+), and today's date</td><td>The fact the site asked for.</td></tr>
+  <tr><td>Your prefecture code (for example 13 = Tokyo)</td><td>Some services are limited to a region.</td></tr>
+  <tr><td>A pseudonymous ID for that service</td><td>Lets the service see that the same person does not claim twice.
+    It is different for every service, so services cannot link you with it.</td></tr>
+  <tr><td>A hash of the issuing authority's key, and a random number</td><td>Shows the card was issued by a trusted
+    authority, and ties the proof to this one request.</td></tr>
+</table>
+
+<h2>Demo card</h2>
+<p>If you choose "Demo card", the app sends a random ID made on your phone to the demo site, which issues a dummy
+card for it: a fictional person and a test key. No real data is involved. The demo site keeps the test key for that
+random ID so that the same demo card is issued again.</p>
+
+<h2>What the demo site keeps</h2>
+<ul>
+  <li>Requests and their proofs, in memory, for up to 10 minutes.</li>
+  <li>Your IP address, in memory, for up to one hour, to limit how many proofs one address can request.</li>
+  <li>Demo card test keys, as described above.</li>
+</ul>
+<p>There are no accounts, no analytics and no advertising, and nothing is sold or shared.</p>
+
+<h2>Blockchain (Web3 demo only)</h2>
+<p>If you claim on a Solana gate, the proof, your wallet address, the pseudonymous ID for that gate and the public
+facts are recorded on Solana devnet. Blockchain records are public and cannot be deleted.</p>
+
+<h2>Permissions</h2>
+<ul>
+  <li>NFC: to read your My Number Card when you tap it.</li>
+  <li>Local network: only when a demo site runs on your own network.</li>
+</ul>
+
+<h2>Children</h2>
+<p>p!pon is a demo and is not directed at children.</p>
+
+<h2>Contact</h2>
+<p>Questions: <a href="mailto:[CONTACT EMAIL]">[CONTACT EMAIL]</a>. We will update this page when the app changes, and
+show the date above.</p>
+</main>
+</body>
+</html>

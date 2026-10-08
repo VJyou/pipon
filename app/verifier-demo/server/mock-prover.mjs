@@ -51,6 +51,13 @@ function allowProof(ip) {
   return true;
 }
 
+// Retention promised in public/privacy.html: IPs at most an hour, relay sessions at most their 10 minutes.
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, ts] of proofLog) if (ts.every((t) => now - t >= 3_600_000)) proofLog.delete(ip);
+  for (const [id, s] of sessions) if (s.expires < now) sessions.delete(id);
+}, 60_000).unref();
+
 // make-claim.sh shares build/claim-tmp, so run one proof at a time.
 let queue = Promise.resolve();
 const serial = (fn) => (queue = queue.then(fn, fn));
