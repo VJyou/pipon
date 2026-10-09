@@ -115,3 +115,13 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 3. Video (≤3 min) and submission prep; deadline 2026-10-12 11:59pm PDT.
 - Push from this Mac without the SSH agent: `git -c credential.helper= -c 'credential.helper=!gh auth git-credential'
   push https://github.com/VJyou/pipon.git main`.
+
+## TestFlight (2026-10-09)
+- App Store Connect record: p!pon (`app.pipon.ios`, SKU `pipon-ios`). Build 1.0 (1) uploaded from the Mac (release
+  artifacts, no `--dev`; checked: no `.pem` or `dev/` in the archive). Upload worked through Xcode Organizer after
+  re-signing in to the account; `xcodebuild -exportArchive` failed with "App Store Connect access is required".
+- Groups: `team` (internal, automatic distribution) and `public` (external, public link, tester limit 20).
+  Build 1.0 (1) submitted to Beta App Review on 2026-10-09 (Waiting for Review).
+- The public link is **not** published (README, demo site, this repository): the developer name shown by TestFlight
+  is the account holder's legal name. Share it only in the submission form's judges field; the link is kept outside
+  the repository (App Store Connect → TestFlight → public).
