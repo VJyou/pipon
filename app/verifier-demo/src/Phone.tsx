@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { fetchPersonas, prove, Unsatisfiable, type ProveResult } from './lib/prover'
 
 export type ProofRequest = { binding: string; scope: number; service: string; statement: string[] }
@@ -17,7 +17,12 @@ export function Phone({ request, onResult }: { request: ProofRequest | null; onR
   useEffect(() => {
     fetchPersonas().then(setPersonas).catch((e) => setErr(String(e.message)))
   }, [])
-  useEffect(() => setStage('idle'), [request])
+  // The request being shown now: a proof that finishes after the service asked again is for the old session.
+  const current = useRef(request)
+  useEffect(() => {
+    current.current = request
+    setStage('idle')
+  }, [request])
 
   async function run() {
     if (!request) return
@@ -25,13 +30,16 @@ export function Phone({ request, onResult }: { request: ProofRequest | null; onR
     setStage('reading')
     // The real app reads the JPKI signing certificate over NFC here (password required).
     await new Promise((r) => setTimeout(r, 900))
+    if (current.current !== request) return
     setStage('proving')
     try {
       const res = await prove(request.binding, persona, request.scope)
+      if (current.current !== request) return
       setMs(res.ms)
       setStage('done')
       onResult(res)
     } catch (e) {
+      if (current.current !== request) return
       if (e instanceof Unsatisfiable) setStage('unsatisfiable')
       else {
         setStage('error')
