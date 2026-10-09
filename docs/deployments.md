@@ -26,6 +26,8 @@ Notes:
 - Deploy: `(cd app/verifier-demo && npm run build) && deploy/railway/stage.sh <dir> && (cd <dir> && railway up --no-gitignore)`.
   The zkey is on the volume `pipon-demo-volume` (`/data`), uploaded once with `railway volume files upload`
   (needs an SSH key registered with `railway ssh keys add`); sha256 checked against the local copy.
+- Stage into a directory linked to the project first (`railway link`, project `pipon-demo`, service `pipon-demo`):
+  `railway up` from an unlinked directory creates a new project instead (happened once on 2026-10-09).
 - Image base is Debian trixie: the rapidsnark v0.0.8 binary needs GLIBCXX_3.4.32.
 - Measured: dummy proof 13.5 s warm (28 s first), Web2 flow passes in a browser. Guest cards live in the container and
   reset on redeploy (a visitor then gets a fresh dummy card).
