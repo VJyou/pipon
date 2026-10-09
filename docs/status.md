@@ -127,3 +127,5 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
   the repository (App Store Connect → TestFlight → public).
 - Real iPhone, TestFlight build (installed via invite), public Railway URL, holder's own card: Web2 age check passes
   all six browser checks (verify 314 ms).
+- Same setup, Web3 on scope 3: the proof from the phone verifies and the mint is rejected as already claimed (the card's
+  nullifier from 10/7 is on-chain), as expected.
