@@ -1,6 +1,6 @@
 # Pitch video: three 3-minute narration drafts
 
-Drafts for the submission video (3 minutes at most). Each is about 380 spoken words (about 2 min 45 s at 140 words
+Drafts for the submission video (3 minutes at most). Each is about 330 spoken words (about 2 min 20 s at 140 words
 per minute), leaving room for pauses and demo footage. Facts come only from the slide notes (`docs/pitch/deck/slides/`).
 `[SLIDE x]` and `[DEMO]` are visual cues, not spoken. Demo footage: dummy or demo card on screen, or the holder's own
 card with no personal value visible; Web3 on scope 4 (first claim) for the video.
