@@ -125,3 +125,5 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - The public link is **not** published (README, demo site, this repository): the developer name shown by TestFlight
   is the account holder's legal name. Share it only in the submission form's judges field; the link is kept outside
   the repository (App Store Connect → TestFlight → public).
+- Real iPhone, TestFlight build (installed via invite), public Railway URL, holder's own card: Web2 age check passes
+  all six browser checks (verify 314 ms).
