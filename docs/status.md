@@ -129,3 +129,13 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
   all six browser checks (verify 314 ms).
 - Same setup, Web3 on scope 3: the proof from the phone verifies and the mint is rejected as already claimed (the card's
   nullifier from 10/7 is on-chain), as expected.
+
+## Next (end of 2026-10-09; the Mac mini is shut down)
+1. **Beta App Review**: build 1.0 (1) waiting. When approved, open the public link on a phone and check whether the
+   developer's legal name is shown (decides whether the link goes into the submission form).
+2. **Video (≤3 min)**: pick one of the three drafts in `docs/pitch/video-narration.md` (A problem first, B demo first,
+   C Japan as the model; recommendation B) or a mix; record narration and screen captures. Web3 footage on scope 4.
+3. Submission prep: README and docs in English, submission form (demo URL, video, repo; TestFlight link only in the
+   judges field), repository public just before submitting. Deadline 2026-10-12 11:59pm PDT.
+4. Cleanup: Railway project `railway-stage` (created by mistake, deletion requested 10/9) — confirm it is gone with
+   `railway list`; delete screenshots that show real-card results.
