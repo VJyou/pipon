@@ -52,3 +52,15 @@ Screen recording + voice-over. Dummy cards on screen (dummy CA, dummy people) un
 ## Decision: real card in the video (2026-10-07)
 **A**: every on-screen flow uses dummy cards; the real-card result is one slide with timings and devnet tx links.
 No card, no screen showing the holder's prefecture, nullifier or wallet. Scope 2 stays unclaimed.
+
+## Decision: AI presenter and voice (2026-10-10)
+**Pitch video**: the founder's own HeyGen digital twin (face + cloned voice) reads the English script, over the slides.
+**Technical demo**: screen recordings with the cloned voice only, no avatar.
+
+- Source footage is recorded in Japanese (about 2 minutes, plain background); the script is the reviewed English
+  narration, not machine translation.
+- Needs the HeyGen Creator plan (no watermark, 1080p, videos longer than 1 minute).
+- Open: the official rules do not mention AI-generated presenters (`docs/legal/hackathon-rules-check.md` has no entry);
+  confirm before submitting. If the cloned English voice has a strong accent, add 1–2 minutes of English speech to the
+  voice sample.
+- Open: which narration draft (A/B/C in `video-narration.md`) is the final script.
