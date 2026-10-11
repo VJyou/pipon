@@ -25,7 +25,7 @@ const [pngDir, out, draft = 'D', wpm = '140', avatar, wordsFile] = process.argv.
 const PAUSE = 0.8 // breath between slides, seconds
 const FADE = 0.4
 const LEAD = 0.3 // with a presenter: the slide is fully in this long before its first word
-const TITLE_SECONDS = 5.5
+const TITLE_SECONDS = 3.5
 const TITLE_FADE = 0.8 // to white and back, and the words in and out
 const PIP = { size: 300, margin: 48, crop: 'crop=760:760:160:20' } // presenter window; crop is for a 1080×1080 source
 const PIP_HIDDEN = ['global', 'trend', 'solana', 'roadmap'] // slides with content in the bottom-right corner: no window
