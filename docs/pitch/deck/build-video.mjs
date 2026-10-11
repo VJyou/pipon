@@ -28,7 +28,8 @@ const LEAD = 0.3 // with a presenter: the slide is fully in this long before its
 const TITLE_SECONDS = 3.5
 const TITLE_FADE = 0.8 // to white and back, and the words in and out
 const PIP = { size: 300, margin: 48, crop: 'crop=760:760:160:20' } // presenter window; crop is for a 1080×1080 source
-const PIP_HIDDEN = ['global', 'trend', 'solana', 'roadmap'] // slides with content in the bottom-right corner: no window
+// slides with content in the bottom-right corner: no window
+const PIP_HIDDEN = ['global', 'trend', 'solana', 'roadmap', 'circuit', 'web2flow', 'web3flow']
 const norm = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ').filter(Boolean)
 const n2 = (x) => x.toFixed(2)
 
@@ -38,7 +39,7 @@ const segments = [...section.matchAll(/^\[(SLIDE|DEMO|AVATAR|TITLE) ([^\]]*)\]\n
   if (kind === 'TITLE') return { title: rest.trim(), slide: 'title', words: 0, body: '', seconds: TITLE_SECONDS }
   const name = rest.match(/\w+/)[0]
   const words = body.trim().split(/\s+/).length
-  return { solo: kind === 'AVATAR', slide: kind === 'DEMO' ? name.toLowerCase() : name, words, body, seconds: +((words / wpm) * 60 + PAUSE).toFixed(1) }
+  return { solo: kind === 'AVATAR', demo: kind === 'DEMO', slide: kind === 'DEMO' ? name.toLowerCase() : name, words, body, seconds: +((words / wpm) * 60 + PAUSE).toFixed(1) }
 })
 const last = segments.length - 1
 // cross-fade between cue i and the next one
@@ -105,7 +106,7 @@ const inputs = segments.flatMap((s, i) => {
   const length = String(s.seconds + (i < last ? fade(i) : 0))
   if (s.solo) return ['-f', 'lavfi', '-t', length, '-i', 'color=black:s=1920x1080:r=25']
   if (s.title) return ['-loop', '1', '-t', length, '-i', s.png]
-  const clip = process.env.DEMO && `${process.env.DEMO}/${s.slide}.mp4`
+  const clip = s.demo && process.env.DEMO && `${process.env.DEMO}/${s.slide}.mp4`
   if (clip && existsSync(clip)) return (s.clip = true), ['-i', clip]
   const file = pngs.find((f) => f.replace(/^\d+-|\.png$/g, '') === s.slide)
   if (!file) throw new Error(`no slide image for "${s.slide}"`)
