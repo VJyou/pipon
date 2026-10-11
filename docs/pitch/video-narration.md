@@ -182,3 +182,46 @@ other countries get a model to follow.
 
 [SLIDE status]
 It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. p!pon.
+
+---
+
+## T. Technical demo (the second video, 2:00–3:00: stack, circuit, both flows, real-card result, limits)
+
+Not a pitch draft: this is the narration for the technical demo in `video-plan.md` §2. On-screen flows use dummy or
+demo cards only; the real-card result is the `realcard` slide.
+
+[SLIDE tech]
+The stack: a Circom circuit with 1.49 million constraints, proved with Groth16; on-device proving with mopro and rapidsnark; an Anchor program, zk_gate, on Solana; and a web verifier built
+on snarkjs. There is no issuer server. The national certificate authority is the root of trust, and the phone does the
+proving.
+
+[SLIDE circuit]
+Inside the proof, four checks happen in private: the certificate authority's signature over the certificate; the
+card's own signature over a challenge bound to a wallet or a browser session; the age; and the prefecture. The public
+outputs are just two facts, 20 or over and the prefecture, plus a hash of the CA key and a per-service nullifier.
+
+[SLIDE web2flow]
+First, Web2. An online store creates a one-time session and shows it as a QR code. The holder enters the card's password and taps the card: the chip signs a challenge made from the session ID,
+and the phone builds the proof. The certificate never leaves the phone.
+
+[DEMO Web2: store checkout, QR, proof, six checks turn green]
+Here it is with a demo card. The store's browser verifies the proof and runs six checks: a valid proof, the same
+session, a trusted CA from the list on Solana, today's date, 20 or over, and this store's scope. The store keeps a yes, the prefecture and a store-only ID.
+
+[SLIDE web3flow]
+Now Web3. A gate account on Solana holds the rules: minimum age, allowed prefectures, trusted CA keys and a scope. The
+card signs a challenge made from the wallet address, so the proof only works for that wallet.
+
+[DEMO Web3: mint, explorer transaction, same card rejected, other prefecture rejected]
+One transaction does everything: zk_gate verifies the Groth16 proof with the alt_bn128 syscalls, creates the nullifier
+account and mints a Metaplex Core NFT, in about 144 thousand compute units. The same card again: already claimed. A
+card from another prefecture: rejected by the gate's policy.
+
+[SLIDE realcard]
+It also runs on a real My Number Card. The proof takes 3.5 seconds on a Mac with a USB reader, and about nine and
+a half seconds on an iPhone 15 Pro Max. The claim was verified on devnet, and a second claim from a new wallet was
+rejected.
+
+[SLIDE limits]
+Honest limits: there is no revocation check yet, because revocation lists are only available to certified verifiers,
+and the trusted setup has a single contributor. Next: the Solana Attestation Service and a multi-party setup. The code is open source under GPL-3.0.
