@@ -8,7 +8,9 @@ Here it is with a real My Number Card. The store's browser verifies the proof an
 
 Now Web3. A gate account on Solana holds the rules: minimum age, allowed prefectures, trusted C A keys and a scope. The card signs a challenge made from the wallet address, so the proof only works for that wallet.
 
-One transaction does everything: zee-kay gate verifies the Groth sixteen proof with the alt B N one twenty-eight syscalls, creates the nullifier account and mints a Metaplex Core NFT, in about 144 thousand compute units. The same card again: already claimed. A card from another prefecture: rejected by the gate's policy.
+One transaction does everything: zee-kay gate verifies the Groth sixteen proof with the alt B N one twenty-eight syscalls, creates the nullifier account and mints a Metaplex Core NFT, in about 144 thousand compute units. The same card again: already claimed.
+
+A card from another prefecture: rejected by the gate's policy.
 
 Timings with the real card: the proof takes 3.5 seconds on a Mac with a USB reader, and about nine and a half seconds on an iPhone 15 Pro Max. The claim was verified on dev net, and a second claim from a new wallet was rejected.
 
