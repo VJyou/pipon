@@ -85,9 +85,9 @@ password and taps the card: the chip signs a challenge made from the session ID,
 and the phone builds the proof. The certificate never leaves the phone.
 
 [DEMO Web2: store checkout, QR, proof, six checks turn green]
-Here it is with a real My Number Card. The store's browser verifies the proof and runs six checks: a valid proof, the same
-session, a trusted CA from the list on Solana, today's date, 20 or over, and this store's scope. The store keeps a
-yes, the prefecture and a store-only ID.
+Here it is with a real My Number Card. The store's browser verifies the proof and runs six checks: a valid proof, the
+same session, a trusted CA from the list on Solana, today's date, 20 or over, and this store's scope. The store keeps
+a yes, the prefecture and a store-only ID.
 
 [SLIDE web3flow]
 Now Web3. A gate account on Solana holds the rules: minimum age, allowed prefectures, trusted CA keys and a scope. The
