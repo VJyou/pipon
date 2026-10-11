@@ -16,7 +16,8 @@ wide() { # macfile m0 m1 phonefile p0 p1 delay length out idblur
   [1:v:0]fps=30,crop=500:1080:710:0,split[c][d];[d]crop=80:80:27:972,boxblur=luma_radius=20:luma_power=3:chroma_radius=10:chroma_power=3[dd];[c][dd]overlay=27:972:enable='${11}',scale=472:1020,trim=start=$5:end=$6,setpts=PTS-STARTPTS,tpad=start_mode=clone:start_duration=$7:stop_mode=clone:stop_duration=30[ph];
   [bg][mac]overlay=40:0:shortest=1[x];[x][ph]overlay=1392:30:shortest=1,trim=duration=$8,setpts=PTS-STARTPTS[v]" -map "[v]" $X $9.mp4; }
 W2M=pipon_web2_mac.mp4; W2I=pipon-web2_iphone.mp4; W3M=pipon_web3_mac.mp4; W3I=pipon_web3_iphone.mp4
-close $W2M 0.10 800:450:790:170 web2a 0
+# web2a: the whole page, not a close-up (the first look at the product), where the wide shots put it; no phone yet
+ffmpeg -v error -y -ss 0.10 -i $P/$W2M -filter_complex "${BG}:d=2[bg];[0:v:0]crop=1280:1080:320:0,trim=end_frame=1,loop=loop=-1:size=1,fps=30[m];[bg][m]overlay=40:0:shortest=1[v]" -map "[v]" $X web2a.mp4
 wide  $W2M 0 0.9   $W2I 0 0.05 0 2.0 web2b 0 1
 wide  $W2M 0.7 0.75 $W2I 0 3.6 0 4.0 web2c 0 'lt(t,1.4)'
 wide  $W2M 0.7 0.75 $W2I 3.6 6.6 0 3.2 web2d 0 0

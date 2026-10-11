@@ -130,7 +130,7 @@ for as long as its sentence takes.
 p!pon has three parts: an iPhone app that reads your My Number Card, a check that any website can run in its own
 browser page, and a Solana program for one-per-person gates. Here is each of them, live.
 
-[DEMO web2a: close-up of the store's checkout]
+[DEMO web2a: the whole demo page, store at checkout]
 This is an online store selling sake. At checkout it needs one fact: is the buyer 20 or over?
 
 [DEMO web2b: the QR code appears]
