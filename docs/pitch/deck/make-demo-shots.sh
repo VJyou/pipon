@@ -28,3 +28,5 @@ wide  $W3M 1.0 10.0 $W3I 0 6.5 1.0 9.0 web3b 0 0
 close $W3M 11.0 800:450:790:285 web3c 0
 close $W3M 11.0 720:405:800:335 web3d 0
 close $W2M 1.45 640:360:820:458 web3e 1
+# web3b carries the whole request-to-mint sequence: fit it to its sentence (about 6.5 s in the recording of 10-11)
+ffmpeg -v error -y -i web3b.mp4 -vf "setpts=PTS*6.3/9.0" $X web3b-fit.mp4 && mv web3b-fit.mp4 web3b.mp4
