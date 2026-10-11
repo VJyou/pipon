@@ -5,7 +5,8 @@ Scripts for the two submission videos (3 minutes at most each). **D is the pitch
 The copy of D to paste into the voice tool is `video-script-d-tts.txt` (no cues, names spelled for pronunciation).
 Facts come only from the slide notes (`docs/pitch/deck/slides/`); "open source" in D is the repository licence
 (GPL-3.0).
-`[SLIDE x]`, `[DEMO]` and `[AVATAR only]` (the presenter alone, no slide) are visual cues, not spoken. Demo footage:
+`[SLIDE x]`, `[DEMO]`, `[AVATAR only]` (the presenter alone, no slide) and `[TITLE words]` (a silent section
+break: white, the words fade in and out) are visual cues, not spoken. Demo footage:
 dummy or demo card on screen, or the holder's own
 card with no personal value visible; Web3 on scope 4 (first claim) for the video.
 
@@ -25,6 +26,8 @@ copy someone was asked to upload.
 And laws now demand more checks: the UK, Australia, about half of US states. More checks times stored copies equals
 more breaches. The way we check identity online has to change, and this is the moment.
 
+[TITLE Why start in Japan]
+
 [SLIDE whynow]
 Japan can change first. From April 2027, remote KYC drops photo uploads and moves to the IC chip. Over 100 million My
 Number Cards can carry a certificate signed by the national authority.
@@ -39,6 +42,8 @@ in its browser and keeps only a yes, the prefecture and a store-only ID.
 
 [DEMO Web3, short]
 On Solana, zk_gate verifies the proof on-chain and records a nullifier, so a second claim from another wallet fails.
+
+[TITLE Why Solana]
 
 [SLIDE solana]
 Why bring a Japanese card to Solana? Because the hard part is shared. The one-per-person registry and the list of
