@@ -139,3 +139,24 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
    judges field), repository public just before submitting. Deadline 2026-10-12 11:59pm PDT.
 4. Cleanup: Railway project `railway-stage` (created by mistake, deletion requested 10/9) — confirm it is gone with
    `railway list`; delete screenshots that show real-card results.
+
+## Videos and submission form (2026-10-11)
+- Repository is **public** since 2026-10-11 (history checked first: no keys, tokens or personal data; author email is
+  the GitHub noreply address). About text and homepage (the Railway demo) are set.
+- Submission form limits (differ from the workshop notes): pitch video up to **2 minutes**; demo video up to 3 minutes,
+  "the live product, not a slide deck, not a code walkthrough"; both as YouTube, Loom or Vimeo links.
+- **Pitch video final**: 1 min 58 s (draft D of `docs/pitch/video-narration.md`, three `[CUT]` passages).
+- **Demo video final**: 1 min 45 s (section P: how the product is put together, shots cut from the four real-card
+  screen recordings by `docs/pitch/deck/make-demo-shots.sh`, no slides). Section T (technical walkthrough) is not
+  submitted.
+- Built with `docs/pitch/deck/build-video.mjs` (ffmpeg and whisper-cpp from Homebrew). The videos, the recordings and
+  the presenter videos are on the Mac in `~/pipon-out` (not in the repository); the whisper word times are in
+  `~/pipon-out/work/`. Decisions on what the footage shows and blurs: `docs/pitch/video-plan.md`.
+- Scope 4 (the gate kept for the video) is claimed.
+
+## Next (end of 2026-10-11; the Mac mini is shut down)
+1. Upload both videos (YouTube, Loom or Vimeo) and paste the links into the form.
+2. Fill in the form: GitHub link `https://github.com/VJyou/pipon`; live product link
+   `https://pipon-demo-production.up.railway.app`; access instructions (drafted in the session of 10-11, with the
+   TestFlight public link pasted in by hand — the link stays out of the repository).
+3. Deadline: 2026-10-12 11:59pm PDT (= 2026-10-13 15:59 JST).
