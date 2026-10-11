@@ -66,7 +66,7 @@ Stop collecting IDs. Prove the fact. p!pon.
 ## T. Technical demo (the second video, 2:00–3:00: stack, circuit, both flows, real-card result, limits)
 
 Not a pitch draft: this is the narration for the technical demo in `video-plan.md` §2. On-screen flows use dummy or
-demo cards only; the real-card result is the `realcard` slide.
+demo cards or the real-card recordings (see `video-plan.md` for what is shown and blurred).
 
 [SLIDE tech]
 The stack: a Circom circuit with 1.49 million constraints, proved with Groth16; on-device proving with mopro and
@@ -85,7 +85,7 @@ password and taps the card: the chip signs a challenge made from the session ID,
 and the phone builds the proof. The certificate never leaves the phone.
 
 [DEMO Web2: store checkout, QR, proof, six checks turn green]
-Here it is with a demo card. The store's browser verifies the proof and runs six checks: a valid proof, the same
+Here it is with a real My Number Card. The store's browser verifies the proof and runs six checks: a valid proof, the same
 session, a trusted CA from the list on Solana, today's date, 20 or over, and this store's scope. The store keeps a
 yes, the prefecture and a store-only ID.
 
@@ -99,7 +99,7 @@ account and mints a Metaplex Core NFT, in about 144 thousand compute units. The 
 card from another prefecture: rejected by the gate's policy.
 
 [SLIDE realcard]
-It also runs on a real My Number Card. The proof takes 3.5 seconds on a Mac with a USB reader, and about nine and
+Timings with the real card: the proof takes 3.5 seconds on a Mac with a USB reader, and about nine and
 a half seconds on an iPhone 15 Pro Max. The claim was verified on devnet, and a second claim from a new wallet was
 rejected.
 
