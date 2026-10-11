@@ -1,53 +1,11 @@
 # Pitch video and technical demo: narration
 
 Scripts for the two submission videos (3 minutes at most each). **D is the pitch script** (about 330 words, about
-2 min 30 s at 140 words per minute with pauses); C is the earlier draft it was built from; T is the technical demo.
+2 min 30 s at 140 words per minute with pauses); T is the technical demo.
 The copy of D to paste into the voice tool is `video-script-d-tts.txt` (no cues, names spelled for pronunciation).
 Facts come only from the slide notes (`docs/pitch/deck/slides/`); "open source" in D is the repository licence (GPL-3.0).
 `[SLIDE x]` and `[DEMO]` are visual cues, not spoken. Demo footage: dummy or demo card on screen, or the holder's own
 card with no personal value visible; Web3 on scope 4 (first claim) for the video.
-
----
-
-## C. Japan as the model (why now, why us, the bigger vision)
-
-[SLIDE cover]
-Hi, I'm Yu Ayato, building p!pon: zero-knowledge credentials from Japan's My Number Card.
-
-[SLIDE whynow]
-Japan is about to change how it checks identity online. From April 2027, remote KYC drops photo uploads and moves to
-the IC chip. Over 100 million My Number Cards each carry a certificate signed by the national authority.
-
-[SLIDE breach]
-That fixes forgery, not privacy. Two weeks ago, one of Japan's largest car-sharing services lost 1.6 million uploaded
-ID images. Every service that keeps a copy of your ID is a breach waiting to happen.
-
-[SLIDE how]
-p!pon closes that gap. The phone reads the card and proves only the facts a service needs: 20 or over, the prefecture,
-one per person. The service gets a yes, not your data.
-
-[DEMO Web2, short]
-Here it is: scan, tap the card, and in about nine and a half seconds the iPhone makes the proof. The store verifies it
-in its browser and keeps only a yes, the prefecture and a store-only ID.
-
-[DEMO Web3, short]
-On Solana, zk_gate verifies the proof on-chain and records a nullifier, so a second claim from another wallet fails.
-
-[SLIDE compete]
-Why not passport-based tools? In Japan only about 18% of people hold a valid passport, while 84.5% hold a My Number
-Card — and passports cannot prove where you live.
-
-[SLIDE policy]
-Technology alone is not enough. A zero-knowledge proof has to be accepted as a lawful way to check age or residence.
-So we are co-founding an industry association with other ZK identity projects, from any chain, to write guidelines and
-work with regulators. If ZK proofs gain legal standing in Japan, other countries get a model to follow.
-
-[SLIDE roadmap]
-From there: the App Store and Android, a checkout SDK, AI agents that act for a verified human, and ePassports, so the
-same proof and the same Solana registry can work for travellers from any country.
-
-[SLIDE status]
-It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. p!pon.
 
 ---
 
