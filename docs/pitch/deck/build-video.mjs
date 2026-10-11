@@ -8,8 +8,10 @@
 // and the presenter is overlaid as a round window, bottom right, with the video's own audio:
 //   ffmpeg -i avatar.mp4 -ar 16000 -ac 1 a.wav && whisper-cli -m ggml-base.en.bin -f a.wav -ml 1 -sow -oj -of words
 //   node docs/pitch/deck/build-video.mjs /tmp/slides out.mp4 D 140 avatar.mp4 words.json
+// DEMO=<dir> uses <dir>/web2.mp4 and <dir>/web3.mp4 (1920×1080 screen recordings) for the [DEMO] cues instead of the
+// stand-in slides; a clip is cut to the cue's length, or its last frame is held. No presenter window over a clip.
 // Needs ffmpeg (FFMPEG=/path/to/ffmpeg if it is not on the PATH).
-import { readFileSync, readdirSync } from 'node:fs'
+import { existsSync, readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { execFileSync } from 'node:child_process'
 
@@ -55,6 +57,8 @@ const pngs = readdirSync(pngDir)
 const inputs = segments.flatMap((s, i) => {
   const length = String(s.seconds + (i < segments.length - 1 ? FADE : 0))
   if (s.solo) return ['-f', 'lavfi', '-t', length, '-i', 'color=black:s=1920x1080:r=25']
+  const clip = process.env.DEMO && `${process.env.DEMO}/${s.slide}.mp4`
+  if (clip && existsSync(clip)) return (s.clip = true), ['-i', clip]
   const file = pngs.find((f) => f.replace(/^\d+-|\.png$/g, '') === s.slide)
   if (!file) throw new Error(`no slide image for "${s.slide}"`)
   return ['-loop', '1', '-t', length, '-i', `${pngDir}/${file}`]
@@ -67,6 +71,7 @@ let solo = 0
 segments.forEach((s, i) => {
   const same = 'format=yuv420p,setsar=1,fps=25'
   if (s.solo && avatar) filter += `[solo${solo++}]trim=start=${at.toFixed(2)}:end=${(at + s.seconds + FADE).toFixed(2)},setpts=PTS-STARTPTS,scale=-2:1080,pad=1920:1080:(ow-iw)/2:0:black,${same}[s${i}];`
+  else if (s.clip) filter += `[${i}:v]scale=1920:1080,tpad=stop_mode=clone:stop_duration=60,trim=duration=${(s.seconds + FADE).toFixed(2)},setpts=PTS-STARTPTS,${same}[s${i}];`
   else filter += `[${i}:v]${same}[s${i}];`
   at += s.seconds
 })
@@ -83,7 +88,7 @@ if (avatar) {
   let t0 = 0
   for (const s of segments) {
     const span = [t0, (t0 += s.seconds)]
-    if (!s.solo && !PIP_HIDDEN.includes(s.slide)) continue
+    if (!s.solo && !s.clip && !PIP_HIDDEN.includes(s.slide)) continue
     if (hidden.length && hidden.at(-1)[1] === span[0]) hidden.at(-1)[1] = span[1]
     else hidden.push(span)
   }
