@@ -3,15 +3,17 @@
 Scripts for the two submission videos (3 minutes at most each). **D is the pitch script** (about 330 words, about
 2 min 30 s at 140 words per minute with pauses); T is the technical demo.
 The copy of D to paste into the voice tool is `video-script-d-tts.txt` (no cues, names spelled for pronunciation).
-Facts come only from the slide notes (`docs/pitch/deck/slides/`); "open source" in D is the repository licence (GPL-3.0).
-`[SLIDE x]` and `[DEMO]` are visual cues, not spoken. Demo footage: dummy or demo card on screen, or the holder's own
+Facts come only from the slide notes (`docs/pitch/deck/slides/`); "open source" in D is the repository licence
+(GPL-3.0).
+`[SLIDE x]`, `[DEMO]` and `[AVATAR only]` (the presenter alone, no slide) are visual cues, not spoken. Demo footage:
+dummy or demo card on screen, or the holder's own
 card with no personal value visible; Web3 on scope 4 (first claim) for the video.
 
 ---
 
 ## D. Pitch (leaks everywhere, why Japan now, open source, why this belongs on Solana)
 
-[SLIDE cover]
+[AVATAR only]
 Hi, I'm Yu Ayato, building p!pon: zero-knowledge credentials from Japan's My Number Card.
 
 [SLIDE global]
@@ -48,7 +50,10 @@ kind of government-signed chip. Any team can take this code and adapt it to its 
 registry. What we build for Japan, the whole ecosystem can use.
 
 [SLIDE status]
-It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. p!pon.
+It works today, with a real card, and the iPhone app is in TestFlight beta.
+
+[AVATAR only]
+Stop collecting IDs. Prove the fact. p!pon.
 
 ---
 
@@ -58,7 +63,8 @@ Not a pitch draft: this is the narration for the technical demo in `video-plan.m
 demo cards only; the real-card result is the `realcard` slide.
 
 [SLIDE tech]
-The stack: a Circom circuit with 1.49 million constraints, proved with Groth16; on-device proving with mopro and rapidsnark; an Anchor program, zk_gate, on Solana; and a web verifier built
+The stack: a Circom circuit with 1.49 million constraints, proved with Groth16; on-device proving with mopro and
+rapidsnark; an Anchor program, zk_gate, on Solana; and a web verifier built
 on snarkjs. There is no issuer server. The national certificate authority is the root of trust, and the phone does the
 proving.
 
@@ -68,12 +74,14 @@ card's own signature over a challenge bound to a wallet or a browser session; th
 outputs are just two facts, 20 or over and the prefecture, plus a hash of the CA key and a per-service nullifier.
 
 [SLIDE web2flow]
-First, Web2. An online store creates a one-time session and shows it as a QR code. The holder enters the card's password and taps the card: the chip signs a challenge made from the session ID,
+First, Web2. An online store creates a one-time session and shows it as a QR code. The holder enters the card's
+password and taps the card: the chip signs a challenge made from the session ID,
 and the phone builds the proof. The certificate never leaves the phone.
 
 [DEMO Web2: store checkout, QR, proof, six checks turn green]
 Here it is with a demo card. The store's browser verifies the proof and runs six checks: a valid proof, the same
-session, a trusted CA from the list on Solana, today's date, 20 or over, and this store's scope. The store keeps a yes, the prefecture and a store-only ID.
+session, a trusted CA from the list on Solana, today's date, 20 or over, and this store's scope. The store keeps a
+yes, the prefecture and a store-only ID.
 
 [SLIDE web3flow]
 Now Web3. A gate account on Solana holds the rules: minimum age, allowed prefectures, trusted CA keys and a scope. The
