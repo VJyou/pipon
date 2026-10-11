@@ -60,7 +60,9 @@ No card, no screen showing the holder's prefecture, nullifier or wallet. Scope 2
 - Source footage is recorded in Japanese (about 2 minutes, plain background); the script is the reviewed English
   narration, not machine translation.
 - Needs the HeyGen Creator plan (no watermark, 1080p, videos longer than 1 minute).
-- Open: the official rules do not mention AI-generated presenters (`docs/legal/hackathon-rules-check.md` has no entry);
-  confirm before submitting. If the cloned English voice has a strong accent, add 1–2 minutes of English speech to the
-  voice sample.
+- Decided 2026-10-11: go ahead with the AI presenter. The official rules have no provision against AI-generated
+  presenters (`docs/legal/hackathon-rules-check.md` has no entry); this is our reading, not a confirmation from the
+  organisers.
+- Decided 2026-10-11: the pronunciation in the generated pitch video is accepted as it is (product name, founder's
+  name, zk_gate).
 - Pitch script: draft D in `video-narration.md`; the copy for the voice tool is `video-script-d-tts.txt`.
