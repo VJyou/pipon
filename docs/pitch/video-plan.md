@@ -65,4 +65,8 @@ No card, no screen showing the holder's prefecture, nullifier or wallet. Scope 2
   organisers.
 - Decided 2026-10-11: the pronunciation in the generated pitch video is accepted as it is (product name, founder's
   name, zk_gate).
+- Decided 2026-10-11 (pitch video demo footage, replaces decision A of 10-07 for this video): the real-card
+  recordings are used. Shown as they are: the prefecture (Tokyo), the shortened wallet address, the on-screen
+  "Proof sent" time (it differs from the narrated proof time). Blurred: the store-only pseudonymous ID and the photo
+  thumbnail in the iPhone camera. No footage of the rejected second claim. Scope 4 is now claimed.
 - Pitch script: draft D in `video-narration.md`; the copy for the voice tool is `video-script-d-tts.txt`.
