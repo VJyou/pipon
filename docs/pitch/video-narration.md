@@ -9,7 +9,7 @@ card with no personal value visible; Web3 on scope 4 (first claim) for the video
 
 ---
 
-## D. C plus the world (leaks everywhere, open source, why this belongs on Solana)
+## D. Pitch (leaks everywhere, why Japan now, open source, why this belongs on Solana)
 
 [SLIDE cover]
 Hi, I'm Yu Ayato, building p!pon: zero-knowledge credentials from Japan's My Number Card.
