@@ -18,6 +18,7 @@ const PAUSE = 0.8 // breath between slides, seconds
 const FADE = 0.4
 const LEAD = 0.3 // with a presenter: the slide is fully in this long before its first word
 const PIP = { size: 300, margin: 48, crop: 'crop=760:760:160:20' } // presenter window; crop is for a 1080×1080 source
+const PIP_HIDDEN = ['global', 'trend', 'solana', 'roadmap'] // slides with content in the bottom-right corner: no window
 const norm = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, ' ').trim().split(' ').filter(Boolean)
 
 const text = readFileSync(here + '../video-narration.md', 'utf8')
@@ -64,7 +65,13 @@ for (let i = 1; i < segments.length; i++) {
 const args = ['-y', '-loglevel', 'error', ...inputs]
 if (avatar) {
   const { size, margin, crop } = PIP
-  const disc = (d) => `geq=lum='p(X,Y)':cb='cb(X,Y)':cr='cr(X,Y)':a='clip((${d / 2}-hypot(X-${d / 2},Y-${d / 2}))*255,0,255)'`
+  // window opacity over time: fades out with the cross-fade into a hidden slide and back in after it
+  let t0 = 0
+  const shown = segments.map((s) => {
+    const span = [t0, (t0 += s.seconds)]
+    return PIP_HIDDEN.includes(s.slide) ? `(clip((${(span[0] + FADE).toFixed(2)}-T)/${FADE},0,1)+clip((T-${span[1].toFixed(2)})/${FADE},0,1))` : ''
+  }).filter(Boolean).join('*') || '1'
+  const disc = (d) => `geq=lum='p(X,Y)':cb='cb(X,Y)':cr='cr(X,Y)':a='clip((${d / 2}-hypot(X-${d / 2},Y-${d / 2}))*255,0,255)*${shown}'`
   filter += `[${segments.length}:v]${crop},scale=${size}:${size},format=yuva420p,${disc(size)}[face];`
   filter += `color=c=0xf4efe6:s=${size + 12}x${size + 12}:r=30,format=yuva420p,${disc(size + 12)}[ring];`
   filter += `[x${segments.length - 1}][ring]overlay=W-w-${margin - 6}:H-h-${margin - 6}:shortest=1[bg];[bg][face]overlay=W-w-${margin}:H-h-${margin}:shortest=1,format=yuv420p[v]`
