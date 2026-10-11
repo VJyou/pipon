@@ -1,0 +1,7 @@
+Pippon has three parts: an iPhone app that reads your My Number Card, a check that any website can run in its own browser page, and a Solana program for one-per-person gates. Here is each of them, live.
+
+This is an online store selling sake. At checkout it needs one fact: is the buyer 20 or over? The store shows a QR code. I scan it with my iPhone, and the pippon app shows who is asking and what they will learn. I tap my real My Number Card on the phone. The app reads the chip and builds a zero-knowledge proof on the device, so the card data never leaves the phone. The store's page checks the proof by itself: no pippon server, no account, no wallet. It learns three things: 20 or over, the prefecture, and an ID that only this store sees. It never gets my name, my birthday, my address or a photo of my card.
+
+The second place a proof can go is Solana. This gate keeps its rules on-chain: 20 or over, and one claim per person. I connect a wallet, the app makes a proof that only works for that wallet, and I press Mint. Our program, zee-kay gate, verifies the proof on-chain, records that this card has claimed, and mints the NFT, all in one transaction. The same card cannot claim here again from any wallet, and nobody keeps a list of people. The store and the gate read the same list of trusted government keys from Solana, so both trust the same root.
+
+The iPhone app is in TestFlight beta, with a demo card for people who do not have a My Number Card. The web demo is live, and all the code is open source. Pippon: prove the fact, not your ID.

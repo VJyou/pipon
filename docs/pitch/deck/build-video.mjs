@@ -2,7 +2,8 @@
 // Each [SLIDE x] cue shows slide x for as long as its text takes to say; [DEMO Web2 …] / [DEMO Web3 …] cues use the
 // web2 / web3 slides as stand-ins until the screen recordings are cut in. [AVATAR only] cues show the presenter alone,
 // full height on black (plain black when there is no presenter video). [TITLE some words] is a section break: the
-// picture goes white, the words fade in and out, and the next cue starts (TITLE_SECONDS, no speech).
+// picture goes white, the words fade in and out, and the next cue starts (TITLE_SECONDS, no speech). The text under a
+// [CUT] cue is in the presenter video but left out of the film (ignored when there is no presenter video).
 //   PNG=/tmp/slides node docs/pitch/deck/build-pdf.mjs             (slide images)
 //   node docs/pitch/deck/build-video.mjs /tmp/slides out.mp4 [draft=D] [wpm=140]
 // With a presenter video, the slides change when the presenter starts each cue's text (word times from whisper.cpp)
@@ -35,24 +36,27 @@ const n2 = (x) => x.toFixed(2)
 
 const text = readFileSync(here + '../video-narration.md', 'utf8')
 const section = text.split(/^## /m).find((s) => s.startsWith(draft + '.')).split(/^---$/m)[0]
-const segments = [...section.matchAll(/^\[(SLIDE|DEMO|AVATAR|TITLE) ([^\]]*)\]\n([^[]*)/gm)].map(([, kind, rest, body]) => {
+const segments = [...section.matchAll(/^\[(SLIDE|DEMO|AVATAR|TITLE|CUT)\b ?([^\]]*)\]\n([^[]*)/gm)].map(([, kind, rest, body]) => {
   if (kind === 'TITLE') return { title: rest.trim(), slide: 'title', words: 0, body: '', seconds: TITLE_SECONDS }
+  if (kind === 'CUT') return { cut: true, body }
   const name = rest.match(/\w+/)[0]
   const words = body.trim().split(/\s+/).length
   return { solo: kind === 'AVATAR', demo: kind === 'DEMO', slide: kind === 'DEMO' ? name.toLowerCase() : name, words, body, seconds: +((words / wpm) * 60 + PAUSE).toFixed(1) }
 })
+const cues = segments.splice(0) // with the [CUT] cues; `segments` gets the ones that are shown
+segments.push(...cues.filter((s) => !s.cut))
 const last = segments.length - 1
 // cross-fade between cue i and the next one
 const fade = (i) => (segments[i].title || segments[i + 1]?.title ? TITLE_FADE : FADE)
 
-const cuts = [] // presenter times where a section break is inserted
+const edits = [] // on the presenter's timeline, in order: { at, pause } for a section break, { at, to } for a cut
 if (avatar) {
   // Spoken words with times; a cue starts where three consecutive words of its opening are heard (names that the
   // recogniser mishears are skipped by trying later openings and stepping back).
   const spoken = JSON.parse(readFileSync(wordsFile, 'utf8')).transcription.flatMap((w) => norm(w.text).map((text) => ({ text, at: w.offsets.from / 1000, to: w.offsets.to / 1000 })))
   const total = +execFileSync(process.env.FFPROBE ?? 'ffprobe', ['-v', 'error', '-show_entries', 'format=duration', '-of', 'csv=p=0', avatar], { encoding: 'utf8' })
   let from = 0
-  const first = segments.map((s, i) => {
+  const first = cues.map((s, i) => {
     if (i === 0 || s.title) return null
     const want = norm(s.body)
     for (let skip = 0; skip < 6; skip++) {
@@ -63,23 +67,26 @@ if (avatar) {
         }
       }
     }
-    throw new Error(`cannot find the start of "${s.slide}" in ${wordsFile}`)
+    throw new Error(`cannot find the start of "${s.slide ?? 'a cut'}" in ${wordsFile}`)
   })
-  // start of each cue on the output timeline; a section break sits in the silence before the next cue's first word
-  let shift = 0
-  const starts = segments.map((s, i) => {
-    if (i === 0) return 0
+  // the silence before a cue's first word, on the presenter's timeline
+  const gap = (i) => (first[i] === undefined ? total : (spoken[first[i] - 1].to + spoken[first[i]].at) / 2)
+  // presenter time to film time: section breaks add their length, cuts take theirs away
+  const film = (t) => edits.reduce((x, e) => (e.at > t ? x : e.pause ? x + e.pause : x - (Math.min(e.to, t) - e.at)), t)
+  cues.forEach((s, i) => {
+    if (i === 0) return (s.start = 0)
+    const before = cues[i - 1]
+    if (s.cut) return edits.push({ at: gap(i), to: gap(cues.findIndex((c, k) => k > i && !c.cut && !c.title)) })
     if (s.title) {
-      const next = first[i + 1]
-      const cut = (spoken[next - 1].to + spoken[next].at) / 2
-      cuts.push(cut)
-      shift += TITLE_SECONDS
-      return cut + shift - TITLE_SECONDS
+      const at = gap(i + 1)
+      s.start = film(at)
+      return edits.push({ at, pause: TITLE_SECONDS })
     }
-    if (segments[i - 1].title) return cuts.at(-1) + shift
-    return Math.max(0, spoken[first[i]].at - LEAD - FADE) + shift
+    // straight after a section break or a cut the cue starts at the join; otherwise a little before its first word
+    s.start = before.title ? before.start + TITLE_SECONDS : film(before.cut ? gap(i) : Math.max(0, spoken[first[i]].at - LEAD - FADE))
   })
-  segments.forEach((s, i) => (s.seconds = +((starts[i + 1] ?? total + shift) - starts[i]).toFixed(2)))
+  const end = film(total)
+  segments.forEach((s, i) => (s.seconds = +((segments[i + 1]?.start ?? end) - s.start).toFixed(2)))
 }
 
 // the words of each section break as an image, in the deck's heading face
@@ -115,16 +122,22 @@ const inputs = segments.flatMap((s, i) => {
 
 let filter = ''
 if (avatar) {
-  // the presenter on the output timeline: held still and silent during each section break
-  const edges = [0, ...cuts]
-  edges.forEach((a, k) => {
-    const end = k < cuts.length ? `:end=${n2(cuts[k])}` : ''
-    const hold = k < cuts.length ? `,tpad=stop_mode=clone:stop_duration=${TITLE_SECONDS}` : ''
-    const quiet = k < cuts.length ? `,afade=t=out:st=${n2(cuts[k] - a - 0.05)}:d=0.05,apad=pad_dur=${TITLE_SECONDS}` : ''
+  // the presenter on the film's timeline: held still and silent during each section break, cuts taken out
+  const pieces = [] // [from, to, pause after]
+  let pos = 0
+  for (const e of edits) {
+    pieces.push([pos, e.at, e.pause ?? 0])
+    pos = e.pause ? e.at : e.to
+  }
+  pieces.push([pos, null, 0])
+  pieces.forEach(([a, b, pause], k) => {
+    const end = b === null ? '' : `:end=${n2(b)}`
+    const hold = pause ? `,tpad=stop_mode=clone:stop_duration=${pause}` : ''
+    const join = (k ? ',afade=t=in:d=0.04' : '') + (b === null ? '' : `,afade=t=out:st=${n2(b - a - 0.04)}:d=0.04`) + (pause ? `,apad=pad_dur=${pause}` : '')
     filter += `[${segments.length}:v]trim=start=${n2(a)}${end},setpts=PTS-STARTPTS,fps=25${hold}[pv${k}];`
-    filter += `[${segments.length}:a]atrim=start=${n2(a)}${end},asetpts=PTS-STARTPTS${k ? ',afade=t=in:d=0.05' : ''}${quiet}[pa${k}];`
+    filter += `[${segments.length}:a]atrim=start=${n2(a)}${end},asetpts=PTS-STARTPTS${join}[pa${k}];`
   })
-  filter += `${edges.map((_, k) => `[pv${k}][pa${k}]`).join('')}concat=n=${edges.length}:v=1:a=1[pv][pa];`
+  filter += `${pieces.map((_, k) => `[pv${k}][pa${k}]`).join('')}concat=n=${pieces.length}:v=1:a=1[pv][pa];`
   const solos = segments.filter((s) => s.solo).length
   filter += `[pv]split=${solos + 1}[pip]${Array.from({ length: solos }, (_, k) => `[solo${k}]`).join('')};`
 }
