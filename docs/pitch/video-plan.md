@@ -69,4 +69,9 @@ No card, no screen showing the holder's prefecture, nullifier or wallet. Scope 2
   recordings are used. Shown as they are: the prefecture (Tokyo), the shortened wallet address, the on-screen
   "Proof sent" time (it differs from the narrated proof time). Blurred: the store-only pseudonymous ID and the photo
   thumbnail in the iPhone camera. No footage of the rejected second claim. Scope 4 is now claimed.
+- Submission form (seen 2026-10-11) differs from the workshop notes above: **pitch video up to 2 minutes**; demo video up
+  to 3 minutes and it "should show the live product, not a slide deck, not a code walkthrough"; both as YouTube, Loom
+  or Vimeo links.
+- Decided 2026-10-11: the pitch video is final at 1 min 58 s (draft D with its `[CUT]` cues, no section breaks). The
+  demo video follows section P of `video-narration.md` (product structure over live recordings), not section T.
 - Pitch script: draft D in `video-narration.md`; the copy for the voice tool is `video-script-d-tts.txt`.
