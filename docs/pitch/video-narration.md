@@ -1,7 +1,7 @@
 # Pitch video and technical demo: narration
 
-Scripts for the two submission videos (3 minutes at most each). **D is the pitch script** (about 370 words, about
-2 min 50 s at 140 words per minute with pauses); C is the earlier draft it was built from; T is the technical demo.
+Scripts for the two submission videos (3 minutes at most each). **D is the pitch script** (about 330 words, about
+2 min 30 s at 140 words per minute with pauses); C is the earlier draft it was built from; T is the technical demo.
 The copy of D to paste into the voice tool is `video-script-d-tts.txt` (no cues, names spelled for pronunciation).
 Facts come only from the slide notes (`docs/pitch/deck/slides/`); "open source" in D is the repository licence (GPL-3.0).
 `[SLIDE x]` and `[DEMO]` are visual cues, not spoken. Demo footage: dummy or demo card on screen, or the holder's own
@@ -88,11 +88,6 @@ trusted government keys live on-chain: no company owns them, and anyone can read
 And p!pon is open source. We start with the My Number Card, but ePassports and other national ID cards carry the same
 kind of government-signed chip. Any team can take this code and adapt it to its own country's card, on the same Solana
 registry. What we build for Japan, the whole ecosystem can use.
-
-[SLIDE policy]
-Technology alone is not enough: a zero-knowledge proof must be accepted as a lawful check. So we are co-founding an
-industry association with other ZK identity projects, from any chain. If these proofs gain legal standing in Japan,
-other countries get a model to follow.
 
 [SLIDE status]
 It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. p!pon.

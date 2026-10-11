@@ -16,6 +16,4 @@ Why bring a Japanese card to Solana? Because the hard part is shared. The one-pe
 
 And pippon is open source. We start with the My Number Card, but e-passports and other national ID cards carry the same kind of government-signed chip. Any team can take this code and adapt it to its own country's card, on the same Solana registry. What we build for Japan, the whole ecosystem can use.
 
-Technology alone is not enough: a zero-knowledge proof must be accepted as a lawful check. So we are co-founding an industry association with other zero-knowledge identity projects, from any chain. If these proofs gain legal standing in Japan, other countries get a model to follow.
-
 It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. Pippon.
