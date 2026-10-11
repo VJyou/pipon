@@ -1,0 +1,15 @@
+The stack: a Circom circuit with 1.49 million constraints, proved with Groth sixteen; on-device proving with mopro and rapid snark; an Anchor program, zee-kay gate, on Solana; and a web verifier built on snark J S. There is no issuer server. The national certificate authority is the root of trust, and the phone does the proving.
+
+Inside the proof, four checks happen in private: the certificate authority's signature over the certificate; the card's own signature over a challenge bound to a wallet or a browser session; the age; and the prefecture. The public outputs are just two facts, 20 or over and the prefecture, plus a hash of the C A key and a per-service nullifier.
+
+First, Web2. An online store creates a one-time session and shows it as a QR code. The holder enters the card's password and taps the card: the chip signs a challenge made from the session ID, and the phone builds the proof. The certificate never leaves the phone.
+
+Here it is with a demo card. The store's browser verifies the proof and runs six checks: a valid proof, the same session, a trusted C A from the list on Solana, today's date, 20 or over, and this store's scope. The store keeps a yes, the prefecture and a store-only ID.
+
+Now Web3. A gate account on Solana holds the rules: minimum age, allowed prefectures, trusted C A keys and a scope. The card signs a challenge made from the wallet address, so the proof only works for that wallet.
+
+One transaction does everything: zee-kay gate verifies the Groth sixteen proof with the alt B N one twenty-eight syscalls, creates the nullifier account and mints a Metaplex Core NFT, in about 144 thousand compute units. The same card again: already claimed. A card from another prefecture: rejected by the gate's policy.
+
+It also runs on a real My Number Card. The proof takes 3.5 seconds on a Mac with a USB reader, and about nine and a half seconds on an iPhone 15 Pro Max. The claim was verified on dev net, and a second claim from a new wallet was rejected.
+
+Honest limits: there is no revocation check yet, because revocation lists are only available to certified verifiers, and the trusted setup has a single contributor. Next: revocation through a certified operator, a multi-party setup and an audit before mainnet, and the App Store and Android.

@@ -2,7 +2,8 @@
 
 Scripts for the two submission videos (3 minutes at most each). **D is the pitch script** (about 330 words, about
 2 min 30 s at 140 words per minute with pauses); T is the technical demo.
-The copy of D to paste into the voice tool is `video-script-d-tts.txt` (no cues, names spelled for pronunciation).
+The copies to paste into the voice tool are `video-script-d-tts.txt` and `video-script-t-tts.txt` (no cues, names
+spelled for pronunciation).
 Facts come only from the slide notes (`docs/pitch/deck/slides/`); "open source" in D is the repository licence
 (GPL-3.0).
 `[SLIDE x]`, `[DEMO]`, `[AVATAR only]` (the presenter alone, no slide) and `[TITLE words]` (a silent section
