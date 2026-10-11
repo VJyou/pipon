@@ -224,4 +224,5 @@ rejected.
 
 [SLIDE limits]
 Honest limits: there is no revocation check yet, because revocation lists are only available to certified verifiers,
-and the trusted setup has a single contributor. Next: the Solana Attestation Service and a multi-party setup. The code is open source under GPL-3.0.
+and the trusted setup has a single contributor. Next: revocation through a certified operator, a multi-party setup and
+an audit before mainnet, and the App Store and Android.
