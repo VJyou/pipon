@@ -32,7 +32,7 @@ before. No name, no birthday, no address, no ID image — and no issuer server.
 
 [DEMO Web2: QR → iPhone → tap card → "Age verified"]
 Here is an online store selling sake. I tap "Verify age with p!pon", scan the QR code, and tap my card. The proof is
-made on the iPhone in about nine and a half seconds, and the store's browser verifies it in a third of a second. The
+made on the iPhone in about nine and a half seconds, and the store's browser verifies it in under a second. The
 store learns: 20 or over, the prefecture, and a pseudonymous ID for this store only.
 
 [DEMO Web3: claim on devnet, then a second wallet rejected]
@@ -60,7 +60,7 @@ This online store sells sake, so it must know I'm 20 or over. Today it would ask
 "Verify age with p!pon", scan the QR code with my iPhone, enter my card's password and tap my My Number Card.
 
 [DEMO proof finishing, store shows "Age verified"]
-In about nine and a half seconds the phone makes a zero-knowledge proof. The store checks it in a third of a second
+In about nine and a half seconds the phone makes a zero-knowledge proof. The store checks it in under a second
 and learns three things: 20 or over, my prefecture, and an ID that only this store sees. It never sees my name, my
 birthday, my address or my card.
 
