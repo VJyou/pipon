@@ -123,25 +123,50 @@ an audit before mainnet, and the App Store and Android.
 
 How the product is put together, told over the live recordings: the app, the check a website runs, the Solana
 program. No slides. Replaces T for the submission (the form asks for the live product, not a technical walkthrough).
+Each `[DEMO name]` cue is one shot cut from the four recordings (whole screen, or a close-up of part of it), held
+for as long as its sentence takes.
 
 [AVATAR only]
 p!pon has three parts: an iPhone app that reads your My Number Card, a check that any website can run in its own
 browser page, and a Solana program for one-per-person gates. Here is each of them, live.
 
-[DEMO Web2: store checkout, QR, iPhone app, card tap, proof, result]
-This is an online store selling sake. At checkout it needs one fact: is the buyer 20 or over? The store shows a QR
-code. I scan it with my iPhone, and the p!pon app shows who is asking and what they will learn. I tap my real My
-Number Card on the phone. The app reads the chip and builds a zero-knowledge proof on the device, so the card data
-never leaves the phone. The store's page checks the proof by itself: no p!pon server, no account, no wallet. It learns
-three things: 20 or over, the prefecture, and an ID that only this store sees. It never gets my name, my birthday, my
-address or a photo of my card.
+[DEMO web2a: close-up of the store's checkout]
+This is an online store selling sake. At checkout it needs one fact: is the buyer 20 or over?
 
-[DEMO Web3: gate rules, request, card tap, mint]
-The second place a proof can go is Solana. This gate keeps its rules on-chain: 20 or over, and one claim per person. I
-connect a wallet, the app makes a proof that only works for that wallet, and I press Mint. Our program, zk_gate,
-verifies the proof on-chain, records that this card has claimed, and mints the NFT, all in one transaction. The same
-card cannot claim here again from any wallet, and nobody keeps a list of people. The store and the gate read the same
-list of trusted government keys from Solana, so both trust the same root.
+[DEMO web2b: the QR code appears]
+The store shows a QR code.
+
+[DEMO web2c: iPhone camera, then the request in the app]
+I scan it with my iPhone, and the p!pon app shows who is asking and what they will learn.
+
+[DEMO web2d: card tap]
+I tap my real My Number Card on the phone.
+
+[DEMO web2e: proving on the phone, proof sent]
+The app reads the chip and builds a zero-knowledge proof on the device, so the card data never leaves the phone.
+
+[DEMO web2f: close-up of the six checks]
+The store's page checks the proof by itself: no p!pon server, no account, no wallet.
+
+[DEMO web2g: close-up of what the store received and never sees]
+It learns three things: 20 or over, the prefecture, and an ID that only this store sees. It never gets my name, my
+birthday, my address or a photo of my card.
+
+[DEMO web3a: close-up of the gate and its rules]
+The second place a proof can go is Solana. This gate keeps its rules on-chain: 20 or over, and one claim per person.
+
+[DEMO web3b: request, card tap, mint]
+I connect a wallet, the app makes a proof that only works for that wallet, and I press Mint.
+
+[DEMO web3c: close-up of the minted result]
+Our program, zk_gate, verifies the proof on-chain, records that this card has claimed, and mints the NFT, all in one
+transaction.
+
+[DEMO web3d: close-up of the claim count and the note on a second claim]
+The same card cannot claim here again from any wallet, and nobody keeps a list of people.
+
+[DEMO web3e: close-up of the trust-list check]
+The store and the gate read the same list of trusted government keys from Solana, so both trust the same root.
 
 [AVATAR only]
 The iPhone app is in TestFlight beta, with a demo card for people who do not have a My Number Card. The web demo is
