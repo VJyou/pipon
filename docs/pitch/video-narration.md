@@ -1,7 +1,8 @@
-# Pitch video: three 3-minute narration drafts
+# Pitch video: four 3-minute narration drafts
 
 Drafts for the submission video (3 minutes at most). Each is about 330 spoken words (about 2 min 20 s at 140 words
-per minute), leaving room for pauses and demo footage. Facts come only from the slide notes (`docs/pitch/deck/slides/`).
+per minute), leaving room for pauses and demo footage; D is about 370 words (about 2 min 50 s with pauses). Facts come
+only from the slide notes (`docs/pitch/deck/slides/`); "open source" in D is the repository licence (GPL-3.0).
 `[SLIDE x]` and `[DEMO]` are visual cues, not spoken. Demo footage: dummy or demo card on screen, or the holder's own
 card with no personal value visible; Web3 on scope 4 (first claim) for the video.
 
@@ -130,6 +131,54 @@ work with regulators. If ZK proofs gain legal standing in Japan, other countries
 [SLIDE roadmap]
 From there: the App Store and Android, a checkout SDK, AI agents that act for a verified human, and ePassports, so the
 same proof and the same Solana registry can work for travellers from any country.
+
+[SLIDE status]
+It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. p!pon.
+
+---
+
+## D. C plus the world (leaks everywhere, open source, why this belongs on Solana)
+
+[SLIDE cover]
+Hi, I'm Yu Ayato, building p!pon: zero-knowledge credentials from Japan's My Number Card.
+
+[SLIDE global]
+ID documents are leaking everywhere. In September, an ID-verification vendor in the US confirmed a breach reported at
+over 150 million records. The same month, a Japanese car-sharing service lost 1.6 million ID images. Every one was a
+copy someone was asked to upload.
+
+[SLIDE trend]
+And laws now demand more checks: the UK, Australia, about half of US states. More checks times stored copies equals
+more breaches. The way we check identity online has to change, and this is the moment.
+
+[SLIDE whynow]
+Japan can change first. From April 2027, remote KYC drops photo uploads and moves to the IC chip. Over 100 million My
+Number Cards can carry a certificate signed by the national authority.
+
+[SLIDE how]
+That fixes forgery, not privacy. p!pon closes the gap. The phone reads the card and proves only the facts a service
+needs: 20 or over, the prefecture, one per person. The service gets a yes, not your data.
+
+[DEMO Web2, short]
+Here it is: scan, tap the card, and in about nine and a half seconds the iPhone makes the proof. The store verifies it
+in its browser and keeps only a yes, the prefecture and a store-only ID.
+
+[DEMO Web3, short]
+On Solana, zk_gate verifies the proof on-chain and records a nullifier, so a second claim from another wallet fails.
+
+[SLIDE solana]
+Why bring a Japanese card to Solana? Because the hard part is shared. The one-per-person registry and the list of
+trusted government keys live on-chain: no company owns them, and anyone can read them.
+
+[SLIDE roadmap]
+And p!pon is open source. We start with the My Number Card, but ePassports and other national ID cards carry the same
+kind of government-signed chip. Any team can take this code and adapt it to its own country's card, on the same Solana
+registry. What we build for Japan, the whole ecosystem can use.
+
+[SLIDE policy]
+Technology alone is not enough: a zero-knowledge proof must be accepted as a lawful check. So we are co-founding an
+industry association with other ZK identity projects, from any chain. If these proofs gain legal standing in Japan,
+other countries get a model to follow.
 
 [SLIDE status]
 It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. p!pon.
