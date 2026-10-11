@@ -1,0 +1,21 @@
+Hi, I'm Yu Ayato, building pippon: zero-knowledge credentials from Japan's My Number Card.
+
+ID documents are leaking everywhere. In September, an ID-verification vendor in the US confirmed a breach reported at over 150 million records. The same month, a Japanese car-sharing service lost 1.6 million ID images. Every one was a copy someone was asked to upload.
+
+And laws now demand more checks: the UK, Australia, about half of US states. More checks times stored copies equals more breaches. The way we check identity online has to change, and this is the moment.
+
+Japan can change first. From April 2027, remote KYC drops photo uploads and moves to the IC chip. Over 100 million My Number Cards can carry a certificate signed by the national authority.
+
+That fixes forgery, not privacy. Pippon closes the gap. The phone reads the card and proves only the facts a service needs: 20 or over, the prefecture, one per person. The service gets a yes, not your data.
+
+Here it is: scan, tap the card, and in about nine and a half seconds the iPhone makes the proof. The store verifies it in its browser and keeps only a yes, the prefecture and a store-only ID.
+
+On Solana, Z K gate verifies the proof on-chain and records a nullifier, so a second claim from another wallet fails.
+
+Why bring a Japanese card to Solana? Because the hard part is shared. The one-per-person registry and the list of trusted government keys live on-chain: no company owns them, and anyone can read them.
+
+And pippon is open source. We start with the My Number Card, but e-passports and other national ID cards carry the same kind of government-signed chip. Any team can take this code and adapt it to its own country's card, on the same Solana registry. What we build for Japan, the whole ecosystem can use.
+
+Technology alone is not enough: a zero-knowledge proof must be accepted as a lawful check. So we are co-founding an industry association with other zero-knowledge identity projects, from any chain. If these proofs gain legal standing in Japan, other countries get a model to follow.
+
+It works today, with a real card, and the iPhone app is in TestFlight beta. Stop collecting IDs. Prove the fact. Pippon.

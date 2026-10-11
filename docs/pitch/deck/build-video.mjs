@@ -2,13 +2,13 @@
 // Each [SLIDE x] cue shows slide x for as long as its text takes to say; [DEMO Web2 …] / [DEMO Web3 …] cues use the
 // web2 / web3 slides as stand-ins until the screen recordings are cut in.
 //   PNG=/tmp/slides node docs/pitch/deck/build-pdf.mjs             (slide images)
-//   FFMPEG=/path/to/ffmpeg node docs/pitch/deck/build-video.mjs /tmp/slides out.mp4 [draft=A] [wpm=140]
+//   FFMPEG=/path/to/ffmpeg node docs/pitch/deck/build-video.mjs /tmp/slides out.mp4 [draft=D] [wpm=140]
 import { readFileSync, readdirSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 import { execFileSync } from 'node:child_process'
 
 const here = fileURLToPath(new URL('.', import.meta.url))
-const [pngDir, out, draft = 'A', wpm = '140'] = process.argv.slice(2)
+const [pngDir, out, draft = 'D', wpm = '140'] = process.argv.slice(2)
 const PAUSE = 0.8 // breath between slides, seconds
 const FADE = 0.4
 

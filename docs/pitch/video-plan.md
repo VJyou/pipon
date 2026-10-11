@@ -63,4 +63,4 @@ No card, no screen showing the holder's prefecture, nullifier or wallet. Scope 2
 - Open: the official rules do not mention AI-generated presenters (`docs/legal/hackathon-rules-check.md` has no entry);
   confirm before submitting. If the cloned English voice has a strong accent, add 1–2 minutes of English speech to the
   voice sample.
-- Open: which narration draft (A/B/C in `video-narration.md`) is the final script.
+- Pitch script: draft D in `video-narration.md`; the copy for the voice tool is `video-script-d-tts.txt`.
