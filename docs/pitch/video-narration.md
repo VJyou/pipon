@@ -93,12 +93,12 @@ a yes, the prefecture and a store-only ID.
 Now Web3. A gate account on Solana holds the rules: minimum age, allowed prefectures, trusted CA keys and a scope. The
 card signs a challenge made from the wallet address, so the proof only works for that wallet.
 
-[DEMO Web3: mint, explorer transaction, same card rejected]
+[DEMO Web3: mint, explorer transaction]
 One transaction does everything: zk_gate verifies the Groth16 proof with the alt_bn128 syscalls, creates the nullifier
-account and mints a Metaplex Core NFT, in about 144 thousand compute units. The same card again: already claimed.
+account and mints a Metaplex Core NFT, in about 144 thousand compute units.
 
 [SLIDE web3]
-A card from another prefecture: rejected by the gate's policy.
+The same card again: already claimed. A card from another prefecture: rejected by the gate's policy.
 
 [SLIDE realcard]
 Timings with the real card: the proof takes 3.5 seconds on a Mac with a USB reader, and about nine and
