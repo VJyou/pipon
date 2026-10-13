@@ -53,6 +53,9 @@ the national CA is the root of trust, and the phone does the proving.
   and mint; replays and other prefectures rejected.
 - Proving with rapidsnark: **9.1 s on an iPhone 15 Pro Max** (on device, ~470 MB), 3.5 s on a Mac mini.
 
+## Try the demo
+Public web demo (dummy cards, devnet): https://pipon-demo-production.up.railway.app
+
 ## Run the demo
 ```bash
 # circuit artifacts (needs the 2^21 Perpetual Powers of Tau file, see circuits/scripts/build.sh)

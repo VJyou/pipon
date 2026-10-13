@@ -59,17 +59,9 @@ Read first: `CLAUDE.md`, then `docs/research/ios-plan.md`, `docs/setup/mac.md` a
 - Gate names are immutable: the demo now uses scope 5 ("p!pon Tokyo 20+", dummy CA) and scope 4 ("p!pon Japan 20+",
   J-LIS); scopes 1 and 2 keep the old name. Fresh dummy cards for first mints: `tokyo30`, `tokyo25` (used on scope 5).
 
-## Public demo (2026-10-07)
-- Temporary: Mac mini + Cloudflare quick tunnel, `PUBLIC=1` server (`app/verifier-demo/README.md`). URL changes on
-  restart; plan: move to a cloud host before submission/judging. Web2 flow verified through the public URL.
-
-## Next (end of 2026-10-07; the Mac mini was shut down, so the public tunnel URL is gone)
-1. **Fly.io deploy** (`deploy/fly/`, ADR: Fly over Render). Waiting on the user: sign up + card, then
-   `flyctl auth login` on the Mac. Then: `(cd app/verifier-demo && npm run build)` and
-   `flyctl launch --no-deploy --copy-config --config deploy/fly/fly.toml` (app name may need changing) →
-   `flyctl deploy --config deploy/fly/fly.toml --dockerfile deploy/fly/Dockerfile .` (uploads the 0.9 GB zkey).
-   Until then, a temporary URL: `PUBLIC=1 IP_HEADER=cf-connecting-ip node server/mock-prover.mjs` +
-   `cloudflared tunnel --url http://127.0.0.1:8787` (`app/verifier-demo/README.md`).
+## Next (end of 2026-10-07)
+1. **Public demo on a cloud host** — done on 2026-10-08: https://pipon-demo-production.up.railway.app
+   (`docs/deployments.md`).
 2. **iPhone NFC**: waiting for the paid Apple Developer Program (dev Apple ID, separate from the phone's). Then add the
    account in Xcode, switch DEVELOPMENT_TEAM (local edit, not committed), build with the real entitlements, trust the
    developer on the phone, Card check + real-card claim (use scope 3 for tests; scope 4 is for the video).

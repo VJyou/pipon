@@ -3,7 +3,7 @@
 //    certificate for a chosen persona and proves with circuits/build artifacts.
 //  - relay: hands a request to the real iPhone app (QR -> pipon://) and the proof back to the page.
 //   node server/mock-prover.mjs   (port 8787; Vite proxies /api)
-//   PUBLIC=1 node server/mock-prover.mjs   (public demo: also serves dist/, rate limits, binds for a tunnel)
+//   PUBLIC=1 node server/mock-prover.mjs   (public demo: also serves dist/, rate limits)
 import { createServer } from "node:http";
 import { randomBytes } from "node:crypto";
 import { execFile } from "node:child_process";
@@ -40,7 +40,7 @@ const MAX_WAITING = 6;
 const proofLog = new Map(); // ip -> timestamps
 let waiting = 0;
 // The proxy in front sets the client address in a header; trust only the one named by IP_HEADER.
-const IP_HEADER = process.env.IP_HEADER; // "cf-connecting-ip" (Cloudflare tunnel) or "fly-client-ip" (Fly.io)
+const IP_HEADER = process.env.IP_HEADER; // "x-real-ip" on Railway
 const clientIp = (req) => String((IP_HEADER && req.headers[IP_HEADER]) || req.socket.remoteAddress || "");
 function allowProof(ip) {
   const now = Date.now();
