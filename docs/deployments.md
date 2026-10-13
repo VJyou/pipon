@@ -31,4 +31,3 @@ Notes:
 - Image base is Debian trixie: the rapidsnark v0.0.8 binary needs GLIBCXX_3.4.32.
 - Measured: dummy proof 13.5 s warm (28 s first), Web2 flow passes in a browser. Guest cards live in the container and
   reset on redeploy (a visitor then gets a fresh dummy card).
-- Fly.io was dropped: no spending cap. Railway stops workloads at the hard limit.

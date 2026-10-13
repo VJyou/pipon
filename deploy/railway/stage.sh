@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # Public web demo on Railway. Railway's `railway up` uploads a directory, and the files the image needs (zkey, dummy
-# keys, built page) are git-ignored, so this script stages exactly those files plus the Fly.io Dockerfile into a
+# keys, built page) are git-ignored, so this script stages exactly those files plus the Dockerfile into a
 # separate directory and deploys from there. The 0.9 GB zkey is over Railway's upload limit (413 at ~490 MB), so it
 # lives on a volume mounted at /data instead, uploaded once:
 #   (cd app/verifier-demo && npm run build)
@@ -21,9 +21,5 @@ for f in circuits/build/jpki_age_region_js circuits/build/vkey.json \
   copy "$f"
 done
 
-# Same image as Fly.io, but the zkey comes from the volume; Railway's edge puts the client address in X-Real-IP and
-# injects PORT at runtime.
-sed -e 's/IP_HEADER=fly-client-ip/IP_HEADER=x-real-ip/' -e 's/on Fly\.io/on Railway/' \
-  -e 's|^COPY circuits/build/jpki_age_region.zkey circuits/build/$|RUN mkdir -p circuits/build \&\& ln -s /data/jpki_age_region.zkey circuits/build/jpki_age_region.zkey|' \
-  "$root/deploy/fly/Dockerfile" > "$out/Dockerfile"
+cp "$root/deploy/railway/Dockerfile" "$out/Dockerfile"
 du -sh "$out"

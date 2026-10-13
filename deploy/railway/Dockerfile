@@ -1,7 +1,8 @@
-# Public web demo on Fly.io: the built page, the demo prover (dummy cards only) and the relay, on one port.
-# Build context = repository root (see fly.toml). Needs, from the Mac (not in git):
-#   circuits/build/{jpki_age_region.zkey, jpki_age_region_js/, vkey.json, dummy-ca.pem, persona-*.pem}
+# Public web demo on Railway: the built page, the demo prover (dummy cards only) and the relay, on one port.
+# Build context = the directory staged by deploy/railway/stage.sh, which adds the files that are not in git:
+#   circuits/build/{jpki_age_region_js/, vkey.json, dummy-ca.pem, persona-*.pem}
 #   app/verifier-demo/dist/  (npm run build)
+# The 0.9 GB zkey is not in the image: it is on the volume mounted at /data.
 # The dummy CA and persona keys are test keys for dummy cards; no real card data is involved.
 # trixie: the rapidsnark v0.0.8 binary needs GLIBCXX_3.4.32 (bookworm has 3.4.30)
 FROM node:22-trixie-slim
@@ -22,7 +23,7 @@ RUN mkdir -p circuits && cd circuits && npm install --no-save --no-package-lock 
 COPY sdk/package.json sdk/package-lock.json sdk/
 RUN cd sdk && npm ci --omit=dev
 
-COPY circuits/build/jpki_age_region.zkey circuits/build/
+RUN mkdir -p circuits/build && ln -s /data/jpki_age_region.zkey circuits/build/jpki_age_region.zkey
 COPY circuits/build/jpki_age_region_js circuits/build/jpki_age_region_js
 COPY circuits/build/vkey.json circuits/build/dummy-ca.pem circuits/build/
 COPY circuits/build/persona-tokyo20.pem circuits/build/persona-osaka40.pem circuits/build/persona-tokyo17.pem circuits/build/
@@ -31,6 +32,7 @@ COPY sdk/src sdk/src
 COPY app/verifier-demo/server app/verifier-demo/server
 COPY app/verifier-demo/dist app/verifier-demo/dist
 
-ENV PUBLIC=1 HOST=0.0.0.0 PORT=8080 IP_HEADER=fly-client-ip PYTHON=python3
+# Railway's edge puts the client address in X-Real-IP and injects PORT at runtime.
+ENV PUBLIC=1 HOST=0.0.0.0 PORT=8080 IP_HEADER=x-real-ip PYTHON=python3
 EXPOSE 8080
 CMD ["node", "app/verifier-demo/server/mock-prover.mjs"]
